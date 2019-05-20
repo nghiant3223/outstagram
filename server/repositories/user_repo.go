@@ -1,4 +1,4 @@
-package repositories
+package userrepo
 
 import (
 	"outstagram/server/entities"
@@ -10,7 +10,7 @@ type UserRepository struct {
 	db *gorm.DB
 }
 
-func NewUserRepository(dbConnection *gorm.DB) *UserRepository {
+func New(dbConnection *gorm.DB) *UserRepository {
 	return &UserRepository{db: dbConnection}
 }
 

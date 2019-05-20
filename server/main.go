@@ -1,40 +1,24 @@
 package main
 
 import (
-	"net/http"
-	usercontroller "outstagram/server/controllers/userController"
-	"outstagram/server/entities"
-	"outstagram/server/repositories"
-	"outstagram/server/services"
+	"outstagram/server/managers"
+	"outstagram/server/routers"
 
 	"github.com/gin-gonic/gin"
-	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
 
 func main() {
-	db, err := gorm.Open("mysql", "root:root@/test?charset=utf8&parseTime=True&loc=Local")
-
-	if err != nil {
-		panic(err)
-	}
-
-	defer db.Close()
-
-	db.SingularTable(true)
-	db.AutoMigrate(&entities.User{})
-
-	userRepository := repositories.NewUserRepository(db)
-	userService := services.NewUserService(userRepository)
-	userController := usercontroller.NewUserController(userService)
-
 	router := gin.Default()
 
-	router.GET("/", func(c *gin.Context) {
-		c.String(http.StatusOK, "Hello")
-	})
+	go managers.HubInstance.Run(managers.StoryManagerInstance.WSMux)
+	router.GET("/ws", func(c *gin.Context) { managers.ServeWs(c.Writer, c.Request) })
 
-	router.GET("/:username", userController.GetUserByUsername)
+	apiRouter := router.Group("/api")
+	{
+		routers.UserAPIRouter(apiRouter.Group("/user"))
+		routers.StoryAPIRouter(apiRouter.Group("/story"))
+	}
 
-	router.Run("localhost:5000")
+	router.Run(":3000")
 }
