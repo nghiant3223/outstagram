@@ -1,9 +1,10 @@
 package managers
 
-import 	"github.com/gorilla/websocket"
 import (
 	"time"
 	"net/http"
+
+	"github.com/gorilla/websocket"
 ) 
 
 // TransmitData is data transmitted between peers
@@ -18,14 +19,6 @@ type WSMessage struct {
 	From *Connection
 }
 
-// Connection is an middleman between the websocket Connection and the hub.
-type Connection struct {
-	// The websocket Connection.
-	WS *websocket.Conn
-
-	// Buffered channel of outbound WSMessages.
-	Send chan TransmitData
-}
 
 const (
 	// Time allowed to write a message to the peer.

@@ -1,6 +1,20 @@
 package managers
 
-import "time"
+import (
+	"time"
+	
+	"github.com/gorilla/websocket"
+)
+
+// Connection is an middleman between the websocket Connection and the hub.
+type Connection struct {
+	// The websocket Connection.
+	WS *websocket.Conn
+
+	// Buffered channel of outbound WSMessages.
+	Send chan TransmitData
+}
+
 
 // Write writes a message with the given message type and payload.
 func (c *Connection) Write(mt int, payload []byte) error {

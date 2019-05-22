@@ -26,7 +26,6 @@ func NewHub() *Hub {
 		Rooms:            make(map[string]map[*Connection]bool),
 		Connections:      make(map[*Connection]bool),
 	}
-
 }
 
 // Run starts a hub session
