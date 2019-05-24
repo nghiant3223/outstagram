@@ -1,7 +1,7 @@
 package userservice
 
 import (
-	"outstagram/server/entities"
+	"outstagram/server/models"
 	userrepo "outstagram/server/repositories"
 )
 
@@ -13,10 +13,10 @@ func New(userRepository *userrepo.UserRepository) *UserService {
 	return &UserService{repo: userRepository}
 }
 
-func (us *UserService) FindAll() ([]entities.User, error) {
+func (us *UserService) FindAll() ([]models.User, error) {
 	return us.repo.FindAll()
 }
 
-func (us *UserService) FindByUsername(username string) (*entities.User, error) {
+func (us *UserService) FindByUsername(username string) (*models.User, error) {
 	return us.repo.FindByUsername(username)
 }
