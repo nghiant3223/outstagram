@@ -8,6 +8,7 @@ package config
 import (
 	"outstagram/server/controllers/authcontroller"
 	"outstagram/server/controllers/usercontroller"
+	"outstagram/server/db"
 	"outstagram/server/repositories/userrepo"
 	"outstagram/server/services/userservice"
 )
@@ -15,22 +16,22 @@ import (
 // Injectors from injection.go:
 
 func InitializeUserController() (*usercontroller.Controller, error) {
-	db, err := ConnectDatabase()
+	gormDB, err := db.New()
 	if err != nil {
 		return nil, err
 	}
-	userRepository := userrepo.New(db)
+	userRepository := userrepo.New(gormDB)
 	userService := userservice.New(userRepository)
 	controller := usercontroller.New(userService)
 	return controller, nil
 }
 
 func InitializeAuthController() (*authcontroller.Controller, error) {
-	db, err := ConnectDatabase()
+	gormDB, err := db.New()
 	if err != nil {
 		return nil, err
 	}
-	userRepository := userrepo.New(db)
+	userRepository := userrepo.New(gormDB)
 	userService := userservice.New(userRepository)
 	controller := authcontroller.New(userService)
 	return controller, nil

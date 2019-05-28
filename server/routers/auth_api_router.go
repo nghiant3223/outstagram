@@ -6,9 +6,6 @@ import (
 	"outstagram/server/config"
 )
 
-
-
-
 func AuthAPIRouter(router *gin.RouterGroup) {
 	authController, err := config.InitializeAuthController()
 	if err != nil {
