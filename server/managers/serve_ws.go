@@ -2,19 +2,20 @@ package managers
 
 import (
 	"log"
-	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 // ServeWs handles websocket requests from the peer.
-func ServeWs(w http.ResponseWriter, r *http.Request) {
-	ws, err := upgrader.Upgrade(w, r, nil)
+func ServeWs(c *gin.Context) {
+	ws, err := upgrader.Upgrade(c.Writer, c.Request, nil)
 	if err != nil {
 		log.Println(err)
 		return
 	}
 
-	c := &Connection{Send: make(chan TransmitData), WS: ws}
-	s := Subscription{c}
+	conn := &Connection{Send: make(chan TransmitData), WS: ws}
+	s := Subscription{conn}
 
 	HubInstance.Register <- s
 	go s.WritePump()

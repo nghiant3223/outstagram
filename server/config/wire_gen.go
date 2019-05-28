@@ -6,12 +6,13 @@
 package config
 
 import (
+	"outstagram/server/controllers/authcontroller"
 	"outstagram/server/controllers/usercontroller"
-	"outstagram/server/repositories"
+	"outstagram/server/repositories/userrepo"
 	"outstagram/server/services/userservice"
 )
 
-// Injectors from container.go:
+// Injectors from injection.go:
 
 func InitializeUserController() (*usercontroller.Controller, error) {
 	db, err := ConnectDatabase()
@@ -21,5 +22,16 @@ func InitializeUserController() (*usercontroller.Controller, error) {
 	userRepository := userrepo.New(db)
 	userService := userservice.New(userRepository)
 	controller := usercontroller.New(userService)
+	return controller, nil
+}
+
+func InitializeAuthController() (*authcontroller.Controller, error) {
+	db, err := ConnectDatabase()
+	if err != nil {
+		return nil, err
+	}
+	userRepository := userrepo.New(db)
+	userService := userservice.New(userRepository)
+	controller := authcontroller.New(userService)
 	return controller, nil
 }

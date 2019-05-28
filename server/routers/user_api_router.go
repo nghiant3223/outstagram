@@ -1,6 +1,7 @@
 package routers
 
 import (
+	"log"
 	"outstagram/server/config"
 
 	"github.com/gin-gonic/gin"
@@ -9,7 +10,7 @@ import (
 func UserAPIRouter(router *gin.RouterGroup) {
 	userController, err := config.InitializeUserController()
 	if err != nil {
-		panic(err)
+		log.Fatal(err.Error())
 	}
 	router.GET("/:username", userController.GetUserPassword)
 }

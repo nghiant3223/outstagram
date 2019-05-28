@@ -9,7 +9,7 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-// ConnectDatabase connects application to the database server
+// ConnectDatabase return a *gorm.DB instance and error if exists
 func ConnectDatabase() (*gorm.DB, error) {
 	db, err := gorm.Open("mysql", fmt.Sprintf("%v:%v@/%v?charset=utf8&parseTime=True&loc=Local", os.Getenv("DB_USERNAME"), os.Getenv("DB_PASSWORD"), os.Getenv("DB_SCHEMA")))
 	if err != nil {

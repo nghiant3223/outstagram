@@ -1,16 +1,16 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
-	"fmt"
-	
+
 	"outstagram/server/managers"
 	"outstagram/server/routers"
 
 	"github.com/gin-gonic/gin"
-	"github.com/joho/godotenv"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
+	"github.com/joho/godotenv"
 )
 
 func main() {
@@ -21,18 +21,26 @@ func main() {
 	router := gin.Default()
 
 	go managers.HubInstance.Run(managers.StoryManagerInstance.WSMux)
-	router.GET("/ws", func(c *gin.Context) { managers.ServeWs(c.Writer, c.Request) })
+	router.GET("/ws", managers.ServeWs)
 
 	apiRouter := router.Group("/api")
 	{
 		routers.UserAPIRouter(apiRouter.Group("/user"))
 		routers.StoryAPIRouter(apiRouter.Group("/story"))
-	}
+		routers.AuthAPIRouter(apiRouter.Group("/auth"))
+	}	
 
 	PORT := os.Getenv("PORT")
 	if PORT == "" {
-		router.Run(":3000")
+		err := router.Run(":3000")
+		if err != nil {
+			log.Fatal(err.Error())
+		}
 		return
 	}
-	router.Run(fmt.Sprintf(":%v", PORT))
+
+	err := router.Run(fmt.Sprintf(":%v", PORT))
+	if err != nil {
+		log.Fatal(err.Error())
+	}
 }

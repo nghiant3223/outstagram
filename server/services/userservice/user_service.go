@@ -2,14 +2,14 @@ package userservice
 
 import (
 	"outstagram/server/models"
-	userrepo "outstagram/server/repositories"
+	userrepo2 "outstagram/server/repositories/userrepo"
 )
 
 type UserService struct {
-	repo *userrepo.UserRepository
+	repo *userrepo2.UserRepository
 }
 
-func New(userRepository *userrepo.UserRepository) *UserService {
+func New(userRepository *userrepo2.UserRepository) *UserService {
 	return &UserService{repo: userRepository}
 }
 

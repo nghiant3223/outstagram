@@ -3,9 +3,10 @@
 package config
 
 import (
+	"outstagram/server/controllers/authcontroller"
 	"outstagram/server/controllers/usercontroller"
-	userrepo "outstagram/server/repositories"
-	userservice "outstagram/server/services/usersservice"
+	"outstagram/server/repositories/userrepo"
+	"outstagram/server/services/userservice"
 
 	"github.com/google/wire"
 )
@@ -13,4 +14,9 @@ import (
 func InitializeUserController() (*usercontroller.Controller, error) {
 	wire.Build(usercontroller.New, userservice.New, userrepo.New, ConnectDatabase)
 	return &usercontroller.Controller{}, nil
+}
+
+func InitializeAuthController() (*authcontroller.Controller, error) {
+	wire.Build(authcontroller.New, userservice.New, userrepo.New, ConnectDatabase)
+	return &authcontroller.Controller{}, nil
 }
