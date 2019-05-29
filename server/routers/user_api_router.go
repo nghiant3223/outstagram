@@ -9,8 +9,10 @@ import (
 
 func UserAPIRouter(router *gin.RouterGroup) {
 	userController, err := config.InitializeUserController()
+
 	if err != nil {
 		log.Fatal(err.Error())
 	}
+
 	router.GET("/:username", userController.GetUserPassword)
 }

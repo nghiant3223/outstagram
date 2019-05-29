@@ -9,7 +9,11 @@ import (
 	"outstagram/server/controllers/authcontroller"
 	"outstagram/server/controllers/usercontroller"
 	"outstagram/server/db"
+	"outstagram/server/repositories/nbrepo"
+	"outstagram/server/repositories/sbrepo"
 	"outstagram/server/repositories/userrepo"
+	"outstagram/server/services/nbservice"
+	"outstagram/server/services/sbservice"
 	"outstagram/server/services/userservice"
 )
 
@@ -33,6 +37,10 @@ func InitializeAuthController() (*authcontroller.Controller, error) {
 	}
 	userRepository := userrepo.New(gormDB)
 	userService := userservice.New(userRepository)
-	controller := authcontroller.New(userService)
+	notifBoardRepo := nbrepo.New(gormDB)
+	notifBoardService := nbservice.New(notifBoardRepo)
+	storyBoardRepo := sbrepo.New(gormDB)
+	storyBoardService := sbservice.New(storyBoardRepo)
+	controller := authcontroller.New(userService, notifBoardService, storyBoardService)
 	return controller, nil
 }

@@ -30,7 +30,7 @@ func (ur *UserRepository) FindByUsername(username string) (*models.User, error) 
 	return &user, nil
 }
 
-func (ur *UserRepository) FindById(id uint) (*models.User, error) {
+func (ur *UserRepository) FindByID(id uint) (*models.User, error) {
 	var user models.User
 	if err := ur.db.Find(&user, "id = ?", id).Error; err != nil {
 		return nil, err
@@ -38,27 +38,51 @@ func (ur *UserRepository) FindById(id uint) (*models.User, error) {
 	return &user, nil
 }
 
-func (ur *UserRepository) Save(user *models.User) {
-	ur.db.Create(user)
+func (ur *UserRepository) Save(user *models.User) error {
+	return ur.db.Create(user).Error
 }
 
-func (ur *UserRepository) SaveAll(users []*models.User) {
+func (ur *UserRepository) SaveAll(users []*models.User) error {
 	for _, user := range users {
-		ur.db.Create(user)
+		err := ur.db.Create(&user).Error
+		if err != nil {
+			return err
+		}
 	}
+	return nil
 }
 
-func (ur *UserRepository) DeleteByID(id uint) {
-	ur.db.Where("id = ?", id).Delete(&models.User{})
+func (ur *UserRepository) DeleteByID(id uint) error {
+	var user models.User
+	if err := ur.db.Where("id = ?", id).Find(&user).Error; err != nil {
+		return err
+	}
+	ur.db.Delete(&user)
+	return nil
 }
 
-func (ur *UserRepository) DeleteAll(ids []uint) {
+func (ur *UserRepository) DeleteAll(ids []uint) error {
 	for _, id := range ids {
-		ur.db.Where("id = ?", id).Delete(&models.User{})
+		var user models.User
+		if err := ur.db.Where("id = ?", id).Find(&user).Error; err != nil {
+			return err
+		}
+		ur.db.Delete(&user)
 	}
+	return nil
 }
 
-func (ur *UserRepository) ExistsById(id uint) bool {
+func (ur *UserRepository) ExistsByID(id uint) bool {
 	var user models.User
 	return !ur.db.First(&user, id).RecordNotFound()
+}
+
+func (ur *UserRepository) ExistsByUsername(username string) bool {
+	var user models.User
+	return !ur.db.Where("username = ?", username).First(&user).RecordNotFound()
+}
+
+func (ur *UserRepository) ExistsByEmail(username string) bool {
+	var user models.User
+	return !ur.db.Where("email = ?", username).First(&user).RecordNotFound()
 }

@@ -11,6 +11,7 @@ func AuthAPIRouter(router *gin.RouterGroup) {
 	if err != nil {
 		log.Fatal(err.Error())
 	}
+
 	router.GET("/me", authController.GetMe)
 
 	router.POST("/register", authController.Register)

@@ -28,7 +28,7 @@ func main() {
 		routers.UserAPIRouter(apiRouter.Group("/user"))
 		routers.StoryAPIRouter(apiRouter.Group("/story"))
 		routers.AuthAPIRouter(apiRouter.Group("/auth"))
-	}	
+	}
 
 	PORT := os.Getenv("PORT")
 	if PORT == "" {
