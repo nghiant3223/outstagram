@@ -93,6 +93,6 @@ func (h *Hub) BroadcastSelective(conn *Connection, trasmitData TransmitData, con
 // WSMessageMultiplexer multiplexes message type and its corresponding handler
 func (h *Hub) WSMessageMultiplexer(from *Connection, transmitData TransmitData) {
 	switch transmitData.Type {
-		
+
 	}
 }

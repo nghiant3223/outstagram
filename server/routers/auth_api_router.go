@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"log"
 	"outstagram/server/config"
+	"outstagram/server/middlewares"
 )
 
 func AuthAPIRouter(router *gin.RouterGroup) {
@@ -12,7 +13,7 @@ func AuthAPIRouter(router *gin.RouterGroup) {
 		log.Fatal(err.Error())
 	}
 
-	router.GET("/me", authController.GetMe)
+	router.GET("/me", middlewares.VerifyToken, authController.GetMe)
 
 	router.POST("/register", authController.Register)
 	router.POST("/login", authController.Login)

@@ -9,3 +9,7 @@ func NewStringPointer(str string) *string {
 func NewTimePointer(t time.Time) *time.Time {
 	return &t
 }
+
+func GetUserIDFromToken(t interface{}) uint {
+	return uint(t.(float64))
+}

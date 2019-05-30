@@ -11,7 +11,7 @@ import (
 )
 
 func (ac *Controller) Login(c *gin.Context) {
-	var reqBody dtos.Login
+	var reqBody dtos.LoginRequest
 
 	if err := c.ShouldBindJSON(&reqBody); err != nil {
 		utils.ResponseWithError(c, http.StatusBadRequest, "Some required fields missing", nil)
@@ -40,14 +40,15 @@ func (ac *Controller) Login(c *gin.Context) {
 		utils.ResponseWithError(c, http.StatusInternalServerError, "Saving user failed", err.Error())
 		return
 	}
+
 	utils.ResponseWithSuccess(c, http.StatusOK, "Login successfully", token)
 }
 
 func (ac *Controller) Register(c *gin.Context) {
-	var reqBody dtos.Register
+	var reqBody dtos.RegisterRequest
 
 	if err := c.ShouldBindJSON(&reqBody); err != nil {
-		utils.ResponseWithError(c, http.StatusBadRequest, "Some required fields missing", nil)
+		utils.ResponseWithError(c, http.StatusBadRequest, "Some required fields missing", err.Error())
 		return
 	}
 
@@ -69,12 +70,13 @@ func (ac *Controller) Register(c *gin.Context) {
 		Username:     reqBody.Username,
 		Password:     reqBody.Password,
 		Email:        reqBody.Email,
+		Fullname:     reqBody.Fullname,
 		NotifBoardID: notifBoard.ID,
 		StoryBoardID: storyBoard.ID,
 	}
 
 	if err := ac.userService.Save(&newUser); err != nil {
-		utils.ResponseWithError(c, http.StatusInternalServerError, "Fail to create user", err.Error())
+		utils.ResponseWithError(c, http.StatusInternalServerError, "Creating user failed", err.Error())
 		return
 	}
 

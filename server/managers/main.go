@@ -1,11 +1,11 @@
 package managers
 
 import (
-	"time"
 	"net/http"
+	"time"
 
 	"github.com/gorilla/websocket"
-) 
+)
 
 // TransmitData is data transmitted between peers
 type TransmitData struct {
@@ -18,7 +18,6 @@ type WSMessage struct {
 	TransmitData
 	From *Connection
 }
-
 
 const (
 	// Time allowed to write a message to the peer.
