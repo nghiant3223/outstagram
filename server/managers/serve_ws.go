@@ -9,6 +9,7 @@ import (
 // ServeWs handles websocket requests from the peer.
 func ServeWs(c *gin.Context) {
 	ws, err := upgrader.Upgrade(c.Writer, c.Request, nil)
+
 	if err != nil {
 		log.Println(err)
 		return

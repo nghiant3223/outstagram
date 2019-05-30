@@ -23,7 +23,7 @@ func TestUserRepository_Save(t *testing.T) {
 		Email:        "me22232ee@gmail.com",
 		NotifBoardID: notifBoard.ID,
 		StoryBoardID: storyBoard.ID,
-		Phone:        utils.StringPointer("la230j")}
+		Phone:        utils.NewStringPointer("la230j")}
 	userRepo.Save(&user)
 
 	if dbConn.Where("username = ?", "52332").RecordNotFound() {
@@ -43,7 +43,7 @@ func TestUserRepository_ExistsById(t *testing.T) {
 		Email:        "mde23e@gmail.com",
 		NotifBoardID: notifBoard.ID,
 		StoryBoardID: storyBoard.ID,
-		Phone:        utils.StringPointer("033dd9")}
+		Phone:        utils.NewStringPointer("033dd9")}
 	userRepo.Save(&user)
 
 	if !userRepo.ExistsByID(user.ID) {
@@ -105,7 +105,7 @@ func TestUserRepository_Save2(t *testing.T) {
 		Email:        "me23e@gmail.com",
 		NotifBoardID: notifBoard.ID,
 		StoryBoardID: storyBoard.ID,
-		Phone:        utils.StringPointer("123")}
+		Phone:        utils.NewStringPointer("123")}
 	err := userRepo.Save(&user)
 	if err == nil {
 		t.Error("Fail at TestUserRepository_Save2")

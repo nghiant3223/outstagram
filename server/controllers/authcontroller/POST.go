@@ -34,7 +34,13 @@ func (ac *Controller) Register(c *gin.Context) {
 	storyBoard := models.StoryBoard{}
 	ac.nbService.Save(&notifBoard)
 	ac.sbService.Save(&storyBoard)
-	newUser := models.User{Username: reqBody.Username, Password: reqBody.Password, Email: reqBody.Email, NotifBoardID: notifBoard.ID, StoryBoardID: storyBoard.ID}
+	newUser := models.User{
+		Username:     reqBody.Username,
+		Password:     reqBody.Password,
+		Email:        reqBody.Email,
+		NotifBoardID: notifBoard.ID,
+		StoryBoardID: storyBoard.ID,
+	}
 
 	if err := ac.userService.Save(&newUser); err != nil {
 		utils.AbortRequestWithError(c, http.StatusInternalServerError, "Fail to create user", err.Error())
