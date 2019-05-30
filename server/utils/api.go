@@ -11,14 +11,24 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// AbortRequestWithError terminates request with error
+// AbortRequestWithError abort request with error, request stops at middleware in which this function is called
 func AbortRequestWithError(c *gin.Context, code int, message string, data interface{}) {
-	c.AbortWithStatusJSON(code, gin.H{"status": "error", "message": message, "data": data})
+	c.AbortWithStatusJSON(code, gin.H{"status": "error", "message": message, "description": data})
 }
 
-// AbortRequestWithSuccess terminates request with success
+// AbortRequestWithSuccess abort request with success, request stops at middleware in which this function is called
 func AbortRequestWithSuccess(c *gin.Context, code int, message string, data interface{}) {
 	c.AbortWithStatusJSON(code, gin.H{"status": "success", "message": message, "data": data})
+}
+
+// ResponseWithError responses request with an error
+func ResponseWithError(c *gin.Context, code int, message string, data interface{}) {
+	c.JSON(code, gin.H{"status": "error", "message": message, "description": data})
+}
+
+// ResponseWithSuccess responses request with a success
+func ResponseWithSuccess(c *gin.Context, code int, message string, data interface{}) {
+	c.JSON(code, gin.H{"status": "success", "message": message, "data": data})
 }
 
 // SignToken returns a token string
@@ -33,7 +43,7 @@ func SignToken(user *models.User) (string, error) {
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	tokenString, err := token.SignedString(os.Getenv("JWT_SECRET"))
+	tokenString, err := token.SignedString([]byte(os.Getenv("JWT_SECRET")))
 
 	if err != nil {
 		return "", err

@@ -1,12 +1,12 @@
 package managers
 
 import (
-	"time"
-	"log"
 	"encoding/json"
-	
+	"log"
+	"time"
+
 	"github.com/gorilla/websocket"
-)	
+)
 
 // Subscription is the wrapper for socket subscription
 type Subscription struct {
@@ -20,9 +20,11 @@ func (s Subscription) ReadPump() {
 		HubInstance.Unregister <- s
 		c.WS.Close()
 	}()
+
 	c.WS.SetReadLimit(maxMessageSize)
 	c.WS.SetReadDeadline(time.Now().Add(pongWait))
 	c.WS.SetPongHandler(func(string) error { c.WS.SetReadDeadline(time.Now().Add(pongWait)); return nil })
+
 	for {
 		var transmitData TransmitData
 		err := c.WS.ReadJSON(&transmitData)
@@ -45,6 +47,7 @@ func (s *Subscription) WritePump() {
 		ticker.Stop()
 		c.WS.Close()
 	}()
+
 	for {
 		select {
 		case transmitData, ok := <-c.Send:
