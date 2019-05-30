@@ -11,7 +11,7 @@ import (
 )
 
 func (ac *Controller) Login(c *gin.Context) {
-	var reqBody dtos.LoginRequest
+	var reqBody dtos.Login
 
 	if err := c.ShouldBindJSON(&reqBody); err != nil {
 		utils.ResponseWithError(c, http.StatusBadRequest, "Some required fields missing", nil)
@@ -44,7 +44,7 @@ func (ac *Controller) Login(c *gin.Context) {
 }
 
 func (ac *Controller) Register(c *gin.Context) {
-	var reqBody dtos.RegisterRequest
+	var reqBody dtos.Register
 
 	if err := c.ShouldBindJSON(&reqBody); err != nil {
 		utils.ResponseWithError(c, http.StatusBadRequest, "Some required fields missing", nil)

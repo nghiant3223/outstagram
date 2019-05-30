@@ -38,10 +38,6 @@ func (ur *UserRepository) FindByID(id uint) (*models.User, error) {
 	return &user, nil
 }
 
-func (ur *UserRepository) Create(user *models.User) error {
-	return ur.db.Create(user).Error
-}
-
 func (ur *UserRepository) Save(user *models.User) error {
 	return ur.db.Save(user).Error
 }
@@ -49,15 +45,6 @@ func (ur *UserRepository) Save(user *models.User) error {
 func (ur *UserRepository) SaveAll(users []*models.User) error {
 	for _, user := range users {
 		err := ur.db.Save(&user).Error
-		if err != nil {
-			return err
-		}
-	}
-	return nil
-}
-func (ur *UserRepository) CreateAll(users []*models.User) error {
-	for _, user := range users {
-		err := ur.db.Create(&user).Error
 		if err != nil {
 			return err
 		}
