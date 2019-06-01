@@ -62,17 +62,11 @@ func (ac *Controller) Register(c *gin.Context) {
 		return
 	}
 
-	notifBoard := models.NotifBoard{}
-	storyBoard := models.StoryBoard{}
-	ac.nbService.Save(&notifBoard)
-	ac.sbService.Save(&storyBoard)
 	newUser := models.User{
-		Username:     reqBody.Username,
-		Password:     reqBody.Password,
-		Email:        reqBody.Email,
-		Fullname:     reqBody.Fullname,
-		NotifBoardID: notifBoard.ID,
-		StoryBoardID: storyBoard.ID,
+		Username:   reqBody.Username,
+		Password:   reqBody.Password,
+		Email:      reqBody.Email,
+		Fullname:   reqBody.Fullname,
 	}
 
 	if err := ac.userService.Save(&newUser); err != nil {

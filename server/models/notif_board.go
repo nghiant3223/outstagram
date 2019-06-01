@@ -7,4 +7,5 @@ import (
 // NotifBoard entity
 type NotifBoard struct {
 	gorm.Model
+	UserID uint
 }

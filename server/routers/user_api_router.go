@@ -2,13 +2,13 @@ package routers
 
 import (
 	"log"
-	"outstagram/server/config"
+	"outstagram/server/configs"
 
 	"github.com/gin-gonic/gin"
 )
 
 func UserAPIRouter(router *gin.RouterGroup) {
-	userController, err := config.InitializeUserController()
+	userController, err := configs.InitializeUserController()
 	if err != nil {
 		log.Fatal(err.Error())
 	}

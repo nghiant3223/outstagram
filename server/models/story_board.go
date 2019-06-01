@@ -7,4 +7,5 @@ import (
 // StoryBoard entity
 type StoryBoard struct {
 	gorm.Model
+	UserID uint
 }

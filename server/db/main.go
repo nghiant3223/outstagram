@@ -27,6 +27,9 @@ func New() (*gorm.DB, error) {
 			log.Fatal(err.Error())
 		}
 
+		dbInstance.LogMode(true)
+		dbInstance.Debug()
+
 		dbInstance.SingularTable(true)
 		dbInstance.AutoMigrate(&models.User{}, &models.Comment{}, &models.Image{},
 			&models.Message{}, &models.NotifBoard{}, &models.Notification{}, &models.PostImage{},
