@@ -3,12 +3,12 @@ package routers
 import (
 	"github.com/gin-gonic/gin"
 	"log"
-	"outstagram/server/config"
+	"outstagram/server/configs"
 	"outstagram/server/middlewares"
 )
 
 func AuthAPIRouter(router *gin.RouterGroup) {
-	authController, err := config.InitializeAuthController()
+	authController, err := configs.InitializeAuthController()
 	if err != nil {
 		log.Fatal(err.Error())
 	}

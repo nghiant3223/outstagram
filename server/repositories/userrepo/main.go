@@ -35,6 +35,10 @@ func (ur *UserRepository) FindByID(id uint) (*models.User, error) {
 	if err := ur.db.Find(&user, "id = ?", id).Error; err != nil {
 		return nil, err
 	}
+
+	ur.db.Model(&user).Related(&user.NotifBoard, "NotifBoard")
+	ur.db.Model(&user).Related(&user.StoryBoard, "StoryBoard")
+	
 	return &user, nil
 }
 
@@ -51,6 +55,27 @@ func (ur *UserRepository) SaveAll(users []*models.User) error {
 	}
 	return nil
 }
+
+func (ur *UserRepository) Create(user *models.User) error {
+	if err := ur.db.Create(user).Error; err != nil {
+		return err
+	}
+
+	ur.db.Create(&models.NotifBoard{UserID:user.ID})
+	ur.db.Create(&models.StoryBoard{UserID:user.ID})
+	return nil
+}
+
+func (ur *UserRepository) CreateAll(users []*models.User) error {
+	for _, user := range users {
+		err := ur.db.Create(&user).Error
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 
 func (ur *UserRepository) DeleteByID(id uint) error {
 	var user models.User

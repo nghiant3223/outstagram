@@ -3,7 +3,7 @@
 //go:generate wire
 //+build !wireinject
 
-package config
+package configs
 
 import (
 	"outstagram/server/controllers/authcontroller"
