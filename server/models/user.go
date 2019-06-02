@@ -14,6 +14,7 @@ type User struct {
 	Fullname   string  `gorm:"not null"`
 	Phone      *string `gorm:"unique"`
 	Email      string  `gorm:"unique; not null"`
+	AvatarURL  *string
 	LastLogin  *time.Time
 	Gender     bool
 	NotifBoard NotifBoard

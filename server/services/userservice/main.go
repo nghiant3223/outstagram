@@ -43,3 +43,11 @@ func (us *UserService) CheckExistsByUsername(username string) bool {
 func (us *UserService) CheckExistsByEmail(email string) bool {
 	return us.userRepo.ExistsByEmail(email)
 }
+
+func (us *UserService) GetFollowers(userID uint) []models.User {
+	return us.userRepo.GetFollowers(userID)
+}
+
+func (us *UserService) GetFollowings(userID uint) []models.User {
+	return us.userRepo.GetFollowings(userID)
+}

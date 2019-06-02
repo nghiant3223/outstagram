@@ -111,7 +111,19 @@ func (ur *UserRepository) ExistsByUsername(username string) bool {
 	return !ur.db.Where("username = ?", username).First(&user).RecordNotFound()
 }
 
-func (ur *UserRepository) ExistsByEmail(username string) bool {
+func (ur *UserRepository) ExistsByEmail(email string) bool {
 	var user models.User
-	return !ur.db.Where("email = ?", username).First(&user).RecordNotFound()
+	return !ur.db.Where("email = ?", email).First(&user).RecordNotFound()
+}
+
+func (ur *UserRepository) GetFollowers(userID uint) []models.User {
+	var users []models.User
+	ur.db.Raw(`SELECT user.* FROM user INNER JOIN follows ON user_follow_id = user.id WHERE follows.user_followed_id = ?`, userID).Scan(&users)
+	return users
+}
+
+func (ur *UserRepository) GetFollowings(userID uint) []models.User {
+	var users []models.User
+	ur.db.Raw(`SELECT user.* FROM user INNER JOIN follows ON user_followed_id = user.id WHERE follows.user_follow_id = ?`, userID).Scan(&users)
+	return users
 }

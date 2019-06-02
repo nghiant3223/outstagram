@@ -21,8 +21,6 @@ func TestUserRepository_Save(t *testing.T) {
 		Username:     "52332",
 		Password:     "3422334",
 		Email:        "me22232ee@gmail.com",
-		NotifBoardID: notifBoard.ID,
-		StoryBoardID: storyBoard.ID,
 		Phone:        utils.NewStringPointer("la230j")}
 	userRepo.Save(&user)
 
@@ -41,8 +39,6 @@ func TestUserRepository_ExistsById(t *testing.T) {
 		Username:     "1asdd",
 		Password:     "3422334",
 		Email:        "mde23e@gmail.com",
-		NotifBoardID: notifBoard.ID,
-		StoryBoardID: storyBoard.ID,
 		Phone:        utils.NewStringPointer("033dd9")}
 	userRepo.Save(&user)
 
@@ -96,15 +92,10 @@ func TestUserRepository_FindByUsername(t *testing.T) {
 }
 
 func TestUserRepository_Save2(t *testing.T) {
-	notifBoard := models.NotifBoard{}
-	storyBoard := models.StoryBoard{}
-
 	user := models.User{
 		Username:     "1asd",
 		Password:     "3422334",
 		Email:        "me23e@gmail.com",
-		NotifBoardID: notifBoard.ID,
-		StoryBoardID: storyBoard.ID,
 		Phone:        utils.NewStringPointer("123")}
 	err := userRepo.Save(&user)
 	if err == nil {
@@ -122,5 +113,32 @@ func TestUserRepository_DeleteByID2(t *testing.T) {
 func TestUserRepository_ExistsById2(t *testing.T) {
 	if !userRepo.ExistsByID(14) {
 		t.Error("Fail at TestUserRepository_ExistsById2")
+	}
+}
+
+func TestUserRepository_GetFollowers(t *testing.T) {
+	users := userRepo.GetFollowers(42)
+	if len(users) != 2 {
+		t.Error("Length users < 2")
+	}
+	if !((users[0].ID == 43 || users[0].ID == 44) && (users[1].ID == 44 || users[1].ID == 43)) {
+		t.Error("Wrong followers")
+	}
+}
+
+func TestUserRepository_GetFollowings(t *testing.T) {
+	users := userRepo.GetFollowings(43)
+	if len(users) != 2 {
+		t.Error("Length users < 2")
+	}
+	if !((users[0].ID == 44 || users[0].ID == 42) && (users[1].ID == 44 || users[1].ID == 42)) {
+		t.Error("Wrong followers")
+	}
+}
+
+func TestUserRepository_GetFollowers2(t *testing.T) {
+	users := userRepo.GetFollowers(43)
+	if len(users) != 0 {
+		t.Error("Length users < 2")
 	}
 }

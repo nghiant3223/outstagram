@@ -30,6 +30,8 @@ func (ac *Controller) GetMe(c *gin.Context) {
 		NotifBoardID: user.NotifBoard.ID,
 		Phone:        user.Phone,
 		Gender:       user.Gender,
+		NumFollower:  len(ac.userService.GetFollowers(userID)),
+		NumFollowing: len(ac.userService.GetFollowings(userID)),
 	}
 
 	utils.ResponseWithSuccess(c, http.StatusOK, "Get user successfully", result)
