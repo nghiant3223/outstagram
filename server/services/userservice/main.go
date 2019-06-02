@@ -25,7 +25,6 @@ func (us *UserService) Save(user *models.User) error {
 	if us.userRepo.ExistsByID(user.ID) {
 		return us.userRepo.Save(user)
 	}
-
 	return us.userRepo.Create(user)
 }
 

@@ -19,6 +19,10 @@ func (ur *UserRepository) FindAll() ([]models.User, error) {
 	if err := ur.db.Find(&users).Error; err != nil {
 		return nil, err
 	}
+	for _, user := range users {
+		ur.db.Model(&user).Related(&user.NotifBoard, "NotifBoard")
+		ur.db.Model(&user).Related(&user.StoryBoard, "StoryBoard")
+	}
 	return users, nil
 }
 
@@ -27,6 +31,8 @@ func (ur *UserRepository) FindByUsername(username string) (*models.User, error) 
 	if err := ur.db.Find(&user, "username = ?", username).Error; err != nil {
 		return nil, err
 	}
+	ur.db.Model(&user).Related(&user.NotifBoard, "NotifBoard")
+	ur.db.Model(&user).Related(&user.StoryBoard, "StoryBoard")
 	return &user, nil
 }
 
@@ -35,10 +41,8 @@ func (ur *UserRepository) FindByID(id uint) (*models.User, error) {
 	if err := ur.db.Find(&user, "id = ?", id).Error; err != nil {
 		return nil, err
 	}
-
 	ur.db.Model(&user).Related(&user.NotifBoard, "NotifBoard")
 	ur.db.Model(&user).Related(&user.StoryBoard, "StoryBoard")
-	
 	return &user, nil
 }
 
