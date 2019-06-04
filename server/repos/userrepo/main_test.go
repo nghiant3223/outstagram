@@ -18,10 +18,10 @@ func TestUserRepository_Save(t *testing.T) {
 	dbConn.Save(&notifBoard)
 	dbConn.Save(&storyBoard)
 	user := models.User{
-		Username:     "52332",
-		Password:     "3422334",
-		Email:        "me22232ee@gmail.com",
-		Phone:        utils.NewStringPointer("la230j")}
+		Username: "52332",
+		Password: "3422334",
+		Email:    "me22232ee@gmail.com",
+		Phone:    utils.NewStringPointer("la230j")}
 	userRepo.Save(&user)
 
 	if dbConn.Where("username = ?", "52332").RecordNotFound() {
@@ -36,10 +36,10 @@ func TestUserRepository_ExistsById(t *testing.T) {
 	dbConn.Save(&notifBoard)
 	dbConn.Save(&storyBoard)
 	user := models.User{
-		Username:     "1asdd",
-		Password:     "3422334",
-		Email:        "mde23e@gmail.com",
-		Phone:        utils.NewStringPointer("033dd9")}
+		Username: "1asdd",
+		Password: "3422334",
+		Email:    "mde23e@gmail.com",
+		Phone:    utils.NewStringPointer("033dd9")}
 	userRepo.Save(&user)
 
 	if !userRepo.ExistsByID(user.ID) {
@@ -93,10 +93,10 @@ func TestUserRepository_FindByUsername(t *testing.T) {
 
 func TestUserRepository_Save2(t *testing.T) {
 	user := models.User{
-		Username:     "1asd",
-		Password:     "3422334",
-		Email:        "me23e@gmail.com",
-		Phone:        utils.NewStringPointer("123")}
+		Username: "1asd",
+		Password: "3422334",
+		Email:    "me23e@gmail.com",
+		Phone:    utils.NewStringPointer("123")}
 	err := userRepo.Save(&user)
 	if err == nil {
 		t.Error("Fail at TestUserRepository_Save2")

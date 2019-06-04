@@ -14,7 +14,6 @@ func AuthAPIRouter(router *gin.RouterGroup) {
 	}
 
 	router.GET("/me", middlewares.VerifyToken, authController.GetMe)
-
 	router.POST("/register", authController.Register)
 	router.POST("/login", authController.Login)
 }

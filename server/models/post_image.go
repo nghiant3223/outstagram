@@ -8,6 +8,9 @@ import (
 type PostImage struct {
 	gorm.Model
 	CommentableID uint
-	ReactableID uint
-	ImageID uint `gorm:"not null"`
+	ViewableID    uint
+	ReactableID   uint
+	ImageID       uint `gorm:"not null"`
+	PostID        uint
+	Image         Image `gorm:"foreignkey:ImageID"`
 }

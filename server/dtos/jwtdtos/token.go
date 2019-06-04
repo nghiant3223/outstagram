@@ -1,4 +1,4 @@
-package dtos
+package jwtdtos
 
 import (
 	"github.com/dgrijalva/jwt-go"

@@ -25,9 +25,10 @@ func main() {
 
 	apiRouter := router.Group("/api")
 	{
-		routers.UserAPIRouter(apiRouter.Group("/user"))
-		routers.StoryAPIRouter(apiRouter.Group("/story"))
 		routers.AuthAPIRouter(apiRouter.Group("/auth"))
+		routers.UserAPIRouter(apiRouter.Group("/users"))
+		routers.StoryAPIRouter(apiRouter.Group("/stories"))
+		routers.PostAPIRouter(apiRouter.Group("/posts"))
 	}
 
 	PORT := os.Getenv("PORT")
@@ -39,8 +40,7 @@ func main() {
 		return
 	}
 
-	err := router.Run(fmt.Sprintf(":%v", PORT))
-	if err != nil {
+	if err := router.Run(fmt.Sprintf(":%v", PORT)); err != nil {
 		log.Fatal(err.Error())
 	}
 }

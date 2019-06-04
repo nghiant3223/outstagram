@@ -1,4 +1,4 @@
-package dtos
+package authdtos
 
 type LoginRequest struct {
 	Username string `form:"username" json:"username" binding:"required"`

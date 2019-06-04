@@ -4,14 +4,14 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	"net/http"
-	"outstagram/server/dtos"
+	"outstagram/server/dtos/authdtos"
 	"outstagram/server/models"
 	"outstagram/server/utils"
 	"time"
 )
 
 func (ac *Controller) Login(c *gin.Context) {
-	var reqBody dtos.LoginRequest
+	var reqBody authdtos.LoginRequest
 
 	if err := c.ShouldBindJSON(&reqBody); err != nil {
 		utils.ResponseWithError(c, http.StatusBadRequest, "Some required fields missing", nil)
@@ -45,7 +45,7 @@ func (ac *Controller) Login(c *gin.Context) {
 }
 
 func (ac *Controller) Register(c *gin.Context) {
-	var reqBody dtos.RegisterRequest
+	var reqBody authdtos.RegisterRequest
 
 	if err := c.ShouldBindJSON(&reqBody); err != nil {
 		utils.ResponseWithError(c, http.StatusBadRequest, "Some required fields missing", err.Error())
@@ -63,10 +63,10 @@ func (ac *Controller) Register(c *gin.Context) {
 	}
 
 	newUser := models.User{
-		Username:   reqBody.Username,
-		Password:   reqBody.Password,
-		Email:      reqBody.Email,
-		Fullname:   reqBody.Fullname,
+		Username: reqBody.Username,
+		Password: reqBody.Password,
+		Email:    reqBody.Email,
+		Fullname: reqBody.Fullname,
 	}
 
 	if err := ac.userService.Save(&newUser); err != nil {

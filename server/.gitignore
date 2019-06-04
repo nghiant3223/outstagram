@@ -3,3 +3,5 @@ vendor/*
 gin-bin
 .idea/
 .env
+images/
+!images/.keep

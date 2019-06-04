@@ -7,5 +7,6 @@ import (
 // StoryImage entity
 type StoryImage struct {
 	gorm.Model
-	ImageID uint `gorm:"not null"`
+	ImageID uint  `gorm:"not null"`
+	Image   Image `gorm:"foreignkey:ImageID"`
 }

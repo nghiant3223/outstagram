@@ -1,4 +1,4 @@
-package dtos
+package authdtos
 
 import "time"
 
@@ -10,7 +10,7 @@ type GetMeResponse struct {
 	LastLogin    *time.Time `json:"lastLogin"`
 	Gender       bool       `json:"gender"`
 	NumFollower  int        `json:"numFollower"`
-	NumFollowing int       `json:"numFollowing"`
+	NumFollowing int        `json:"numFollowing"`
 	NotifBoardID uint       `json:"notifBoardID"`
 	StoryBoardID uint       `json:"storyBoardID"`
 }

@@ -7,13 +7,20 @@ package configs
 
 import (
 	"outstagram/server/controllers/authcontroller"
+	"outstagram/server/controllers/postcontroller"
 	"outstagram/server/controllers/usercontroller"
 	"outstagram/server/db"
-	"outstagram/server/repositories/nbrepo"
-	"outstagram/server/repositories/sbrepo"
-	"outstagram/server/repositories/userrepo"
-	"outstagram/server/services/nbservice"
-	"outstagram/server/services/sbservice"
+	"outstagram/server/repos/imgrepo"
+	"outstagram/server/repos/notifbrepo"
+	"outstagram/server/repos/postimgrepo"
+	"outstagram/server/repos/postrepo"
+	"outstagram/server/repos/storybrepo"
+	"outstagram/server/repos/userrepo"
+	"outstagram/server/services/imgservice"
+	"outstagram/server/services/notifbservice"
+	"outstagram/server/services/postimgservice"
+	"outstagram/server/services/postservice"
+	"outstagram/server/services/storybservice"
 	"outstagram/server/services/userservice"
 )
 
@@ -24,8 +31,8 @@ func InitializeUserController() (*usercontroller.Controller, error) {
 	if err != nil {
 		return nil, err
 	}
-	userRepository := userrepo.New(gormDB)
-	userService := userservice.New(userRepository)
+	userRepo := userrepo.New(gormDB)
+	userService := userservice.New(userRepo)
 	controller := usercontroller.New(userService)
 	return controller, nil
 }
@@ -35,12 +42,27 @@ func InitializeAuthController() (*authcontroller.Controller, error) {
 	if err != nil {
 		return nil, err
 	}
-	userRepository := userrepo.New(gormDB)
-	userService := userservice.New(userRepository)
-	notifBoardRepo := nbrepo.New(gormDB)
-	notifBoardService := nbservice.New(notifBoardRepo)
-	storyBoardRepo := sbrepo.New(gormDB)
-	storyBoardService := sbservice.New(storyBoardRepo)
+	userRepo := userrepo.New(gormDB)
+	userService := userservice.New(userRepo)
+	notifBoardRepo := notifbrepo.New(gormDB)
+	notifBoardService := notifbservice.New(notifBoardRepo)
+	storyBoardRepo := storybrepo.New(gormDB)
+	storyBoardService := storybservice.New(storyBoardRepo)
 	controller := authcontroller.New(userService, notifBoardService, storyBoardService)
+	return controller, nil
+}
+
+func InitializePostController() (*postcontroller.Controller, error) {
+	gormDB, err := db.New()
+	if err != nil {
+		return nil, err
+	}
+	postRepo := postrepo.New(gormDB)
+	postService := postservice.New(postRepo)
+	imageRepo := imgrepo.New(gormDB)
+	imageService := imgservice.New(imageRepo)
+	postImageRepo := postimgrepo.New(gormDB)
+	postImageService := postimgservice.New(postImageRepo)
+	controller := postcontroller.New(postService, imageService, postImageService)
 	return controller, nil
 }

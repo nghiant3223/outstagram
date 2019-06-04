@@ -2,52 +2,49 @@ package userservice
 
 import (
 	"outstagram/server/models"
-	"outstagram/server/repositories/userrepo"
+	"outstagram/server/repos/userrepo"
 )
 
 type UserService struct {
-	userRepo *userrepo.UserRepository
+	userRepo *userrepo.UserRepo
 }
 
-func New(userRepository *userrepo.UserRepository) *UserService {
-	return &UserService{userRepo: userRepository}
+func New(userRepo *userrepo.UserRepo) *UserService {
+	return &UserService{userRepo: userRepo}
 }
 
-func (us *UserService) FindByUsername(username string) (*models.User, error) {
-	return us.userRepo.FindByUsername(username)
+func (s *UserService) FindByUsername(username string) (*models.User, error) {
+	return s.userRepo.FindByUsername(username)
 }
 
-func (us *UserService) FindByID(id uint) (*models.User, error) {
-	return us.userRepo.FindByID(id)
+func (s *UserService) FindByID(id uint) (*models.User, error) {
+	return s.userRepo.FindByID(id)
 }
 
-func (us *UserService) Save(user *models.User) error {
-	if us.userRepo.ExistsByID(user.ID) {
-		return us.userRepo.Save(user)
-	}
-	return us.userRepo.Create(user)
+func (s *UserService) Save(user *models.User) error {
+	return s.userRepo.Save(user)
 }
 
-func (us *UserService) Delete(id uint) error {
-	return us.userRepo.DeleteByID(id)
+func (s *UserService) Delete(id uint) error {
+	return s.userRepo.DeleteByID(id)
 }
 
-func (us *UserService) CheckExistsByID(id uint) bool {
-	return us.userRepo.ExistsByID(id)
+func (s *UserService) CheckExistsByID(id uint) bool {
+	return s.userRepo.ExistsByID(id)
 }
 
-func (us *UserService) CheckExistsByUsername(username string) bool {
-	return us.userRepo.ExistsByUsername(username)
+func (s *UserService) CheckExistsByUsername(username string) bool {
+	return s.userRepo.ExistsByUsername(username)
 }
 
-func (us *UserService) CheckExistsByEmail(email string) bool {
-	return us.userRepo.ExistsByEmail(email)
+func (s *UserService) CheckExistsByEmail(email string) bool {
+	return s.userRepo.ExistsByEmail(email)
 }
 
-func (us *UserService) GetFollowers(userID uint) []models.User {
-	return us.userRepo.GetFollowers(userID)
+func (s *UserService) GetFollowers(userID uint) []models.User {
+	return s.userRepo.GetFollowers(userID)
 }
 
-func (us *UserService) GetFollowings(userID uint) []models.User {
-	return us.userRepo.GetFollowings(userID)
+func (s *UserService) GetFollowings(userID uint) []models.User {
+	return s.userRepo.GetFollowings(userID)
 }

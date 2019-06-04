@@ -4,14 +4,14 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"os"
-	"outstagram/server/dtos"
+	"outstagram/server/dtos/jwtdtos"
 	"outstagram/server/models"
 	"time"
 )
 
 // SignToken returns a token string
 func SignToken(user *models.User) (string, error) {
-	claims := dtos.Token{
+	claims := jwtdtos.Token{
 		UserID: user.ID,
 		StandardClaims: jwt.StandardClaims{
 			Issuer:  os.Getenv("JWT_ISSUER"),

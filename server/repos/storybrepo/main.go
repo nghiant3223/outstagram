@@ -1,4 +1,4 @@
-package sbrepo
+package storybrepo
 
 import (
 	"github.com/jinzhu/gorm"
@@ -13,6 +13,6 @@ func New(dbConnection *gorm.DB) *StoryBoardRepo {
 	return &StoryBoardRepo{db: dbConnection}
 }
 
-func (br *StoryBoardRepo) Save(board *models.StoryBoard) error {
-	return br.db.Create(board).Error
+func (r *StoryBoardRepo) Save(board *models.StoryBoard) error {
+	return r.db.Create(board).Error
 }

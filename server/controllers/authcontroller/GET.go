@@ -5,7 +5,7 @@ import (
 	"github.com/jinzhu/gorm"
 	"log"
 	"net/http"
-	"outstagram/server/dtos"
+	"outstagram/server/dtos/authdtos"
 	"outstagram/server/utils"
 )
 
@@ -21,7 +21,7 @@ func (ac *Controller) GetMe(c *gin.Context) {
 		return
 	}
 
-	result := dtos.GetMeResponse{
+	result := authdtos.GetMeResponse{
 		Username:     user.Username,
 		Fullname:     user.Fullname,
 		Email:        user.Email,
