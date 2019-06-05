@@ -29,3 +29,27 @@ func (r *CommentableRepo) GetCommentsByID(id uint) ([]models.Comment, error) {
 
 	return comments, nil
 }
+
+func (r *CommentableRepo) GetCommentsByIDWithLimit(id uint, limit int, offset int) ([]models.Comment, error) {
+	var commentable models.Commentable
+	var comments []models.Comment
+
+	if err := r.db.First(&commentable, id).Error; err != nil {
+		return nil, err
+	}
+
+	if err := r.db.Where("commentable_id = ?", commentable.ID).
+		Offset(offset).
+		Limit(limit).
+		Find(&comments).
+		Error; err != nil {
+		return nil, err
+	}
+
+	for i := 0; i < len(comments); i++ {
+		r.db.Model(&comments[i]).Related(&comments[i].User)
+		r.db.Model(&comments[i]).Related(&comments[i].Replies)
+	}
+
+	return comments, nil
+}

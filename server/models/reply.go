@@ -10,4 +10,5 @@ type Reply struct {
 	Content   string `gorm:"not null"`
 	CommentID uint
 	UserID    uint
+	User      User
 }
