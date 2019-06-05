@@ -7,5 +7,7 @@ import (
 // Reply entity
 type Reply struct {
 	gorm.Model
-	Content string `gorm:"not null"`
+	Content   string `gorm:"not null"`
+	CommentID uint
+	UserID    uint
 }

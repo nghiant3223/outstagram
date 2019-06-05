@@ -51,8 +51,7 @@ func (r *UserRepo) FindByID(id uint) (*models.User, error) {
 }
 
 func (r *UserRepo) Save(user *models.User) error {
-	err := r.db.Save(user).Error
-	if err != nil {
+	if err := r.db.Save(user).Error; err != nil {
 		return err
 	}
 
