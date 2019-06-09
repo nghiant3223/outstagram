@@ -22,7 +22,11 @@ func (s *UserService) FindByID(id uint) (*models.User, error) {
 }
 
 func (s *UserService) Save(user *models.User) error {
-	return s.userRepo.Save(user)
+	if s.CheckExistsByID(user.ID) {
+		return s.userRepo.Save(user)
+	}
+
+	return s.userRepo.Create(user)
 }
 
 func (s *UserService) Delete(id uint) error {

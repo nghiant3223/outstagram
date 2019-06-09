@@ -3,7 +3,7 @@ package postenums
 type Visibility int
 
 const (
-	PUBLIC Visibility = iota
-	ONLY_FOLLOWERS
-	PRIVATE
+	Public Visibility = iota
+	OnlyFollowers
+	Private
 )

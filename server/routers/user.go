@@ -13,5 +13,5 @@ func UserAPIRouter(router *gin.RouterGroup) {
 		log.Fatal(err.Error())
 	}
 
-	router.GET("/:username", userController.GetUserPassword)
+	router.GET("/:username", userController.GetUsersInfo)
 }

@@ -2,6 +2,7 @@ package authcontroller
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/jinzhu/copier"
 	"github.com/jinzhu/gorm"
 	"log"
 	"net/http"
@@ -12,7 +13,7 @@ import (
 func (ac *Controller) GetMe(c *gin.Context) {
 	userID, ok := utils.RetrieveUserID(c)
 	if !ok {
-		log.Fatalf("This route need VerifyToken middleware")
+		log.Fatal("This route needs verifyToken middleware")
 	}
 
 	user, err := ac.userService.FindByID(userID)
@@ -22,17 +23,15 @@ func (ac *Controller) GetMe(c *gin.Context) {
 	}
 
 	result := authdtos.GetMeResponse{
-		Username:     user.Username,
-		Fullname:     user.Fullname,
-		Email:        user.Email,
-		LastLogin:    user.LastLogin,
-		StoryBoardID: user.StoryBoard.ID,
-		NotifBoardID: user.NotifBoard.ID,
-		Phone:        user.Phone,
-		Gender:       user.Gender,
-		NumFollower:  len(ac.userService.GetFollowers(userID)),
-		NumFollowing: len(ac.userService.GetFollowings(userID)),
+		FollowerCount:  len(ac.userService.GetFollowers(userID)),
+		FollowingCount: len(ac.userService.GetFollowings(userID)),
+		NotifBoardID:   user.NotifBoard.ID,
+		StoryBoardID:   user.StoryBoard.ID,
+	}
+	if err := copier.Copy(&result, &user); err != nil {
+		utils.ResponseWithError(c, http.StatusInternalServerError, "Error while copying from model to reponse body", err.Error())
+		return
 	}
 
-	utils.ResponseWithSuccess(c, http.StatusOK, "Get user successfully", result)
+	utils.ResponseWithSuccess(c, http.StatusOK, "Fetch user successfully", result)
 }

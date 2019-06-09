@@ -4,5 +4,6 @@ import "github.com/jinzhu/gorm"
 
 type Commentable struct {
 	gorm.Model
-	Comments []Comment
+	Comments     []Comment
+	CommentCount int `gorm:"-"`
 }

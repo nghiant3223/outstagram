@@ -14,6 +14,7 @@ type Post struct {
 	CommentableID uint
 	ReactableID   uint
 	ViewableID    uint
-	PostImages    []PostImage `gorm:"foreignkey:PostID"`
 	UserID        uint
+	Images        []PostImage `gorm:"foreignkey:PostID"`
+	ImageCount    int         `gorm:"-"`
 }

@@ -2,6 +2,7 @@ package authcontroller
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/jinzhu/copier"
 	"github.com/jinzhu/gorm"
 	"net/http"
 	"outstagram/server/dtos/authdtos"
@@ -23,6 +24,7 @@ func (ac *Controller) Login(c *gin.Context) {
 		utils.ResponseWithError(c, http.StatusNotFound, "Username not found", nil)
 		return
 	}
+
 	if user.Password != reqBody.Password {
 		utils.ResponseWithError(c, http.StatusConflict, "Username or password incorrect", nil)
 		return
@@ -35,8 +37,7 @@ func (ac *Controller) Login(c *gin.Context) {
 	}
 
 	user.LastLogin = utils.NewTimePointer(time.Now())
-	err = ac.userService.Save(user)
-	if err != nil {
+	if err = ac.userService.Save(user); err != nil {
 		utils.ResponseWithError(c, http.StatusInternalServerError, "Saving user failed", err.Error())
 		return
 	}
@@ -62,11 +63,10 @@ func (ac *Controller) Register(c *gin.Context) {
 		return
 	}
 
-	newUser := models.User{
-		Username: reqBody.Username,
-		Password: reqBody.Password,
-		Email:    reqBody.Email,
-		Fullname: reqBody.Fullname,
+	newUser := models.User{}
+	if err := copier.Copy(&newUser, &reqBody); err != nil {
+		utils.ResponseWithError(c, http.StatusInternalServerError, "Error while copying from request body to model", err.Error())
+		return
 	}
 
 	if err := ac.userService.Save(&newUser); err != nil {

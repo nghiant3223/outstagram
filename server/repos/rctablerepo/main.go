@@ -13,7 +13,7 @@ func New(dbConnection *gorm.DB) *ReactableRepo {
 	return &ReactableRepo{db: dbConnection}
 }
 
-func (r *ReactableRepo) GetReactsByID(id uint) ([]models.React, error) {
+func (r *ReactableRepo) GetReacts(id uint) ([]models.React, error) {
 	var reactable models.Reactable
 	var reacts []models.React
 
@@ -29,9 +29,8 @@ func (r *ReactableRepo) GetReactsByID(id uint) ([]models.React, error) {
 	return reacts, nil
 }
 
-func (r *ReactableRepo) GetReactsByIDWithLimit(id uint, limit int, offset int) ([]models.React, error) {
+func (r *ReactableRepo) GetReactsWithLimit(id uint, limit uint, offset uint) (*models.Reactable, error) {
 	var reactable models.Reactable
-	var reacts []models.React
 
 	if err := r.db.First(&reactable, id).Error; err != nil {
 		return nil, err
@@ -40,14 +39,22 @@ func (r *ReactableRepo) GetReactsByIDWithLimit(id uint, limit int, offset int) (
 	if err := r.db.Where("reactable_id = ?", reactable.ID).
 		Offset(offset).
 		Limit(limit).
-		Find(&reacts).
+		Find(&reactable.Reacts).
 		Error; err != nil {
 		return nil, err
 	}
 
+	reacts := reactable.Reacts
 	for i := 0; i < len(reacts); i++ {
 		r.db.Model(&reacts[i]).Related(&reacts[i].User)
 	}
 
-	return reacts, nil
+	return &reactable, nil
+}
+
+func (r *ReactableRepo) GetReactCount(id uint) int {
+	var count int
+	r.db.Model(&models.React{}).Where("reactable_id = ?", id).Count(&count)
+	
+	return count
 }

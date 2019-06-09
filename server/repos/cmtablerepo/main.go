@@ -13,7 +13,7 @@ func New(dbConnection *gorm.DB) *CommentableRepo {
 	return &CommentableRepo{db: dbConnection}
 }
 
-func (r *CommentableRepo) GetCommentsByID(id uint) ([]models.Comment, error) {
+func (r *CommentableRepo) GetComments(id uint) ([]models.Comment, error) {
 	var commentable models.Commentable
 	var comments []models.Comment
 
@@ -30,9 +30,8 @@ func (r *CommentableRepo) GetCommentsByID(id uint) ([]models.Comment, error) {
 	return comments, nil
 }
 
-func (r *CommentableRepo) GetCommentsByIDWithLimit(id uint, limit int, offset int) ([]models.Comment, error) {
+func (r *CommentableRepo) GetCommentsWithLimit(id uint, limit uint, offset uint) (*models.Commentable, error) {
 	var commentable models.Commentable
-	var comments []models.Comment
 
 	if err := r.db.First(&commentable, id).Error; err != nil {
 		return nil, err
@@ -41,15 +40,24 @@ func (r *CommentableRepo) GetCommentsByIDWithLimit(id uint, limit int, offset in
 	if err := r.db.Where("commentable_id = ?", commentable.ID).
 		Offset(offset).
 		Limit(limit).
-		Find(&comments).
+		Find(&commentable.Comments).
 		Error; err != nil {
 		return nil, err
 	}
 
+	comments := commentable.Comments
 	for i := 0; i < len(comments); i++ {
 		r.db.Model(&comments[i]).Related(&comments[i].User)
 		r.db.Model(&comments[i]).Related(&comments[i].Replies)
+		comments[i].ReplyCount = len(comments[i].Replies)
 	}
 
-	return comments, nil
+	commentable.CommentCount = r.GetCommentCount(id)
+	return &commentable, nil
+}
+
+func (r *CommentableRepo) GetCommentCount(id uint) int {
+	var count int
+	r.db.Model(&models.Comment{}).Where("commentable_id = ?", id).Count(&count)
+	return count
 }

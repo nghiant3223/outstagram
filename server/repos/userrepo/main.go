@@ -55,6 +55,14 @@ func (r *UserRepo) Save(user *models.User) error {
 		return err
 	}
 
+	return nil
+}
+
+func (r *UserRepo) Create(user *models.User) error {
+	if err := r.db.Create(user).Error; err != nil {
+		return err
+	}
+
 	r.db.Create(&models.NotifBoard{UserID: user.ID})
 	r.db.Create(&models.StoryBoard{UserID: user.ID})
 	return nil

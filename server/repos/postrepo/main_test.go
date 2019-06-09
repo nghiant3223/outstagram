@@ -14,7 +14,7 @@ var prRepo = New(dbConn)
 func TestPostRepository_Create(t *testing.T) {
 	post := models.Post{
 		Content:    utils.NewStringPointer("lmao"),
-		Visibility: postenums.ONLY_FOLLOWERS,
+		Visibility: postenums.OnlyFollowers,
 	}
 
 	prRepo.Save(&post)

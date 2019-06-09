@@ -10,16 +10,22 @@ import (
 	"outstagram/server/controllers/postcontroller"
 	"outstagram/server/controllers/usercontroller"
 	"outstagram/server/db"
+	"outstagram/server/repos/cmtablerepo"
+	"outstagram/server/repos/cmtrepo"
 	"outstagram/server/repos/imgrepo"
 	"outstagram/server/repos/notifbrepo"
 	"outstagram/server/repos/postimgrepo"
 	"outstagram/server/repos/postrepo"
+	"outstagram/server/repos/rctablerepo"
 	"outstagram/server/repos/storybrepo"
 	"outstagram/server/repos/userrepo"
+	"outstagram/server/services/cmtableservice"
+	"outstagram/server/services/cmtservice"
 	"outstagram/server/services/imgservice"
 	"outstagram/server/services/notifbservice"
 	"outstagram/server/services/postimgservice"
 	"outstagram/server/services/postservice"
+	"outstagram/server/services/rctableservice"
 	"outstagram/server/services/storybservice"
 	"outstagram/server/services/userservice"
 )
@@ -63,6 +69,12 @@ func InitializePostController() (*postcontroller.Controller, error) {
 	imageService := imgservice.New(imageRepo)
 	postImageRepo := postimgrepo.New(gormDB)
 	postImageService := postimgservice.New(postImageRepo)
-	controller := postcontroller.New(postService, imageService, postImageService)
+	commentableRepo := cmtablerepo.New(gormDB)
+	commentableService := cmtableservice.New(commentableRepo)
+	commentRepo := cmtrepo.New(gormDB)
+	commentService := cmtservice.New(commentRepo)
+	reactableRepo := rctablerepo.New(gormDB)
+	reactableService := rctableservice.New(reactableRepo)
+	controller := postcontroller.New(postService, imageService, postImageService, commentableService, commentService, reactableService)
 	return controller, nil
 }

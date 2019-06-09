@@ -5,10 +5,11 @@ import (
 )
 
 type CreatePostResponse struct {
-	Content    *string              `json:"content" binding:"required"`
-	NumRead    int                  `json:"numRead" binding:"required"`
-	Visibility postenums.Visibility `json:"visibility" binding:"required"`
-	PostImages []PostImage          `json:"postImages" binding:"required"`
+	ID         uint                 `json:"id"`
+	Content    *string              `json:"content"`
+	NumRead    int                  `json:"numRead"`
+	Visibility postenums.Visibility `json:"visibility"`
+	Images     []PostImage          `json:"images"`
 }
 
 type CreatePostRequest struct {
