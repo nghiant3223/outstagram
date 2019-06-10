@@ -20,3 +20,7 @@ func (s *CommentService) GetReplyCount(commentableID uint) int {
 func (s *CommentService) GetRepliesWithLimit(id uint, limit uint, offset uint) (*models.Comment, error) {
 	return s.commentRepo.GetRepliesWithLimit(id, limit, offset)
 }
+
+func (s *CommentService) Save(comment *models.Comment) error {
+	return s.commentRepo.Save(comment)
+}

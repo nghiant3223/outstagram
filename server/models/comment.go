@@ -7,7 +7,7 @@ import (
 // Comment entity
 type Comment struct {
 	gorm.Model
-	Content       string `gorm:"not null"`
+	Content       *string `gorm:"not null"`
 	CommentableID uint
 	ReactableID   uint
 	UserID        uint

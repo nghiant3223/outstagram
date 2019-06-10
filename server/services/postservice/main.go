@@ -46,9 +46,10 @@ func (s *PostService) GetUsersPostsWithLimit(userID uint, limit uint, offset uin
 // GetPostByID lets user get the post that has the postID specified in parameter
 // User may be restricted to view the post due to its visibility. In such case, ErrRecordNotFound is returned.
 // `userID` is the id of user who wants to view the post
-func (s *PostService) GetPostByID(userID, postID uint) (*models.Post, error) {
+// Pass userID = 0 if an unauthenticated user want to access this post
+func (s *PostService) GetPostByID(postID, userID uint) (*models.Post, error) {
 	post, err := s.postRepo.FindByID(postID)
-	
+
 	if err != nil {
 		return nil, err
 	}
@@ -62,6 +63,10 @@ func (s *PostService) GetPostByID(userID, postID uint) (*models.Post, error) {
 	}
 
 	if post.Visibility == postenums.Private {
+		return nil, gorm.ErrRecordNotFound
+	}
+
+	if userID == 0 {
 		return nil, gorm.ErrRecordNotFound
 	}
 

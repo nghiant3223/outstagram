@@ -20,4 +20,5 @@ func PostAPIRouter(router *gin.RouterGroup) {
 	router.GET("/:postID/comments", postController.GetPostComments)
 
 	router.POST("/", postController.CreatePost)
+	router.POST("/:postID/comments", postController.CreatePostComment)
 }
