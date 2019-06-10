@@ -16,6 +16,8 @@ func PostAPIRouter(router *gin.RouterGroup) {
 	router.Use(middlewares.VerifyToken)
 
 	router.GET("/", postController.GetPosts)
+	router.GET("/:postID", postController.GetPost)
+	router.GET("/:postID/comments", postController.GetPostComments)
 
 	router.POST("/", postController.CreatePost)
 }

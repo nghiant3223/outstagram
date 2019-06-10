@@ -64,7 +64,8 @@ func InitializePostController() (*postcontroller.Controller, error) {
 		return nil, err
 	}
 	postRepo := postrepo.New(gormDB)
-	postService := postservice.New(postRepo)
+	userRepo := userrepo.New(gormDB)
+	postService := postservice.New(postRepo, userRepo)
 	imageRepo := imgrepo.New(gormDB)
 	imageService := imgservice.New(imageRepo)
 	postImageRepo := postimgrepo.New(gormDB)
@@ -75,6 +76,7 @@ func InitializePostController() (*postcontroller.Controller, error) {
 	commentService := cmtservice.New(commentRepo)
 	reactableRepo := rctablerepo.New(gormDB)
 	reactableService := rctableservice.New(reactableRepo)
-	controller := postcontroller.New(postService, imageService, postImageService, commentableService, commentService, reactableService)
+	userService := userservice.New(userRepo)
+	controller := postcontroller.New(postService, imageService, postImageService, commentableService, commentService, reactableService, userService)
 	return controller, nil
 }

@@ -35,7 +35,12 @@ func (r *PostRepo) FindByID(id uint) (*models.Post, error) {
 		return nil, err
 	}
 
+	r.db.Model(&post).Related(&post.User)
 	r.db.Model(&post).Related(&post.Images)
+	for j := 0; j < len(post.Images); j++ {
+		r.db.Model(&post.Images[j]).Related(&post.Images[j].Image)
+	}
+
 	return &post, nil
 }
 
@@ -53,6 +58,7 @@ func (r *PostRepo) GetPostsByUserIDWithLimit(userID uint, limit uint, offset uin
 		r.db.Model(&posts[i]).Related(&posts[i].Images)
 		for j := 0; j < len(posts[i].Images); j++ {
 			r.db.Model(&posts[i].Images[j]).Related(&posts[i].Images[j].Image)
+			r.db.Model(&posts[i]).Related(&posts[i].User)
 		}
 	}
 

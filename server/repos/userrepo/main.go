@@ -121,12 +121,21 @@ func (r *UserRepo) ExistsByEmail(email string) bool {
 
 func (r *UserRepo) GetFollowers(userID uint) []models.User {
 	var users []models.User
-	r.db.Raw(`SELECT user.* FROM user INNER JOIN follows ON user_follow_id = user.id WHERE follows.user_followed_id = ?`, userID).Scan(&users)
+	r.db.Raw("SELECT user.* FROM user INNER JOIN follows ON user_follow_id = user.id WHERE follows.user_followed_id = ?", userID).Scan(&users)
 	return users
 }
 
 func (r *UserRepo) GetFollowings(userID uint) []models.User {
 	var users []models.User
-	r.db.Raw(`SELECT user.* FROM user INNER JOIN follows ON user_followed_id = user.id WHERE follows.user_follow_id = ?`, userID).Scan(&users)
+	r.db.Raw("SELECT user.* FROM user INNER JOIN follows ON user_followed_id = user.id WHERE follows.user_follow_id = ?", userID).Scan(&users)
 	return users
+}
+
+func (r *UserRepo) CheckFollow(following, follower uint) (bool, error) {
+	rows, err := r.db.Raw("SELECT 1 FROM follows WHERE user_follow_id = ? AND user_followed_id = ?", following, follower).Rows()
+	if err != nil {
+		return false, err
+	}
+
+	return rows.Next(), nil
 }

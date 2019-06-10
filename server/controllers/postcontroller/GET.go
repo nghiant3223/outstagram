@@ -6,9 +6,11 @@ import (
 	"log"
 	"net/http"
 	"outstagram/server/dtos/postdtos"
+	"outstagram/server/models"
 	"outstagram/server/utils"
 )
 
+// GetPosts retrieves posts of an authenticated user
 func (pc *Controller) GetPosts(c *gin.Context) {
 	userID, ok := utils.RetrieveUserID(c)
 	if !ok {
@@ -17,13 +19,21 @@ func (pc *Controller) GetPosts(c *gin.Context) {
 
 	var reqBody postdtos.GetPostRequest
 	var resBody postdtos.GetPostResponse
+	var posts []models.Post
+	var err error
 
 	if err := c.ShouldBindQuery(&reqBody); err != nil {
 		utils.ResponseWithError(c, http.StatusBadRequest, "Invalid query parameter", err.Error())
 		return
 	}
 
-	posts, err := pc.postService.GetUsersPostsWithLimit(userID, reqBody.Limit, reqBody.Offset)
+	// If limit and offset are not specified
+	if reqBody.Offset == 0 && reqBody.Limit == 0 {
+		posts, err = pc.postService.GetUserPosts(userID)
+	} else {
+		posts, err = pc.postService.GetUsersPostsWithLimit(userID, reqBody.Limit, reqBody.Offset)
+	}
+
 	if err != nil {
 		if gorm.IsRecordNotFoundError(err) {
 			utils.ResponseWithSuccess(c, http.StatusNoContent, "No posts", nil)
@@ -35,32 +45,7 @@ func (pc *Controller) GetPosts(c *gin.Context) {
 	}
 
 	for _, post := range posts {
-		// Set basic post's info
-		dtoPost := postdtos.Post{
-			ID:         post.ID,
-			Content:    post.Content,
-			Visibility: post.Visibility,
-			ImageCount: len(post.Images),
-			NumRead:    post.NumRead,
-			ReactCount: pc.reactableService.GetReactCount(post.ReactableID),
-			Reactors:   pc.reactableService.GetReactors(post.ReactableID)}
-
-		// Map post's images to DTO
-		for _, postImage := range post.Images {
-			image := postImage.Image
-			dtoPostImage := postdtos.PostImage{
-				ID:     postImage.ID,
-				Tiny:   image.Tiny,
-				Origin: image.Origin,
-				Huge:   image.Huge, Big: image.Huge,
-				Medium: image.Medium,
-				Small:  image.Small,
-			}
-			dtoPost.Images = append(dtoPost.Images, dtoPostImage)
-		}
-
-		// Get post's comments
-		commentable, err := pc.commentableService.GetCommentsWithLimit(post.CommentableID, 5, 0)
+		dtoPost, err := pc.getPostInfo(&post)
 		if err != nil {
 			if gorm.IsRecordNotFoundError(err) {
 				utils.ResponseWithError(c, http.StatusNotFound, "Post not found", err.Error())
@@ -71,23 +56,105 @@ func (pc *Controller) GetPosts(c *gin.Context) {
 			return
 		}
 
-		// Mapping post's comments to DTO
-		dtoPost.CommentCount = commentable.CommentCount
-		for _, comment := range commentable.Comments {
-			dtoComment := postdtos.Comment{
-				ID:         comment.ID,
-				Content:    comment.Content,
-				ReplyCount: comment.ReplyCount,
-				CreatedAt:  comment.CreatedAt,
-				Fullname:   comment.User.Fullname,
-				UserID:     comment.UserID,
-				ReactCount: pc.reactableService.GetReactCount(comment.ReactableID),
-				Reactors:   pc.reactableService.GetReactors(comment.ReactableID)}
-			dtoPost.Comments = append(dtoPost.Comments, dtoComment)
-		}
-
-		resBody.Posts = append(resBody.Posts, dtoPost)
+		resBody.Posts = append(resBody.Posts, *dtoPost)
 	}
 
 	utils.ResponseWithSuccess(c, http.StatusOK, "Fetch user's posts successfully", resBody)
+}
+
+// GetPostComments retrieves comments of a post
+// User may not see the post's comment due to the visibility of the post
+func (pc *Controller) GetPostComments(c *gin.Context) {
+
+}
+
+// GetPostComments retrieves specific post
+// User may not see the post due to the visibility of the post
+func (pc *Controller) GetPost(c *gin.Context) {
+	userID, ok := utils.RetrieveUserID(c)
+	if !ok {
+		log.Fatal("This route needs verifyToken middleware")
+	}
+
+	postID, err := utils.StringToUint(c.Param("postID"))
+	if err != nil {
+		utils.ResponseWithError(c, http.StatusBadRequest, "Invalid parameter", err.Error())
+		return
+	}
+
+	post, err := pc.postService.GetPostByID(userID, postID)
+	if err != nil {
+		if gorm.IsRecordNotFoundError(err) {
+			utils.ResponseWithError(c, http.StatusNotFound, "Post not found", err.Error())
+			return
+		}
+
+		utils.ResponseWithError(c, http.StatusInternalServerError, "Error while retrieving post", err.Error())
+		return
+	}
+
+	dtoPost, err := pc.getPostInfo(post)
+	if err != nil {
+		if gorm.IsRecordNotFoundError(err) {
+			utils.ResponseWithError(c, http.StatusNotFound, "Post not found", err.Error())
+			return
+		}
+
+		utils.ResponseWithError(c, http.StatusInternalServerError, "Error while retrieving post", err.Error())
+		return
+	}
+
+	utils.ResponseWithSuccess(c, http.StatusOK, "Retrieve post successfully", dtoPost)
+}
+
+// getPostInfo retrieves basic information of post, including post's images, post's comments
+func (pc *Controller) getPostInfo(post *models.Post) (*postdtos.Post, error) {
+	// Set basic post's info
+	dtoPost := postdtos.Post{
+		ID:            post.ID,
+		Content:       post.Content,
+		Visibility:    post.Visibility,
+		ImageCount:    len(post.Images),
+		NumRead:       post.NumRead,
+		OwnerID:       post.UserID,
+		OwnerFullname: post.User.Fullname,
+		ReactCount:    pc.reactableService.GetReactCount(post.ReactableID),
+		Reactors:      pc.reactableService.GetReactors(post.ReactableID)}
+
+	// Map post's images to DTO
+	for _, postImage := range post.Images {
+		image := postImage.Image
+		dtoPostImage := postdtos.PostImage{
+			ID:     postImage.ID,
+			Tiny:   image.Tiny,
+			Origin: image.Origin,
+			Huge:   image.Huge, Big: image.Huge,
+			Medium: image.Medium,
+			Small:  image.Small,
+		}
+		dtoPost.Images = append(dtoPost.Images, dtoPostImage)
+	}
+
+	// Get post's comments
+	commentable, err := pc.commentableService.GetCommentsWithLimit(post.CommentableID, 5, 0)
+	if err != nil {
+		return nil, err
+	}
+
+	// Mapping post's comments to DTO
+	dtoPost.CommentCount = commentable.CommentCount
+	for _, comment := range commentable.Comments {
+		dtoComment := postdtos.Comment{
+			ID:            comment.ID,
+			Content:       comment.Content,
+			ReplyCount:    comment.ReplyCount,
+			CreatedAt:     comment.CreatedAt,
+			OwnerFullname: comment.User.Fullname,
+			OwnerID:       comment.UserID,
+			ReactCount:    pc.reactableService.GetReactCount(comment.ReactableID),
+			Reactors:      pc.reactableService.GetReactors(comment.ReactableID)}
+		dtoPost.Comments = append(dtoPost.Comments, dtoComment)
+	}
+
+	return &dtoPost, nil
 }

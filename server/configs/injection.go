@@ -61,6 +61,9 @@ func InitializePostController() (*postcontroller.Controller, error) {
 	wire.Build(
 		postcontroller.New,
 
+		userservice.New,
+		userrepo.New,
+
 		postservice.New,
 		postrepo.New,
 

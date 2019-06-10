@@ -3,7 +3,6 @@ package authcontroller
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/copier"
-	"github.com/jinzhu/gorm"
 	"net/http"
 	"outstagram/server/dtos/authdtos"
 	"outstagram/server/models"
@@ -19,14 +18,9 @@ func (ac *Controller) Login(c *gin.Context) {
 		return
 	}
 
-	user, err := ac.userService.FindByUsername(reqBody.Username)
-	if gorm.IsRecordNotFoundError(err) {
-		utils.ResponseWithError(c, http.StatusNotFound, "Username not found", nil)
-		return
-	}
-
-	if user.Password != reqBody.Password {
-		utils.ResponseWithError(c, http.StatusConflict, "Username or password incorrect", nil)
+	user, err := ac.userService.VerifyLogin(reqBody.Username, reqBody.Password)
+	if err != nil {
+		utils.ResponseWithError(c, http.StatusNotFound, "Login failed", err.Error())
 		return
 	}
 

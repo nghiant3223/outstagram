@@ -1,6 +1,8 @@
 package userservice
 
 import (
+	"errors"
+	"github.com/jinzhu/gorm"
 	"outstagram/server/models"
 	"outstagram/server/repos/userrepo"
 )
@@ -13,12 +15,21 @@ func New(userRepo *userrepo.UserRepo) *UserService {
 	return &UserService{userRepo: userRepo}
 }
 
-func (s *UserService) FindByUsername(username string) (*models.User, error) {
-	return s.userRepo.FindByUsername(username)
-}
-
 func (s *UserService) FindByID(id uint) (*models.User, error) {
 	return s.userRepo.FindByID(id)
+}
+
+func (s *UserService) VerifyLogin(username, password string) (*models.User, error) {
+	user, err := s.userRepo.FindByUsername(username)
+	if gorm.IsRecordNotFoundError(err) {
+		return nil, errors.New("username not found")
+	}
+
+	if user.Password != password {
+		return nil, errors.New("username not found")
+	}
+
+	return user, nil
 }
 
 func (s *UserService) Save(user *models.User) error {
