@@ -209,11 +209,11 @@ func (pc *Controller) CreateCommentReply(c *gin.Context) {
 	}
 
 	dtoReply := postdtos.Reply{
-		ID:reply.ID,
-		Content:reply.Content,
-		CreatedAt:reply.CreatedAt,
-		OwnerID: reply.UserID,
-		OwnerFullname:reply.User.Fullname}
+		ID:            reply.ID,
+		Content:       reply.Content,
+		CreatedAt:     reply.CreatedAt,
+		OwnerID:       reply.UserID,
+		OwnerFullname: reply.User.Fullname}
 
 	utils.ResponseWithSuccess(c, http.StatusOK, "Save reply successfully", dtoReply)
 }

@@ -226,6 +226,7 @@ func (pc *Controller) GetCommentReplies(c *gin.Context) {
 	resBody.ReplyCount = comment.ReplyCount
 	for _, reply := range comment.Replies {
 		dtoReply := postdtos.Reply{
+			ID:            reply.ID,
 			OwnerFullname: reply.User.Fullname,
 			OwnerID:       reply.User.ID,
 			CreatedAt:     reply.CreatedAt,

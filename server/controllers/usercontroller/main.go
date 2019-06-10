@@ -1,7 +1,7 @@
 package usercontroller
 
 import (
-	userservice "outstagram/server/services/userservice"
+	"outstagram/server/services/userservice"
 )
 
 type Controller struct {
