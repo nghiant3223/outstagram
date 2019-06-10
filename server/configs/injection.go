@@ -16,6 +16,7 @@ import (
 	"outstagram/server/repos/rctablerepo"
 	"outstagram/server/repos/storybrepo"
 	"outstagram/server/repos/userrepo"
+	"outstagram/server/repos/viewablerepo"
 	"outstagram/server/services/cmtableservice"
 	"outstagram/server/services/cmtservice"
 	"outstagram/server/services/imgservice"
@@ -25,6 +26,7 @@ import (
 	"outstagram/server/services/rctableservice"
 	"outstagram/server/services/storybservice"
 	"outstagram/server/services/userservice"
+	"outstagram/server/services/viewableservice"
 
 	"github.com/google/wire"
 )
@@ -60,6 +62,9 @@ func InitializeAuthController() (*authcontroller.Controller, error) {
 func InitializePostController() (*postcontroller.Controller, error) {
 	wire.Build(
 		postcontroller.New,
+
+		viewablerepo.New,
+		viewableservice.New,
 
 		userservice.New,
 		userrepo.New,

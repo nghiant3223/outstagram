@@ -10,7 +10,7 @@ type Post struct {
 	CommentCount  int                  `json:"commentCount"`
 	Visibility    postenums.Visibility `json:"visibility"`
 	Content       *string              `json:"content"`
-	NumRead       int                  `json:"numRead"`
+	NumViewed     int                  `json:"numViewed"`
 	Reactors      []string             `json:"reactors"`
 	ReactCount    int                  `json:"reactCount"`
 	OwnerFullname string               `json:"ownerFullname"`

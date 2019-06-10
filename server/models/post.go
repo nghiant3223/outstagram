@@ -9,7 +9,7 @@ import (
 type Post struct {
 	gorm.Model
 	Content       *string
-	NumRead       int                  `gorm:"default:0"`
+	NumViewed     int                  `gorm:"default:0"`
 	Visibility    postenums.Visibility `gorm:"default:0"`
 	CommentableID uint
 	ReactableID   uint

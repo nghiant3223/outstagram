@@ -58,3 +58,17 @@ func (r *CommentRepo) GetReplyCount(id uint) int {
 	r.db.Model(&models.Comment{}).Where("comment_id = ?", id).Count(&count)
 	return count
 }
+
+func (r *CommentRepo) Save(comment *models.Comment) error {
+	reactable := models.Reactable{}
+
+	r.db.Create(&reactable)
+	comment.ReactableID = reactable.ID
+	err := r.db.Create(&comment).Error
+	if err != nil {
+		return err
+	}
+
+	r.db.Model(&comment).Related(&comment.User)
+	return nil
+}
