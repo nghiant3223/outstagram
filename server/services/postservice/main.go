@@ -1,7 +1,6 @@
 package postservice
 
 import (
-	"fmt"
 	"github.com/jinzhu/gorm"
 	"outstagram/server/enums/postenums"
 	"outstagram/server/models"
@@ -44,16 +43,11 @@ func (s *PostService) GetUsersPostsWithLimit(userID uint, limit uint, offset uin
 	return posts, nil
 }
 
-func (s *PostService) FindByID(id uint) (*models.Post, error) {
-	return s.postRepo.FindByID(id)
-}
-
 // GetPostByID lets user get the post that has the postID specified in parameter
 // User may be restricted to view the post due to its visibility. In such case, ErrRecordNotFound is returned.
+// `userID` is the id of user who wants to view the post
 func (s *PostService) GetPostByID(userID, postID uint) (*models.Post, error) {
 	post, err := s.postRepo.FindByID(postID)
-	
-	fmt.Println("==========>",post.Images)
 	
 	if err != nil {
 		return nil, err

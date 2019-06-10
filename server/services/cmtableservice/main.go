@@ -20,3 +20,7 @@ func (s *CommentableService) GetCommentCount(commentableID uint) int {
 func (s *CommentableService) GetCommentsWithLimit(id uint, limit uint, offset uint) (*models.Commentable, error) {
 	return s.commentableRepo.GetCommentsWithLimit(id, limit, offset)
 }
+
+func (s *CommentableService) GetComments(id uint) (*models.Commentable, error) {
+	return s.commentableRepo.GetComments(id)
+}

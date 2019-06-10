@@ -13,21 +13,20 @@ func New(dbConnection *gorm.DB) *CommentableRepo {
 	return &CommentableRepo{db: dbConnection}
 }
 
-func (r *CommentableRepo) GetComments(id uint) ([]models.Comment, error) {
+func (r *CommentableRepo) GetComments(id uint) (*models.Commentable, error) {
 	var commentable models.Commentable
-	var comments []models.Comment
 
 	if err := r.db.First(&commentable, id).Error; err != nil {
 		return nil, err
 	}
 
-	r.db.Model(&commentable).Related(&comments)
-	for i := 0; i < len(comments); i++ {
-		r.db.Model(&comments[i]).Related(&comments[i].User)
-		r.db.Model(&comments[i]).Related(&comments[i].Replies)
+	r.db.Model(&commentable).Related(&commentable.Comments)
+	for i := 0; i < len(commentable.Comments); i++ {
+		r.db.Model(&commentable.Comments[i]).Related(&commentable.Comments[i].User)
+		r.db.Model(&commentable.Comments[i]).Related(&commentable.Comments[i].Replies)
 	}
 
-	return comments, nil
+	return &commentable, nil
 }
 
 func (r *CommentableRepo) GetCommentsWithLimit(id uint, limit uint, offset uint) (*models.Commentable, error) {
