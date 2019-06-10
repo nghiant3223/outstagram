@@ -169,36 +169,14 @@ func (pc *Controller) CreateCommentReply(c *gin.Context) {
 		return
 	}
 
-	post, err := pc.postService.GetPostByID(postID, userID)
-	if err != nil {
-		if gorm.IsRecordNotFoundError(err) {
-			utils.ResponseWithError(c, http.StatusNotFound, "Post not found", err.Error())
-			return
-		}
-
-		utils.ResponseWithError(c, http.StatusInternalServerError, "Error while retrieving post", err.Error())
-		return
-	}
-
 	commentID, err := utils.StringToUint(c.Param("cmtID"))
 	if err != nil {
 		utils.ResponseWithError(c, http.StatusBadRequest, "Invalid parameter", err.Error())
 		return
 	}
 
-	comment, err := pc.commentService.GetReplies(commentID)
-	if err != nil {
-		if gorm.IsRecordNotFoundError(err) {
-			utils.ResponseWithError(c, http.StatusNotFound, "Comment not found", err.Error())
-			return
-		}
-
-		utils.ResponseWithError(c, http.StatusInternalServerError, "Error while retrieving comment", err.Error())
-		return
-	}
-
-	if comment.CommentableID != post.CommentableID {
-		utils.ResponseWithError(c, http.StatusConflict, "Post does have such comment", nil)
+	if err := pc.checkValidComment(postID, userID, commentID); err != nil {
+		utils.ResponseWithError(c, err.StatusCode, err.Message, err.Data)
 		return
 	}
 

@@ -18,7 +18,7 @@ func (ac *Controller) GetMe(c *gin.Context) {
 
 	user, err := ac.userService.FindByID(userID)
 	if gorm.IsRecordNotFoundError(err) {
-		utils.ResponseWithError(c, http.StatusNotFound, "User not found", nil)
+		utils.ResponseWithError(c, 	http.StatusNotFound, "User not found", nil)
 		return
 	}
 

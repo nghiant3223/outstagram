@@ -1,6 +1,9 @@
 package postcontroller
 
 import (
+	"fmt"
+	"github.com/jinzhu/gorm"
+	"net/http"
 	"outstagram/server/dtos/postdtos"
 	"outstagram/server/models"
 	"outstagram/server/services/cmtableservice"
@@ -11,6 +14,7 @@ import (
 	"outstagram/server/services/rctableservice"
 	"outstagram/server/services/userservice"
 	"outstagram/server/services/viewableservice"
+	"outstagram/server/utils"
 )
 
 type Controller struct {
@@ -84,4 +88,34 @@ func (pc *Controller) getDTOComment(comment *models.Comment) postdtos.Comment {
 		OwnerID:       comment.UserID,
 		ReactCount:    pc.reactableService.GetReactCount(comment.ReactableID),
 		Reactors:      pc.reactableService.GetReactors(comment.ReactableID)}
+}
+
+// checkValidComment checks if:
+// 1. Comment, post exist
+// 2. Comment belongs to post
+// 3. User has the authorization to view the post, to comment the post
+func (pc *Controller) checkValidComment(postID, userID, commentID uint) *utils.HttpError {
+	post, err := pc.postService.GetPostByID(postID, userID)
+	if err != nil {
+		if gorm.IsRecordNotFoundError(err) {
+			return utils.NewHttpError(http.StatusNotFound, "Post not found", err.Error())
+		}
+
+		return utils.NewHttpError(http.StatusInternalServerError, "Error while retrieving post", err.Error())
+	}
+
+	comment, err := pc.commentService.FindByID(commentID)
+	if err != nil {
+		if gorm.IsRecordNotFoundError(err) {
+			return utils.NewHttpError(http.StatusNotFound, "Comment not found", err.Error())
+		}
+
+		return utils.NewHttpError(http.StatusInternalServerError, "Error while retrieving comment", err.Error())
+	}
+
+	if comment.CommentableID != post.CommentableID {
+		return utils.NewHttpError(http.StatusConflict, "Comment doesn't belong to post", fmt.Sprintf("commentID %v doesn't belong to postID %v", userID, postID))
+	}
+
+	return nil
 }

@@ -3,14 +3,16 @@ package cmtservice
 import (
 	"outstagram/server/models"
 	"outstagram/server/repos/cmtrepo"
+	"outstagram/server/repos/postrepo"
 )
 
 type CommentService struct {
 	commentRepo *cmtrepo.CommentRepo
+	postRepo    *postrepo.PostRepo
 }
 
-func New(commentRepo *cmtrepo.CommentRepo) *CommentService {
-	return &CommentService{commentRepo: commentRepo}
+func New(commentRepo *cmtrepo.CommentRepo, postRepo *postrepo.PostRepo) *CommentService {
+	return &CommentService{commentRepo: commentRepo, postRepo: postRepo}
 }
 
 func (s *CommentService) GetReplyCount(commentableID uint) int {
@@ -31,4 +33,8 @@ func (s *CommentService) SaveReply(reply *models.Reply) error {
 
 func (s *CommentService) GetReplies(id uint) (*models.Comment, error) {
 	return s.commentRepo.GetReplies(id)
+}
+
+func (s *CommentService) FindByID(id uint) (*models.Comment, error) {
+	return s.commentRepo.FindByID(id)
 }

@@ -86,3 +86,13 @@ func (r *CommentRepo) SaveReply(reply *models.Reply) error {
 	r.db.Model(&reply).Related(&reply.User)
 	return nil
 }
+
+func (r *CommentRepo) FindByID(id uint) (*models.Comment, error) {
+	var comment models.Comment
+
+	if err := r.db.First(&comment, id).Error; err != nil {
+		return nil, err
+	}
+
+	return &comment, nil
+}

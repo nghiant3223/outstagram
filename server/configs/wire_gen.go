@@ -75,7 +75,7 @@ func InitializePostController() (*postcontroller.Controller, error) {
 	commentableRepo := cmtablerepo.New(gormDB)
 	commentableService := cmtableservice.New(commentableRepo)
 	commentRepo := cmtrepo.New(gormDB)
-	commentService := cmtservice.New(commentRepo)
+	commentService := cmtservice.New(commentRepo, postRepo)
 	reactableRepo := rctablerepo.New(gormDB)
 	reactableService := rctableservice.New(reactableRepo)
 	userService := userservice.New(userRepo)
