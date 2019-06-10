@@ -5,6 +5,7 @@ package configs
 import (
 	"outstagram/server/controllers/authcontroller"
 	"outstagram/server/controllers/postcontroller"
+	"outstagram/server/controllers/rctcontroller"
 	"outstagram/server/controllers/usercontroller"
 	"outstagram/server/db"
 	"outstagram/server/repos/cmtablerepo"
@@ -89,4 +90,16 @@ func InitializePostController() (*postcontroller.Controller, error) {
 
 		db.New)
 	return &postcontroller.Controller{}, nil
+}
+
+func InitializeReactController() (*rctcontroller.Controller, error) {
+	wire.Build(
+		rctcontroller.New,
+
+		rctableservice.New,
+		rctablerepo.New,
+
+		db.New)
+
+	return &rctcontroller.Controller{}, nil
 }
