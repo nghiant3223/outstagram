@@ -33,6 +33,7 @@ func (pc *Controller) getDTOPost(post *models.Post) (*postdtos.Post, error) {
 	// Set basic post's info
 	dtoPost := postdtos.Post{
 		ID:            post.ID,
+		CreatedAt:     post.CreatedAt,
 		Content:       post.Content,
 		Visibility:    post.Visibility,
 		ImageCount:    len(post.Images),

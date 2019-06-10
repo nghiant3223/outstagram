@@ -13,20 +13,20 @@ func New(dbConnection *gorm.DB) *CommentRepo {
 	return &CommentRepo{db: dbConnection}
 }
 
-func (r *CommentRepo) GetReplies(id uint) ([]models.Reply, error) {
+func (r *CommentRepo) GetReplies(id uint) (*models.Comment, error) {
 	var comment models.Comment
-	var replies []models.Reply
 
 	if err := r.db.First(&comment, id).Error; err != nil {
 		return nil, err
 	}
 
-	r.db.Model(&comment).Related(&replies)
+	r.db.Model(&comment).Related(&comment.Replies)
+	replies := comment.Replies
 	for i := 0; i < len(replies); i++ {
 		r.db.Model(&replies[i]).Related(&replies[i].User)
 	}
 
-	return replies, nil
+	return &comment, nil
 }
 
 func (r *CommentRepo) GetRepliesWithLimit(id uint, limit uint, offset uint) (*models.Comment, error) {
@@ -61,7 +61,6 @@ func (r *CommentRepo) GetReplyCount(id uint) int {
 
 func (r *CommentRepo) Save(comment *models.Comment) error {
 	reactable := models.Reactable{}
-
 	r.db.Create(&reactable)
 	comment.ReactableID = reactable.ID
 	err := r.db.Create(&comment).Error
@@ -69,6 +68,21 @@ func (r *CommentRepo) Save(comment *models.Comment) error {
 		return err
 	}
 
+	// WARNING: This is for retrieve the information of the comment's owner
 	r.db.Model(&comment).Related(&comment.User)
+	return nil
+}
+
+func (r *CommentRepo) SaveReply(reply *models.Reply) error {
+	reactable := models.Reactable{}
+	r.db.Create(&reactable)
+	reply.ReactableID = reactable.ID
+	err := r.db.Create(&reply).Error
+	if err != nil {
+		return err
+	}
+
+	// WARNING: This is for retrieve the information of the reply's owner
+	r.db.Model(&reply).Related(&reply.User)
 	return nil
 }

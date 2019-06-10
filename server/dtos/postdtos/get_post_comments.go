@@ -6,5 +6,6 @@ type GetPostCommentsRequest struct {
 }
 
 type GetPostCommentsResponse struct {
-	Comments []Comment `json:"comments"`
+	Comments     []Comment `json:"comments"`
+	CommentCount int       `json:"commentCount"`
 }

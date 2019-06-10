@@ -26,6 +26,7 @@ func (r *CommentableRepo) GetComments(id uint) (*models.Commentable, error) {
 		r.db.Model(&commentable.Comments[i]).Related(&commentable.Comments[i].Replies)
 	}
 
+	commentable.CommentCount = r.GetCommentCount(id)
 	return &commentable, nil
 }
 

@@ -19,6 +19,7 @@ import (
 	"outstagram/server/repos/rctablerepo"
 	"outstagram/server/repos/storybrepo"
 	"outstagram/server/repos/userrepo"
+	"outstagram/server/repos/viewablerepo"
 	"outstagram/server/services/cmtableservice"
 	"outstagram/server/services/cmtservice"
 	"outstagram/server/services/imgservice"
@@ -28,6 +29,7 @@ import (
 	"outstagram/server/services/rctableservice"
 	"outstagram/server/services/storybservice"
 	"outstagram/server/services/userservice"
+	"outstagram/server/services/viewableservice"
 )
 
 // Injectors from injection.go:
@@ -77,6 +79,8 @@ func InitializePostController() (*postcontroller.Controller, error) {
 	reactableRepo := rctablerepo.New(gormDB)
 	reactableService := rctableservice.New(reactableRepo)
 	userService := userservice.New(userRepo)
-	controller := postcontroller.New(postService, imageService, postImageService, commentableService, commentService, reactableService, userService)
+	viewableRepo := viewablerepo.New(gormDB)
+	viewableService := viewableservice.New(viewableRepo)
+	controller := postcontroller.New(postService, imageService, postImageService, commentableService, commentService, reactableService, userService, viewableService)
 	return controller, nil
 }

@@ -119,6 +119,7 @@ func (pc *Controller) GetPostComments(c *gin.Context) {
 		resBody.Comments = append(resBody.Comments, pc.getDTOComment(&comment))
 	}
 
+	resBody.CommentCount = commentable.CommentCount
 	utils.ResponseWithSuccess(c, http.StatusOK, "Retrieve comments successfully", resBody)
 }
 
@@ -160,4 +161,77 @@ func (pc *Controller) GetPost(c *gin.Context) {
 	}
 
 	utils.ResponseWithSuccess(c, http.StatusOK, "Retrieve post successfully", dtoPost)
+}
+
+func (pc *Controller) GetCommentReplies(c *gin.Context) {
+	userID, ok := utils.RetrieveUserID(c)
+	if !ok {
+		log.Fatal("This route needs verifyToken middleware")
+	}
+
+	var reqBody postdtos.GetCommentRepliesRequest
+	var resBody postdtos.GetCommentRepliesResponse
+	var comment *models.Comment
+	var err error
+
+	if err := c.ShouldBindQuery(&reqBody); err != nil {
+		utils.ResponseWithError(c, http.StatusBadRequest, "Invalid query parameter", err.Error())
+		return
+	}
+
+	postID, err := utils.StringToUint(c.Param("postID"))
+	if err != nil {
+		utils.ResponseWithError(c, http.StatusBadRequest, "Invalid parameter", err.Error())
+		return
+	}
+
+	post, err := pc.postService.GetPostByID(postID, userID)
+	if err != nil {
+		if gorm.IsRecordNotFoundError(err) {
+			utils.ResponseWithError(c, http.StatusNotFound, "Post not found", err.Error())
+			return
+		}
+
+		utils.ResponseWithError(c, http.StatusInternalServerError, "Error while retrieving post", err.Error())
+		return
+	}
+
+	commentID, err := utils.StringToUint(c.Param("cmtID"))
+	if err != nil {
+		utils.ResponseWithError(c, http.StatusBadRequest, "Invalid parameter", err.Error())
+		return
+	}
+
+	if reqBody.Offset == 0 && reqBody.Limit == 0 {
+		comment, err = pc.commentService.GetReplies(commentID)
+	} else {
+		comment, err = pc.commentService.GetRepliesWithLimit(commentID, reqBody.Limit, reqBody.Offset)
+	}
+
+	if err != nil {
+		if gorm.IsRecordNotFoundError(err) {
+			utils.ResponseWithError(c, http.StatusNotFound, "Comment not found", err.Error())
+			return
+		}
+
+		utils.ResponseWithError(c, http.StatusInternalServerError, "Error while retrieving comment", err.Error())
+		return
+	}
+
+	if comment.CommentableID != post.CommentableID {
+		utils.ResponseWithError(c, http.StatusConflict, "Post does have such comment", nil)
+		return
+	}
+
+	resBody.ReplyCount = comment.ReplyCount
+	for _, reply := range comment.Replies {
+		dtoReply := postdtos.Reply{
+			OwnerFullname: reply.User.Fullname,
+			OwnerID:       reply.User.ID,
+			CreatedAt:     reply.CreatedAt,
+			Content:       reply.Content}
+		resBody.Replies = append(resBody.Replies, dtoReply)
+	}
+
+	utils.ResponseWithSuccess(c, http.StatusOK, "Retrieve replies successfully", resBody)
 }

@@ -7,8 +7,9 @@ import (
 // Reply entity
 type Reply struct {
 	gorm.Model
-	Content   string `gorm:"not null"`
-	CommentID uint
-	UserID    uint
-	User      User
+	Content     *string `gorm:"not null"`
+	CommentID   uint
+	UserID      uint
+	User        User
+	ReactableID uint
 }

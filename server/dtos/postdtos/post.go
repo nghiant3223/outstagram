@@ -1,9 +1,13 @@
 package postdtos
 
-import "outstagram/server/enums/postenums"
+import (
+	"outstagram/server/enums/postenums"
+	"time"
+)
 
 type Post struct {
 	ID            uint                 `json:"id"`
+	CreatedAt     time.Time            `json:"createdAt"`
 	Images        []PostImage          `json:"images"`
 	ImageCount    int                  `json:"imageCount"`
 	Comments      []Comment            `json:"comments"`

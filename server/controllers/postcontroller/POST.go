@@ -149,3 +149,71 @@ func (pc *Controller) ViewPost(c *gin.Context) {
 
 	utils.ResponseWithSuccess(c, http.StatusOK, "Save view successfully", nil)
 }
+
+func (pc *Controller) CreateCommentReply(c *gin.Context) {
+	userID, ok := utils.RetrieveUserID(c)
+	if !ok {
+		log.Fatal("This route needs verifyToken middleware")
+	}
+
+	var reqBody postdtos.CreateReplyRequest
+
+	if err := c.ShouldBindJSON(&reqBody); err != nil {
+		utils.ResponseWithError(c, http.StatusBadRequest, "Invalid query parameter", err.Error())
+		return
+	}
+
+	postID, err := utils.StringToUint(c.Param("postID"))
+	if err != nil {
+		utils.ResponseWithError(c, http.StatusBadRequest, "Invalid parameter", err.Error())
+		return
+	}
+
+	post, err := pc.postService.GetPostByID(postID, userID)
+	if err != nil {
+		if gorm.IsRecordNotFoundError(err) {
+			utils.ResponseWithError(c, http.StatusNotFound, "Post not found", err.Error())
+			return
+		}
+
+		utils.ResponseWithError(c, http.StatusInternalServerError, "Error while retrieving post", err.Error())
+		return
+	}
+
+	commentID, err := utils.StringToUint(c.Param("cmtID"))
+	if err != nil {
+		utils.ResponseWithError(c, http.StatusBadRequest, "Invalid parameter", err.Error())
+		return
+	}
+
+	comment, err := pc.commentService.GetReplies(commentID)
+	if err != nil {
+		if gorm.IsRecordNotFoundError(err) {
+			utils.ResponseWithError(c, http.StatusNotFound, "Comment not found", err.Error())
+			return
+		}
+
+		utils.ResponseWithError(c, http.StatusInternalServerError, "Error while retrieving comment", err.Error())
+		return
+	}
+
+	if comment.CommentableID != post.CommentableID {
+		utils.ResponseWithError(c, http.StatusConflict, "Post does have such comment", nil)
+		return
+	}
+
+	reply := models.Reply{UserID: userID, Content: reqBody.Content, CommentID: commentID}
+	if err := pc.commentService.SaveReply(&reply); err != nil {
+		utils.ResponseWithError(c, http.StatusInternalServerError, "Error while saving reply", err.Error())
+		return
+	}
+
+	dtoReply := postdtos.Reply{
+		ID:reply.ID,
+		Content:reply.Content,
+		CreatedAt:reply.CreatedAt,
+		OwnerID: reply.UserID,
+		OwnerFullname:reply.User.Fullname}
+
+	utils.ResponseWithSuccess(c, http.StatusOK, "Save reply successfully", dtoReply)
+}
