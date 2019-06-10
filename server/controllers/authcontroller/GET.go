@@ -29,7 +29,7 @@ func (ac *Controller) GetMe(c *gin.Context) {
 		StoryBoardID:   user.StoryBoard.ID,
 	}
 	if err := copier.Copy(&result, &user); err != nil {
-		utils.ResponseWithError(c, http.StatusInternalServerError, "Error while copying from model to reponse body", err.Error())
+		utils.ResponseWithError(c, http.StatusInternalServerError, "Error while copying from model to response body", err.Error())
 		return
 	}
 
