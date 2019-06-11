@@ -81,6 +81,7 @@ func (pc *Controller) CreatePostComment(c *gin.Context) {
 	}
 
 	var reqBody postdtos.CreateCommentRequest
+	var resBody postdtos.CreateCommentResponse
 
 	postID, err := utils.StringToUint(c.Param("postID"))
 	if err != nil {
@@ -110,8 +111,8 @@ func (pc *Controller) CreatePostComment(c *gin.Context) {
 		return
 	}
 
-	dtoComment := pc.getDTOComment(&comment)
-	utils.ResponseWithSuccess(c, http.StatusOK, "Save comment successfully", dtoComment)
+	resBody.Comment = pc.getDTOComment(&comment)
+	utils.ResponseWithSuccess(c, http.StatusCreated, "Save comment successfully", resBody)
 }
 
 func (pc *Controller) ViewPost(c *gin.Context) {
@@ -157,6 +158,7 @@ func (pc *Controller) CreateCommentReply(c *gin.Context) {
 	}
 
 	var reqBody postdtos.CreateReplyRequest
+	var resBody postdtos.CreateReplyResponse
 
 	if err := c.ShouldBindJSON(&reqBody); err != nil {
 		utils.ResponseWithError(c, http.StatusBadRequest, "Invalid query parameter", err.Error())
@@ -186,12 +188,6 @@ func (pc *Controller) CreateCommentReply(c *gin.Context) {
 		return
 	}
 
-	dtoReply := postdtos.Reply{
-		ID:            reply.ID,
-		Content:       reply.Content,
-		CreatedAt:     reply.CreatedAt,
-		OwnerID:       reply.UserID,
-		OwnerFullname: reply.User.Fullname}
-
-	utils.ResponseWithSuccess(c, http.StatusOK, "Save reply successfully", dtoReply)
+	resBody.Reply = pc.getDTOReply(&reply)
+	utils.ResponseWithSuccess(c, http.StatusCreated, "Save reply successfully", resBody)
 }

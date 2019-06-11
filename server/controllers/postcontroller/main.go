@@ -32,7 +32,7 @@ func New(postService *postservice.PostService, imageService *imgservice.ImageSer
 	return &Controller{postService: postService, imageService: imageService, postImageService: postImageService, commentableService: commentableService, commentService: commentService, reactableService: reactableService, userService: userService, viewableService: viewableService}
 }
 
-// getDTOPost maps basic information of post, including post's images, post's comments into a DTO object
+// getDTOPost maps post, including post's images, post's comments into a DTO object
 func (pc *Controller) getDTOPost(post *models.Post) (*postdtos.Post, error) {
 	// Set basic post's info
 	dtoPost := postdtos.Post{
@@ -77,7 +77,7 @@ func (pc *Controller) getDTOPost(post *models.Post) (*postdtos.Post, error) {
 	return &dtoPost, nil
 }
 
-// getDTOComment maps information of a comment into a DTO object
+// getDTOComment maps comment into a DTO object
 func (pc *Controller) getDTOComment(comment *models.Comment) postdtos.Comment {
 	return postdtos.Comment{
 		ID:            comment.ID,
@@ -88,6 +88,16 @@ func (pc *Controller) getDTOComment(comment *models.Comment) postdtos.Comment {
 		OwnerID:       comment.UserID,
 		ReactCount:    pc.reactableService.GetReactCount(comment.ReactableID),
 		Reactors:      pc.reactableService.GetReactors(comment.ReactableID)}
+}
+
+// getDTOComment maps a reply into a DTO object
+func (pc *Controller) getDTOReply(reply *models.Reply) postdtos.Reply {
+	return postdtos.Reply{
+		ID: reply.ID,
+		Content:       reply.Content,
+		CreatedAt:     reply.CreatedAt,
+		OwnerID:       reply.UserID,
+		OwnerFullname: reply.User.Fullname}
 }
 
 // checkValidComment checks if:
