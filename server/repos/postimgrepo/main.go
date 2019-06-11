@@ -27,3 +27,13 @@ func (r *PostImageRepo) Save(image *models.PostImage) error {
 
 	return r.db.Save(image).Error
 }
+
+func (r *PostImageRepo) FindByID(id uint) (*models.PostImage, error) {
+	var image models.PostImage
+
+	if err := r.db.First(&image, id).Error; err != nil {
+		return nil, err
+	}
+
+	return &image, nil
+}

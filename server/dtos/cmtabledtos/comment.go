@@ -1,4 +1,4 @@
-package dtos
+package cmtabledtos
 
 import "time"
 

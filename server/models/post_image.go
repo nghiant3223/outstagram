@@ -12,5 +12,6 @@ type PostImage struct {
 	ReactableID   uint
 	ImageID       uint `gorm:"not null"`
 	PostID        uint
+	Post          Post
 	Image         Image `gorm:"foreignkey:ImageID"`
 }

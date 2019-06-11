@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"outstagram/server/dtos/cmtabledtos"
+	postVisibility "outstagram/server/enums/postvisibility"
 	"outstagram/server/models"
 	"outstagram/server/utils"
 )
@@ -19,21 +20,21 @@ func (cc *Controller) CreateComment(c *gin.Context) {
 	var reqBody cmtabledtos.CreateCommentRequest
 	var resBody cmtabledtos.CreateCommentResponse
 
+	if err := c.ShouldBind(&reqBody); err != nil {
+		utils.ResponseWithError(c, http.StatusBadRequest, "Some required fields missing", err.Error())
+		return
+	}
+
 	cmtableID, err := utils.StringToUint(c.Param("cmtableID"))
 	if err != nil {
 		utils.ResponseWithError(c, http.StatusBadRequest, "Invalid parameter", err.Error())
 		return
 	}
 
-	if err := c.ShouldBind(&reqBody); err != nil {
-		utils.ResponseWithError(c, http.StatusBadRequest, "Some required fields missing", err.Error())
-		return
-	}
-
-	post, err := pc.postService.GetPostByID(postID, userID)
+	visibility, ownerID, err := cc.commentableService.GetVisibilityByID(cmtableID)
 	if err != nil {
 		if gorm.IsRecordNotFoundError(err) {
-			utils.ResponseWithError(c, http.StatusNotFound, "Post not found", err.Error())
+			utils.ResponseWithError(c, http.StatusNotFound, "Commentable not found", err.Error())
 			return
 		}
 
@@ -41,13 +42,33 @@ func (cc *Controller) CreateComment(c *gin.Context) {
 		return
 	}
 
-	comment := models.Comment{Content: reqBody.Content, UserID: userID, CommentableID: post.CommentableID}
-	if err := pc.commentService.Save(&comment); err != nil {
+	if visibility == postVisibility.Private {
+		if ownerID != userID {
+			utils.ResponseWithError(c, http.StatusForbidden, "Cannot access this commentable", nil)
+			return
+		}
+	} else if visibility == postVisibility.OnlyFollowers {
+		followed, err := cc.userService.CheckFollow(userID, ownerID)
+		if err != nil {
+			utils.ResponseWithError(c, http.StatusInternalServerError, "Error while checking follow", err.Error())
+			return
+		}
+
+		if !followed {
+			utils.ResponseWithError(c, http.StatusForbidden, "Cannot access this commentable", nil)
+			return
+		}
+	} else if visibility != postVisibility.Public {
+		utils.ResponseWithError(c, http.StatusConflict, "Invalid visibility of a commentable", visibility)
+		return
+	}
+
+	comment := models.Comment{Content: reqBody.Content, UserID: userID, CommentableID: cmtableID}
+	if err := cc.commentService.Save(&comment); err != nil {
 		utils.ResponseWithError(c, http.StatusInternalServerError, "Error while saving comment", err.Error())
 		return
 	}
 
-	resBody.Comment = pc.getDTOComment(&comment)
+	resBody.Comment = cc.getDTOComment(&comment)
 	utils.ResponseWithSuccess(c, http.StatusCreated, "Save comment successfully", resBody)
-
 }

@@ -1,7 +1,7 @@
 package postcontroller
 
 import (
-	"outstagram/server/dtos"
+	"outstagram/server/dtos/cmtabledtos"
 	"outstagram/server/dtos/postdtos"
 	"outstagram/server/models"
 	"outstagram/server/services/cmtableservice"
@@ -32,9 +32,9 @@ func New(postService *postservice.PostService, imageService *imgservice.ImageSer
 }
 
 // getDTOPost maps post, including post's images, post's comments into a DTO object
-func (pc *Controller) getDTOPost(post *models.Post) (*dtos.Post, error) {
+func (pc *Controller) getDTOPost(post *models.Post) (*postdtos.Post, error) {
 	// Set basic post's info
-	dtoPost := dtos.Post{
+	dtoPost := postdtos.Post{
 		ID:            post.ID,
 		CreatedAt:     post.CreatedAt,
 		Content:       post.Content,
@@ -76,9 +76,9 @@ func (pc *Controller) getDTOPost(post *models.Post) (*dtos.Post, error) {
 	return &dtoPost, nil
 }
 
-// getDTOComment maps comment into a DTO object
-func (pc *Controller) getDTOComment(comment *models.Comment) dtos.Comment {
-	return dtos.Comment{
+//getDTOComment maps comment into a DTO object
+func (pc *Controller) getDTOComment(comment *models.Comment) postdtos.Comment {
+	return postdtos.Comment{
 		ID:            comment.ID,
 		Content:       comment.Content,
 		ReplyCount:    comment.ReplyCount,
@@ -90,8 +90,8 @@ func (pc *Controller) getDTOComment(comment *models.Comment) dtos.Comment {
 }
 
 // getDTOReply maps a reply into a DTO object
-func (pc *Controller) getDTOReply(reply *models.Reply) dtos.Reply {
-	return dtos.Reply{
+func (pc *Controller) getDTOReply(reply *models.Reply) cmtabledtos.Reply {
+	return cmtabledtos.Reply{
 		ID:            reply.ID,
 		Content:       reply.Content,
 		CreatedAt:     reply.CreatedAt,

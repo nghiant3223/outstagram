@@ -119,6 +119,15 @@ func InitializeCommentableController() (*cmtablecontroller.Controller, error) {
 		cmtableservice.New,
 		cmtablerepo.New,
 
+		cmtservice.New,
+		cmtrepo.New,
+
+		userservice.New,
+		userrepo.New,
+
+		rctableservice.New,
+		rctablerepo.New,
+
 		db.New)
 
 	return &cmtablecontroller.Controller{}, nil

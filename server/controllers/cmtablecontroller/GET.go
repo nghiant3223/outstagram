@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"outstagram/server/dtos/cmtabledtos"
+	postVisibility "outstagram/server/enums/postvisibility"
 	"outstagram/server/models"
 	"outstagram/server/utils"
 )
@@ -26,16 +27,16 @@ func (cc *Controller) GetComments(c *gin.Context) {
 		return
 	}
 
-	postID, err := utils.StringToUint(c.Param("postID"))
+	cmtableID, err := utils.StringToUint(c.Param("cmtableID"))
 	if err != nil {
 		utils.ResponseWithError(c, http.StatusBadRequest, "Invalid parameter", err.Error())
 		return
 	}
 
-	post, err := pc.postService.GetPostByID(postID, userID)
+	visibility, ownerID, err := cc.commentableService.GetVisibilityByID(cmtableID)
 	if err != nil {
 		if gorm.IsRecordNotFoundError(err) {
-			utils.ResponseWithError(c, http.StatusNotFound, "Post not found", err.Error())
+			utils.ResponseWithError(c, http.StatusNotFound, "Commentable not found", err.Error())
 			return
 		}
 
@@ -43,11 +44,33 @@ func (cc *Controller) GetComments(c *gin.Context) {
 		return
 	}
 
+	if visibility == postVisibility.Private {
+		if ownerID != userID {
+			utils.ResponseWithError(c, http.StatusForbidden, "Cannot access this commentable", nil)
+			return
+		}
+	} else if visibility == postVisibility.OnlyFollowers {
+		followed, err := cc.userService.CheckFollow(userID, ownerID)
+		if err != nil {
+			utils.ResponseWithError(c, http.StatusInternalServerError, "Error while checking follow", err.Error())
+			return
+		}
+
+		if !followed {
+			utils.ResponseWithError(c, http.StatusForbidden, "Cannot access this commentable", nil)
+			return
+		}
+	} else if visibility != postVisibility.Public {
+		utils.ResponseWithError(c, http.StatusConflict, "Invalid visibility of a commentable", visibility)
+		return
+	}
+
+
 	// If limit and offset are not specified
 	if reqBody.Offset == 0 && reqBody.Limit == 0 {
-		commentable, err = pc.commentableService.GetComments(post.CommentableID)
+		commentable, err = cc.commentableService.GetComments(cmtableID)
 	} else {
-		commentable, err = pc.commentableService.GetCommentsWithLimit(post.CommentableID, reqBody.Limit, reqBody.Offset)
+		commentable, err = cc.commentableService.GetCommentsWithLimit(cmtableID, reqBody.Limit, reqBody.Offset)
 	}
 
 	if err != nil {
@@ -61,7 +84,7 @@ func (cc *Controller) GetComments(c *gin.Context) {
 	}
 
 	for _, comment := range commentable.Comments {
-		resBody.Comments = append(resBody.Comments, pc.getDTOComment(&comment))
+		resBody.Comments = append(resBody.Comments, cc.getDTOComment(&comment))
 	}
 
 	resBody.CommentCount = commentable.CommentCount

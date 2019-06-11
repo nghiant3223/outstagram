@@ -1,7 +1,10 @@
 package cmtablerepo
 
 import (
+	"errors"
+	"fmt"
 	"github.com/jinzhu/gorm"
+	postVisibility "outstagram/server/enums/postvisibility"
 	"outstagram/server/models"
 )
 
@@ -60,4 +63,27 @@ func (r *CommentableRepo) GetCommentCount(id uint) int {
 	var count int
 	r.db.Model(&models.Comment{}).Where("commentable_id = ?", id).Count(&count)
 	return count
+}
+
+func (r *CommentableRepo) GetVisibility(id uint) (postVisibility.Visibility, uint, error) {
+	var commentable models.Commentable
+	var post models.Post
+	var postImage models.PostImage
+
+	if err := r.db.First(&commentable, id).Error; err != nil {
+		return 0, 0, nil
+	}
+
+	r.db.Model(&commentable).Related(&post)
+	if post.ID != 0 {
+		return post.Visibility, post.UserID, nil
+	}
+
+	r.db.Model(&commentable).Related(&postImage)
+	if postImage.ID != 0 {
+		r.db.Model(&postImage).Related(&postImage.Post)
+		return postImage.Post.Visibility, postImage.Post.UserID, nil
+	}
+
+	return 0, 0, errors.New(fmt.Sprintf("Database error, invalid use of commentable_id = %v", id))
 }

@@ -111,6 +111,12 @@ func InitializeCommentableController() (*cmtablecontroller.Controller, error) {
 	}
 	commentableRepo := cmtablerepo.New(gormDB)
 	commentableService := cmtableservice.New(commentableRepo)
-	controller := cmtablecontroller.New(commentableService)
+	commentRepo := cmtrepo.New(gormDB)
+	commentService := cmtservice.New(commentRepo)
+	userRepo := userrepo.New(gormDB)
+	userService := userservice.New(userRepo)
+	reactableRepo := rctablerepo.New(gormDB)
+	reactableService := rctableservice.New(reactableRepo)
+	controller := cmtablecontroller.New(commentableService, commentService, userService, reactableService)
 	return controller, nil
 }

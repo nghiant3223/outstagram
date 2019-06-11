@@ -1,6 +1,7 @@
 package cmtableservice
 
 import (
+	postVisibility "outstagram/server/enums/postvisibility"
 	"outstagram/server/models"
 	"outstagram/server/repos/cmtablerepo"
 )
@@ -23,4 +24,8 @@ func (s *CommentableService) GetCommentsWithLimit(id uint, limit uint, offset ui
 
 func (s *CommentableService) GetComments(id uint) (*models.Commentable, error) {
 	return s.commentableRepo.GetComments(id)
+}
+
+func (s *CommentableService) GetVisibilityByID(id uint) (postVisibility.Visibility, uint, error) {
+	return s.commentableRepo.GetVisibility(id)
 }
