@@ -177,13 +177,13 @@ func (pc *Controller) CreateCommentReply(c *gin.Context) {
 		return
 	}
 
-	if err := pc.checkValidComment(postID, userID, commentID); err != nil {
+	if err := pc.commentService.CheckValidComment(postID, userID, commentID); err != nil {
 		utils.ResponseWithError(c, err.StatusCode, err.Message, err.Data)
 		return
 	}
 
 	reply := models.Reply{UserID: userID, Content: reqBody.Content, CommentID: commentID}
-	if err := pc.commentService.SaveReply(&reply); err != nil {
+	if err := pc.replyService.Save(&reply); err != nil {
 		utils.ResponseWithError(c, http.StatusInternalServerError, "Error while saving reply", err.Error())
 		return
 	}

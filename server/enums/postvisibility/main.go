@@ -1,4 +1,4 @@
-package postenums
+package postVisibility
 
 type Visibility int
 

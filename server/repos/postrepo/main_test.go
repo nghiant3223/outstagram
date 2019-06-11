@@ -2,7 +2,7 @@ package postrepo
 
 import (
 	"outstagram/server/db"
-	"outstagram/server/enums/postenums"
+	"outstagram/server/enums/postvisibility"
 	"outstagram/server/models"
 	"outstagram/server/utils"
 	"testing"
@@ -14,7 +14,7 @@ var prRepo = New(dbConn)
 func TestPostRepository_Create(t *testing.T) {
 	post := models.Post{
 		Content:    utils.NewStringPointer("lmao"),
-		Visibility: postenums.OnlyFollowers,
+		Visibility: postVisibility.OnlyFollowers,
 	}
 
 	prRepo.Save(&post)

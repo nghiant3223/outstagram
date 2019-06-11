@@ -18,9 +18,11 @@ import (
 	"outstagram/server/repos/postimgrepo"
 	"outstagram/server/repos/postrepo"
 	"outstagram/server/repos/rctablerepo"
+	"outstagram/server/repos/rctrepo"
+	"outstagram/server/repos/replyrepo"
 	"outstagram/server/repos/storybrepo"
 	"outstagram/server/repos/userrepo"
-	"outstagram/server/repos/viewablerepo"
+	"outstagram/server/repos/vwablerepo"
 	"outstagram/server/services/cmtableservice"
 	"outstagram/server/services/cmtservice"
 	"outstagram/server/services/imgservice"
@@ -28,9 +30,11 @@ import (
 	"outstagram/server/services/postimgservice"
 	"outstagram/server/services/postservice"
 	"outstagram/server/services/rctableservice"
+	"outstagram/server/services/rctservice"
+	"outstagram/server/services/replyservice"
 	"outstagram/server/services/storybservice"
 	"outstagram/server/services/userservice"
-	"outstagram/server/services/viewableservice"
+	"outstagram/server/services/vwableservice"
 )
 
 // Injectors from injection.go:
@@ -68,7 +72,8 @@ func InitializePostController() (*postcontroller.Controller, error) {
 	}
 	postRepo := postrepo.New(gormDB)
 	userRepo := userrepo.New(gormDB)
-	postService := postservice.New(postRepo, userRepo)
+	userService := userservice.New(userRepo)
+	postService := postservice.New(postRepo, userService)
 	imageRepo := imgrepo.New(gormDB)
 	imageService := imgservice.New(imageRepo)
 	postImageRepo := postimgrepo.New(gormDB)
@@ -76,13 +81,14 @@ func InitializePostController() (*postcontroller.Controller, error) {
 	commentableRepo := cmtablerepo.New(gormDB)
 	commentableService := cmtableservice.New(commentableRepo)
 	commentRepo := cmtrepo.New(gormDB)
-	commentService := cmtservice.New(commentRepo, postRepo)
+	commentService := cmtservice.New(commentRepo)
 	reactableRepo := rctablerepo.New(gormDB)
 	reactableService := rctableservice.New(reactableRepo)
-	userService := userservice.New(userRepo)
-	viewableRepo := viewablerepo.New(gormDB)
-	viewableService := viewableservice.New(viewableRepo)
-	controller := postcontroller.New(postService, imageService, postImageService, commentableService, commentService, reactableService, userService, viewableService)
+	viewableRepo := vwablerepo.New(gormDB)
+	viewableService := vwableservice.New(viewableRepo)
+	replyRepo := replyrepo.New(gormDB)
+	replyService := replyservice.New(replyRepo)
+	controller := postcontroller.New(postService, imageService, postImageService, commentableService, commentService, reactableService, userService, viewableService, replyService)
 	return controller, nil
 }
 
@@ -91,8 +97,8 @@ func InitializeReactController() (*rctcontroller.Controller, error) {
 	if err != nil {
 		return nil, err
 	}
-	reactableRepo := rctablerepo.New(gormDB)
-	reactableService := rctableservice.New(reactableRepo)
-	controller := rctcontroller.New(reactableService)
+	reactRepo := rctrepo.New(gormDB)
+	reactService := rctservice.New(reactRepo)
+	controller := rctcontroller.New(reactService)
 	return controller, nil
 }

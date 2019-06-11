@@ -1,4 +1,4 @@
-package viewablerepo
+package vwablerepo
 
 import (
 	"github.com/jinzhu/gorm"

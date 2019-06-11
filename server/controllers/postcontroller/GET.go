@@ -191,7 +191,7 @@ func (pc *Controller) GetCommentReplies(c *gin.Context) {
 		return
 	}
 
-	if err := pc.checkValidComment(postID, userID, commentID); err != nil {
+	if err := pc.commentService.CheckValidComment(postID, userID, commentID); err != nil {
 		utils.ResponseWithError(c, err.StatusCode, err.Message, err.Data)
 		return
 	}
@@ -209,12 +209,7 @@ func (pc *Controller) GetCommentReplies(c *gin.Context) {
 
 	resBody.ReplyCount = comment.ReplyCount
 	for _, reply := range comment.Replies {
-		dtoReply := postdtos.Reply{
-			ID:            reply.ID,
-			OwnerFullname: reply.User.Fullname,
-			OwnerID:       reply.User.ID,
-			CreatedAt:     reply.CreatedAt,
-			Content:       reply.Content}
+		dtoReply := pc.getDTOReply(&reply)
 		resBody.Replies = append(resBody.Replies, dtoReply)
 	}
 

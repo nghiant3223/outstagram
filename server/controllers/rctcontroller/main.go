@@ -1,15 +1,24 @@
 package rctcontroller
 
 import (
-	"outstagram/server/services/rctableservice"
+	"outstagram/server/services/rctservice"
 )
 
+//type Controller struct {
+//	reactableService *rctableservice.ReactableService
+//	reactService     *rctservice.ReactService
+//	postService      *postservice.PostService
+//	commentService   *cmtservice.CommentService
+//}
+//
+//func New(reactableService *rctableservice.ReactableService, reactService *rctservice.ReactService, postService *postservice.PostService, commentService *cmtservice.CommentService) *Controller {
+//	return &Controller{reactableService: reactableService, reactService: reactService, postService: postService, commentService: commentService}
+//}
+
 type Controller struct {
-	reactableService *rctableservice.ReactableService
+	reactService *rctservice.ReactService
 }
 
-func New(reactableService *rctableservice.ReactableService) *Controller {
-	return &Controller{reactableService: reactableService}
+func New(reactService *rctservice.ReactService, ) *Controller {
+	return &Controller{reactService: reactService}
 }
-
-

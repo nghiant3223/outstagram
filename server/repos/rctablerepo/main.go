@@ -55,6 +55,6 @@ func (r *ReactableRepo) GetReactsWithLimit(id uint, limit uint, offset uint) (*m
 func (r *ReactableRepo) GetReactCount(id uint) int {
 	var count int
 	r.db.Model(&models.React{}).Where("reactable_id = ?", id).Count(&count)
-	
+
 	return count
 }

@@ -1,14 +1,14 @@
-package viewableservice
+package vwableservice
 
 import (
-	"outstagram/server/repos/viewablerepo"
+	"outstagram/server/repos/vwablerepo"
 )
 
 type ViewableService struct {
-	viewableRepo *viewablerepo.ViewableRepo
+	viewableRepo *vwablerepo.ViewableRepo
 }
 
-func New(viewableRepo *viewablerepo.ViewableRepo) *ViewableService {
+func New(viewableRepo *vwablerepo.ViewableRepo) *ViewableService {
 	return &ViewableService{viewableRepo: viewableRepo}
 }
 

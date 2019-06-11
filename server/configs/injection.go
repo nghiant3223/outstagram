@@ -15,9 +15,11 @@ import (
 	"outstagram/server/repos/postimgrepo"
 	"outstagram/server/repos/postrepo"
 	"outstagram/server/repos/rctablerepo"
+	"outstagram/server/repos/rctrepo"
+	"outstagram/server/repos/replyrepo"
 	"outstagram/server/repos/storybrepo"
 	"outstagram/server/repos/userrepo"
-	"outstagram/server/repos/viewablerepo"
+	"outstagram/server/repos/vwablerepo"
 	"outstagram/server/services/cmtableservice"
 	"outstagram/server/services/cmtservice"
 	"outstagram/server/services/imgservice"
@@ -25,9 +27,11 @@ import (
 	"outstagram/server/services/postimgservice"
 	"outstagram/server/services/postservice"
 	"outstagram/server/services/rctableservice"
+	"outstagram/server/services/rctservice"
+	"outstagram/server/services/replyservice"
 	"outstagram/server/services/storybservice"
 	"outstagram/server/services/userservice"
-	"outstagram/server/services/viewableservice"
+	"outstagram/server/services/vwableservice"
 
 	"github.com/google/wire"
 )
@@ -64,8 +68,8 @@ func InitializePostController() (*postcontroller.Controller, error) {
 	wire.Build(
 		postcontroller.New,
 
-		viewablerepo.New,
-		viewableservice.New,
+		vwablerepo.New,
+		vwableservice.New,
 
 		userservice.New,
 		userrepo.New,
@@ -85,6 +89,9 @@ func InitializePostController() (*postcontroller.Controller, error) {
 		cmtservice.New,
 		cmtrepo.New,
 
+		replyservice.New,
+		replyrepo.New,
+
 		rctableservice.New,
 		rctablerepo.New,
 
@@ -96,8 +103,8 @@ func InitializeReactController() (*rctcontroller.Controller, error) {
 	wire.Build(
 		rctcontroller.New,
 
-		rctableservice.New,
-		rctablerepo.New,
+		rctservice.New,
+		rctrepo.New,
 
 		db.New)
 

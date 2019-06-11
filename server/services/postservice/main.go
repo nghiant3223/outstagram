@@ -2,21 +2,19 @@ package postservice
 
 import (
 	"github.com/jinzhu/gorm"
-	"outstagram/server/enums/postenums"
+	"outstagram/server/enums/postvisibility"
 	"outstagram/server/models"
-	"outstagram/server/repos/cmtablerepo"
 	"outstagram/server/repos/postrepo"
-	"outstagram/server/repos/userrepo"
+	"outstagram/server/services/userservice"
 )
 
 type PostService struct {
-	postRepo        *postrepo.PostRepo
-	userRepo        *userrepo.UserRepo
-	commentableRepo *cmtablerepo.CommentableRepo
+	postRepo    *postrepo.PostRepo
+	userService *userservice.UserService
 }
 
-func New(postRepo *postrepo.PostRepo, userRepo *userrepo.UserRepo) *PostService {
-	return &PostService{postRepo: postRepo, userRepo: userRepo}
+func New(postRepo *postrepo.PostRepo, userService *userservice.UserService) *PostService {
+	return &PostService{postRepo: postRepo, userService: userService}
 }
 
 func (s *PostService) Save(post *models.Post) error {
@@ -46,7 +44,6 @@ func (s *PostService) GetUsersPostsWithLimit(userID uint, limit uint, offset uin
 // GetPostByID lets user get the post that has the postID specified in parameter
 // User may be restricted to view the post due to its visibility. In such case, ErrRecordNotFound is returned.
 // `userID` is the id of user who wants to view the post
-// Pass userID = 0 if an unauthenticated user want to access this post
 func (s *PostService) GetPostByID(postID, userID uint) (*models.Post, error) {
 	post, err := s.postRepo.FindByID(postID)
 
@@ -58,11 +55,11 @@ func (s *PostService) GetPostByID(postID, userID uint) (*models.Post, error) {
 		return post, nil
 	}
 
-	if post.Visibility == postenums.Public {
+	if post.Visibility == postVisibility.Public {
 		return post, nil
 	}
 
-	if post.Visibility == postenums.Private {
+	if post.Visibility == postVisibility.Private {
 		return nil, gorm.ErrRecordNotFound
 	}
 
@@ -71,7 +68,7 @@ func (s *PostService) GetPostByID(postID, userID uint) (*models.Post, error) {
 	}
 
 	// If post.Visibility is OnlyFollowers
-	ok, err := s.userRepo.CheckFollow(userID, post.UserID)
+	ok, err := s.userService.CheckFollow(userID, post.UserID)
 	if err != nil {
 		return nil, err
 	}

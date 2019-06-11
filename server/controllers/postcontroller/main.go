@@ -1,9 +1,6 @@
 package postcontroller
 
 import (
-	"fmt"
-	"github.com/jinzhu/gorm"
-	"net/http"
 	"outstagram/server/dtos/postdtos"
 	"outstagram/server/models"
 	"outstagram/server/services/cmtableservice"
@@ -12,9 +9,9 @@ import (
 	"outstagram/server/services/postimgservice"
 	"outstagram/server/services/postservice"
 	"outstagram/server/services/rctableservice"
+	"outstagram/server/services/replyservice"
 	"outstagram/server/services/userservice"
-	"outstagram/server/services/viewableservice"
-	"outstagram/server/utils"
+	"outstagram/server/services/vwableservice"
 )
 
 type Controller struct {
@@ -25,11 +22,12 @@ type Controller struct {
 	commentService     *cmtservice.CommentService
 	reactableService   *rctableservice.ReactableService
 	userService        *userservice.UserService
-	viewableService    *viewableservice.ViewableService
+	viewableService    *vwableservice.ViewableService
+	replyService       *replyservice.ReplyService
 }
 
-func New(postService *postservice.PostService, imageService *imgservice.ImageService, postImageService *postimgservice.PostImageService, commentableService *cmtableservice.CommentableService, commentService *cmtservice.CommentService, reactableService *rctableservice.ReactableService, userService *userservice.UserService, viewableService *viewableservice.ViewableService) *Controller {
-	return &Controller{postService: postService, imageService: imageService, postImageService: postImageService, commentableService: commentableService, commentService: commentService, reactableService: reactableService, userService: userService, viewableService: viewableService}
+func New(postService *postservice.PostService, imageService *imgservice.ImageService, postImageService *postimgservice.PostImageService, commentableService *cmtableservice.CommentableService, commentService *cmtservice.CommentService, reactableService *rctableservice.ReactableService, userService *userservice.UserService, viewableService *vwableservice.ViewableService, replyService *replyservice.ReplyService) *Controller {
+	return &Controller{postService: postService, imageService: imageService, postImageService: postImageService, commentableService: commentableService, commentService: commentService, reactableService: reactableService, userService: userService, viewableService: viewableService, replyService:replyService}
 }
 
 // getDTOPost maps post, including post's images, post's comments into a DTO object
@@ -90,10 +88,10 @@ func (pc *Controller) getDTOComment(comment *models.Comment) postdtos.Comment {
 		Reactors:      pc.reactableService.GetReactors(comment.ReactableID)}
 }
 
-// getDTOComment maps a reply into a DTO object
+// getDTOReply maps a reply into a DTO object
 func (pc *Controller) getDTOReply(reply *models.Reply) postdtos.Reply {
 	return postdtos.Reply{
-		ID: reply.ID,
+		ID:            reply.ID,
 		Content:       reply.Content,
 		CreatedAt:     reply.CreatedAt,
 		OwnerID:       reply.UserID,
@@ -104,28 +102,28 @@ func (pc *Controller) getDTOReply(reply *models.Reply) postdtos.Reply {
 // 1. Comment, post exist
 // 2. Comment belongs to post
 // 3. User has the authorization to view the post, to comment the post
-func (pc *Controller) checkValidComment(postID, userID, commentID uint) *utils.HttpError {
-	post, err := pc.postService.GetPostByID(postID, userID)
-	if err != nil {
-		if gorm.IsRecordNotFoundError(err) {
-			return utils.NewHttpError(http.StatusNotFound, "Post not found", err.Error())
-		}
-
-		return utils.NewHttpError(http.StatusInternalServerError, "Error while retrieving post", err.Error())
-	}
-
-	comment, err := pc.commentService.FindByID(commentID)
-	if err != nil {
-		if gorm.IsRecordNotFoundError(err) {
-			return utils.NewHttpError(http.StatusNotFound, "Comment not found", err.Error())
-		}
-
-		return utils.NewHttpError(http.StatusInternalServerError, "Error while retrieving comment", err.Error())
-	}
-
-	if comment.CommentableID != post.CommentableID {
-		return utils.NewHttpError(http.StatusConflict, "Comment doesn't belong to post", fmt.Sprintf("commentID %v doesn't belong to postID %v", userID, postID))
-	}
-
-	return nil
-}
+//func (pc *Controller) checkValidComment(postID, userID, commentID uint) *utils.HttpError {
+//	post, err := pc.postService.GetPostByID(postID, userID)
+//	if err != nil {
+//		if gorm.IsRecordNotFoundError(err) {
+//			return utils.NewHttpError(http.StatusNotFound, "Post not found", err.Error())
+//		}
+//
+//		return utils.NewHttpError(http.StatusInternalServerError, "Error while retrieving post", err.Error())
+//	}
+//
+//	comment, err := pc.commentService.GetPostByID(commentID)
+//	if err != nil {
+//		if gorm.IsRecordNotFoundError(err) {
+//			return utils.NewHttpError(http.StatusNotFound, "Comment not found", err.Error())
+//		}
+//
+//		return utils.NewHttpError(http.StatusInternalServerError, "Error while retrieving comment", err.Error())
+//	}
+//
+//	if comment.CommentableID != post.CommentableID {
+//		return utils.NewHttpError(http.StatusConflict, "Comment doesn't belong to post", fmt.Sprintf("commentID %v doesn't belong to postID %v", userID, postID))
+//	}
+//
+//	return nil
+//}
