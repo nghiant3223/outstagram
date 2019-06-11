@@ -2,15 +2,15 @@ package cmtablecontroller
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/jinzhu/gorm"
 	"log"
 	"net/http"
 	"outstagram/server/dtos/cmtabledtos"
-	postVisibility "outstagram/server/enums/postvisibility"
 	"outstagram/server/models"
 	"outstagram/server/utils"
 )
 
+// CreateComment create comments of a post
+// User may not be able to create the post's comment due to the visibility of the post
 func (cc *Controller) CreateComment(c *gin.Context) {
 	userID, ok := utils.RetrieveUserID(c)
 	if !ok {
@@ -31,35 +31,8 @@ func (cc *Controller) CreateComment(c *gin.Context) {
 		return
 	}
 
-	visibility, ownerID, err := cc.commentableService.GetVisibilityByID(cmtableID)
-	if err != nil {
-		if gorm.IsRecordNotFoundError(err) {
-			utils.ResponseWithError(c, http.StatusNotFound, "Commentable not found", err.Error())
-			return
-		}
-
-		utils.ResponseWithError(c, http.StatusInternalServerError, "Error while retrieving post", err.Error())
-		return
-	}
-
-	if visibility == postVisibility.Private {
-		if ownerID != userID {
-			utils.ResponseWithError(c, http.StatusForbidden, "Cannot access this commentable", nil)
-			return
-		}
-	} else if visibility == postVisibility.OnlyFollowers {
-		followed, err := cc.userService.CheckFollow(userID, ownerID)
-		if err != nil {
-			utils.ResponseWithError(c, http.StatusInternalServerError, "Error while checking follow", err.Error())
-			return
-		}
-
-		if !followed {
-			utils.ResponseWithError(c, http.StatusForbidden, "Cannot access this commentable", nil)
-			return
-		}
-	} else if visibility != postVisibility.Public {
-		utils.ResponseWithError(c, http.StatusConflict, "Invalid visibility of a commentable", visibility)
+	if err := cc.checkUserAuthorizationForCommentable(cmtableID, userID); err != nil {
+		utils.ResponseWithError(c, err.StatusCode, err.Message, err.Data)
 		return
 	}
 
@@ -71,4 +44,53 @@ func (cc *Controller) CreateComment(c *gin.Context) {
 
 	resBody.Comment = cc.getDTOComment(&comment)
 	utils.ResponseWithSuccess(c, http.StatusCreated, "Save comment successfully", resBody)
+}
+
+// CreateComment create replies of a post
+// User may not be able to create the comment's reply due to the visibility of the comment
+func (cc *Controller) CreateCommentReplies(c *gin.Context) {
+	userID, ok := utils.RetrieveUserID(c)
+	if !ok {
+		log.Fatal("This route needs verifyToken middleware")
+	}
+
+	var reqBody cmtabledtos.CreateReplyRequest
+	var resBody cmtabledtos.CreateReplyResponse
+	var err error
+
+	if err := c.ShouldBind(&reqBody); err != nil {
+		utils.ResponseWithError(c, http.StatusBadRequest, "Invalid query parameter", err.Error())
+		return
+	}
+
+	cmtableID, err := utils.StringToUint(c.Param("cmtableID"))
+	if err != nil {
+		utils.ResponseWithError(c, http.StatusBadRequest, "Invalid parameter", err.Error())
+		return
+	}
+
+	if err := cc.checkUserAuthorizationForCommentable(cmtableID, userID); err != nil {
+		utils.ResponseWithError(c, err.StatusCode, err.Message, err.Data)
+		return
+	}
+
+	cmtID, err := utils.StringToUint(c.Param("cmtID"))
+	if err != nil {
+		utils.ResponseWithError(c, http.StatusBadRequest, "Invalid parameter", err.Error())
+		return
+	}
+
+	if !cc.commentableService.CheckHasComment(cmtableID, cmtID) {
+		utils.ResponseWithError(c, http.StatusConflict, "Comment do not belong to commentable", nil)
+		return
+	}
+
+	reply := models.Reply{UserID: userID, Content: reqBody.Content, CommentID: cmtID}
+	if err := cc.replyService.Save(&reply); err != nil {
+		utils.ResponseWithError(c, http.StatusInternalServerError, "Error while saving reply", err.Error())
+		return
+	}
+
+	resBody.Reply = cc.getDTOReply(&reply)
+	utils.ResponseWithSuccess(c, http.StatusCreated, "Save reply successfully", resBody)
 }

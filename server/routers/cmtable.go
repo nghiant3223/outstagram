@@ -14,6 +14,8 @@ func CommentableAPIRouter(router *gin.RouterGroup) {
 	}
 
 	router.GET("/:cmtableID/comments", middlewares.VerifyToken, commentableController.GetComments)
-
 	router.POST("/:cmtableID/comments", middlewares.VerifyToken, commentableController.CreateComment)
+
+	router.GET("/:cmtableID/comments/:cmtID/replies", middlewares.VerifyToken, commentableController.GetCommentReplies)
+	router.POST("/:cmtableID/comments/:cmtID/replies", middlewares.VerifyToken, commentableController.CreateCommentReplies)
 }

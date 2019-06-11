@@ -128,6 +128,9 @@ func InitializeCommentableController() (*cmtablecontroller.Controller, error) {
 		rctableservice.New,
 		rctablerepo.New,
 
+		replyservice.New,
+		replyrepo.New,
+
 		db.New)
 
 	return &cmtablecontroller.Controller{}, nil

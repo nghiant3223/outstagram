@@ -87,3 +87,9 @@ func (r *CommentableRepo) GetVisibility(id uint) (postVisibility.Visibility, uin
 
 	return 0, 0, errors.New(fmt.Sprintf("Database error, invalid use of commentable_id = %v", id))
 }
+
+func (r *CommentableRepo) HasComment(cmtableID, cmtID uint) bool {
+	var count int
+	r.db.Raw("SELECT 1 FROM comment WHERE commentable_id = ? AND id = ?", cmtableID, cmtID).Count(&count)
+	return count > 0
+}

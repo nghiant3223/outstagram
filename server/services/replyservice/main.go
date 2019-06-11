@@ -16,7 +16,3 @@ func New(replyRepo *replyrepo.ReplyRepo) *ReplyService {
 func (s *ReplyService) Save(reply *models.Reply) error {
 	return s.replyRepo.Save(reply)
 }
-
-func (s *ReplyService) CheckValidReply(reply *models.Reply) error {
-	return nil
-}
