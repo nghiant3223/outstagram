@@ -1,4 +1,4 @@
-package followdtos
+package dtos
 
 type Follower struct {
 	ID        uint   `json:"id"`

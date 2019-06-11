@@ -66,61 +66,61 @@ func (pc *Controller) GetPosts(c *gin.Context) {
 // GetPostComments retrieves comments of a post
 // User may not see the post's comment due to the visibility of the post
 func (pc *Controller) GetPostComments(c *gin.Context) {
-	userID, ok := utils.RetrieveUserID(c)
-	if !ok {
-		log.Fatal("This route needs verifyToken middleware")
-	}
-
-	var reqBody postdtos.GetPostCommentsRequest
-	var resBody postdtos.GetPostCommentsResponse
-	var commentable *models.Commentable
-	var err error
-
-	if err := c.ShouldBindQuery(&reqBody); err != nil {
-		utils.ResponseWithError(c, http.StatusBadRequest, "Invalid query parameter", err.Error())
-		return
-	}
-
-	postID, err := utils.StringToUint(c.Param("postID"))
-	if err != nil {
-		utils.ResponseWithError(c, http.StatusBadRequest, "Invalid parameter", err.Error())
-		return
-	}
-
-	post, err := pc.postService.GetPostByID(postID, userID)
-	if err != nil {
-		if gorm.IsRecordNotFoundError(err) {
-			utils.ResponseWithError(c, http.StatusNotFound, "Post not found", err.Error())
-			return
-		}
-
-		utils.ResponseWithError(c, http.StatusInternalServerError, "Error while retrieving post", err.Error())
-		return
-	}
-
-	// If limit and offset are not specified
-	if reqBody.Offset == 0 && reqBody.Limit == 0 {
-		commentable, err = pc.commentableService.GetComments(post.CommentableID)
-	} else {
-		commentable, err = pc.commentableService.GetCommentsWithLimit(post.CommentableID, reqBody.Limit, reqBody.Offset)
-	}
-
-	if err != nil {
-		if gorm.IsRecordNotFoundError(err) {
-			utils.ResponseWithError(c, http.StatusNotFound, "Post not found", err.Error())
-			return
-		}
-
-		utils.ResponseWithError(c, http.StatusInternalServerError, "Error while retrieving post", err.Error())
-		return
-	}
-
-	for _, comment := range commentable.Comments {
-		resBody.Comments = append(resBody.Comments, pc.getDTOComment(&comment))
-	}
-
-	resBody.CommentCount = commentable.CommentCount
-	utils.ResponseWithSuccess(c, http.StatusOK, "Retrieve comments successfully", resBody)
+	//userID, ok := utils.RetrieveUserID(c)
+	//if !ok {
+	//	log.Fatal("This route needs verifyToken middleware")
+	//}
+	//
+	//var reqBody postdtos.GetPostCommentsRequest
+	//var resBody postdtos.GetPostCommentsResponse
+	//var commentable *models.Commentable
+	//var err error
+	//
+	//if err := c.ShouldBindQuery(&reqBody); err != nil {
+	//	utils.ResponseWithError(c, http.StatusBadRequest, "Invalid query parameter", err.Error())
+	//	return
+	//}
+	//
+	//postID, err := utils.StringToUint(c.Param("postID"))
+	//if err != nil {
+	//	utils.ResponseWithError(c, http.StatusBadRequest, "Invalid parameter", err.Error())
+	//	return
+	//}
+	//
+	//post, err := pc.postService.GetPostByID(postID, userID)
+	//if err != nil {
+	//	if gorm.IsRecordNotFoundError(err) {
+	//		utils.ResponseWithError(c, http.StatusNotFound, "Post not found", err.Error())
+	//		return
+	//	}
+	//
+	//	utils.ResponseWithError(c, http.StatusInternalServerError, "Error while retrieving post", err.Error())
+	//	return
+	//}
+	//
+	//// If limit and offset are not specified
+	//if reqBody.Offset == 0 && reqBody.Limit == 0 {
+	//	commentable, err = pc.commentableService.GetComments(post.CommentableID)
+	//} else {
+	//	commentable, err = pc.commentableService.GetCommentsWithLimit(post.CommentableID, reqBody.Limit, reqBody.Offset)
+	//}
+	//
+	//if err != nil {
+	//	if gorm.IsRecordNotFoundError(err) {
+	//		utils.ResponseWithError(c, http.StatusNotFound, "Post not found", err.Error())
+	//		return
+	//	}
+	//
+	//	utils.ResponseWithError(c, http.StatusInternalServerError, "Error while retrieving post", err.Error())
+	//	return
+	//}
+	//
+	//for _, comment := range commentable.Comments {
+	//	resBody.Comments = append(resBody.Comments, pc.getDTOComment(&comment))
+	//}
+	//
+	//resBody.CommentCount = commentable.CommentCount
+	//utils.ResponseWithSuccess(c, http.StatusOK, "Retrieve comments successfully", resBody)
 }
 
 // GetPostComments retrieves specific post
@@ -164,54 +164,54 @@ func (pc *Controller) GetPost(c *gin.Context) {
 }
 
 func (pc *Controller) GetCommentReplies(c *gin.Context) {
-	userID, ok := utils.RetrieveUserID(c)
-	if !ok {
-		log.Fatal("This route needs verifyToken middleware")
-	}
-
-	var reqBody postdtos.GetCommentRepliesRequest
-	var resBody postdtos.GetCommentRepliesResponse
-	var comment *models.Comment
-	var err error
-
-	if err := c.ShouldBindQuery(&reqBody); err != nil {
-		utils.ResponseWithError(c, http.StatusBadRequest, "Invalid query parameter", err.Error())
-		return
-	}
-
-	postID, err := utils.StringToUint(c.Param("postID"))
-	if err != nil {
-		utils.ResponseWithError(c, http.StatusBadRequest, "Invalid parameter", err.Error())
-		return
-	}
-
-	commentID, err := utils.StringToUint(c.Param("cmtID"))
-	if err != nil {
-		utils.ResponseWithError(c, http.StatusBadRequest, "Invalid parameter", err.Error())
-		return
-	}
-
-	if err := pc.commentService.CheckValidComment(postID, userID, commentID); err != nil {
-		utils.ResponseWithError(c, err.StatusCode, err.Message, err.Data)
-		return
-	}
-
-	if reqBody.Offset == 0 && reqBody.Limit == 0 {
-		comment, err = pc.commentService.GetReplies(commentID)
-	} else {
-		comment, err = pc.commentService.GetRepliesWithLimit(commentID, reqBody.Limit, reqBody.Offset)
-	}
-
-	if err != nil {
-		utils.ResponseWithError(c, http.StatusInternalServerError, "Error while retrieving comment", err.Error())
-		return
-	}
-
-	resBody.ReplyCount = comment.ReplyCount
-	for _, reply := range comment.Replies {
-		dtoReply := pc.getDTOReply(&reply)
-		resBody.Replies = append(resBody.Replies, dtoReply)
-	}
-
-	utils.ResponseWithSuccess(c, http.StatusOK, "Retrieve replies successfully", resBody)
+	//userID, ok := utils.RetrieveUserID(c)
+	//if !ok {
+	//	log.Fatal("This route needs verifyToken middleware")
+	//}
+	//
+	//var reqBody cmtabledtos.GetCommentRepliesRequest
+	//var resBody cmtabledtos.GetCommentRepliesResponse
+	//var comment *models.Comment
+	//var err error
+	//
+	//if err := c.ShouldBindQuery(&reqBody); err != nil {
+	//	utils.ResponseWithError(c, http.StatusBadRequest, "Invalid query parameter", err.Error())
+	//	return
+	//}
+	//
+	//postID, err := utils.StringToUint(c.Param("postID"))
+	//if err != nil {
+	//	utils.ResponseWithError(c, http.StatusBadRequest, "Invalid parameter", err.Error())
+	//	return
+	//}
+	//
+	//commentID, err := utils.StringToUint(c.Param("cmtID"))
+	//if err != nil {
+	//	utils.ResponseWithError(c, http.StatusBadRequest, "Invalid parameter", err.Error())
+	//	return
+	//}
+	//
+	//if err := pc.commentService.CheckValidComment(postID, userID, commentID); err != nil {
+	//	utils.ResponseWithError(c, err.StatusCode, err.Message, err.Data)
+	//	return
+	//}
+	//
+	//if reqBody.Offset == 0 && reqBody.Limit == 0 {
+	//	comment, err = pc.commentService.GetReplies(commentID)
+	//} else {
+	//	comment, err = pc.commentService.GetRepliesWithLimit(commentID, reqBody.Limit, reqBody.Offset)
+	//}
+	//
+	//if err != nil {
+	//	utils.ResponseWithError(c, http.StatusInternalServerError, "Error while retrieving comment", err.Error())
+	//	return
+	//}
+	//
+	//resBody.ReplyCount = comment.ReplyCount
+	//for _, reply := range comment.Replies {
+	//	dtoReply := pc.getDTOReply(&reply)
+	//	resBody.Replies = append(resBody.Replies, dtoReply)
+	//}
+	//
+	//utils.ResponseWithSuccess(c, http.StatusOK, "Retrieve replies successfully", resBody)
 }

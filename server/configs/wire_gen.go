@@ -7,6 +7,7 @@ package configs
 
 import (
 	"outstagram/server/controllers/authcontroller"
+	"outstagram/server/controllers/cmtablecontroller"
 	"outstagram/server/controllers/postcontroller"
 	"outstagram/server/controllers/rctcontroller"
 	"outstagram/server/controllers/usercontroller"
@@ -100,5 +101,16 @@ func InitializeReactController() (*rctcontroller.Controller, error) {
 	reactRepo := rctrepo.New(gormDB)
 	reactService := rctservice.New(reactRepo)
 	controller := rctcontroller.New(reactService)
+	return controller, nil
+}
+
+func InitializeCommentableController() (*cmtablecontroller.Controller, error) {
+	gormDB, err := db.New()
+	if err != nil {
+		return nil, err
+	}
+	commentableRepo := cmtablerepo.New(gormDB)
+	commentableService := cmtableservice.New(commentableRepo)
+	controller := cmtablecontroller.New(commentableService)
 	return controller, nil
 }

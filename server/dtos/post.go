@@ -1,6 +1,7 @@
-package postdtos
+package dtos
 
 import (
+	"outstagram/server/dtos/postdtos"
 	"outstagram/server/enums/postvisibility"
 	"time"
 )
@@ -8,7 +9,7 @@ import (
 type Post struct {
 	ID            uint                      `json:"id"`
 	CreatedAt     time.Time                 `json:"createdAt"`
-	Images        []PostImage               `json:"images"`
+	Images        []postdtos.PostImage      `json:"images"`
 	ImageCount    int                       `json:"imageCount"`
 	Comments      []Comment                 `json:"comments"`
 	CommentCount  int                       `json:"commentCount"`

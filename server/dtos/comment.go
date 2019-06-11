@@ -1,4 +1,4 @@
-package postdtos
+package dtos
 
 import "time"
 

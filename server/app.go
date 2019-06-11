@@ -30,6 +30,7 @@ func main() {
 		routers.StoryAPIRouter(apiRouter.Group("/stories"))
 		routers.PostAPIRouter(apiRouter.Group("/posts"))
 		routers.ReactAPIRouter(apiRouter.Group("/reactions"))
+		routers.CommentableAPIRouter(apiRouter.Group("/commentable"))
 	}
 
 	PORT := os.Getenv("PORT")

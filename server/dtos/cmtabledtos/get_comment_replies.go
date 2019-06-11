@@ -1,4 +1,6 @@
-package postdtos
+package cmtabledtos
+
+import "outstagram/server/dtos"
 
 type GetCommentRepliesRequest struct {
 	Limit  uint `form:"limit"`
@@ -6,6 +8,6 @@ type GetCommentRepliesRequest struct {
 }
 
 type GetCommentRepliesResponse struct {
-	Replies    []Reply `json:"replies"`
-	ReplyCount int     `json:"replyCount"`
+	Replies    []dtos.Reply `json:"replies"`
+	ReplyCount int          `json:"replyCount"`
 }

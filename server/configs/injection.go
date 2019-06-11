@@ -4,6 +4,7 @@ package configs
 
 import (
 	"outstagram/server/controllers/authcontroller"
+	"outstagram/server/controllers/cmtablecontroller"
 	"outstagram/server/controllers/postcontroller"
 	"outstagram/server/controllers/rctcontroller"
 	"outstagram/server/controllers/usercontroller"
@@ -109,4 +110,16 @@ func InitializeReactController() (*rctcontroller.Controller, error) {
 		db.New)
 
 	return &rctcontroller.Controller{}, nil
+}
+
+func InitializeCommentableController() (*cmtablecontroller.Controller, error) {
+	wire.Build(
+		cmtablecontroller.New,
+
+		cmtableservice.New,
+		cmtablerepo.New,
+
+		db.New)
+
+	return &cmtablecontroller.Controller{}, nil
 }
