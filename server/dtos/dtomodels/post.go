@@ -12,7 +12,7 @@ type Post struct {
 	ImageCount    int                 `json:"imageCount"`
 	Comments      []Comment           `json:"comments"`
 	CommentCount  int                 `json:"commentCount"`
-	Privacy       postPrivacy.Privacy `json:"visibility"`
+	Visibility    postPrivacy.Privacy `json:"visibility"`
 	Content       *string             `json:"content"`
 	NumViewed     int                 `json:"numViewed"`
 	Reactors      []string            `json:"reactors"`

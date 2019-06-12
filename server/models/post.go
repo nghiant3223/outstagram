@@ -18,4 +18,5 @@ type Post struct {
 	User          User
 	Images        []PostImage `gorm:"foreignkey:PostID"`
 	ImageCount    int         `gorm:"-"`
+	Popularity    float32     `gorm:"popularity;default:0	"`
 }
