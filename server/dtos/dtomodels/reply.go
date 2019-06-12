@@ -10,4 +10,5 @@ type Reply struct {
 	CreatedAt     time.Time `json:"createdAt"`
 	Reactors      []string  `json:"reactors"`
 	ReactCount    int       `json:"reactCount"`
+	ReactableID   uint      `json:"reactableID"`
 }

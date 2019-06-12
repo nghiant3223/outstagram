@@ -19,4 +19,7 @@ type Post struct {
 	ReactCount    int                       `json:"reactCount"`
 	OwnerFullname string                    `json:"ownerFullname"`
 	OwnerID       uint                      `json:"ownerID"`
+	CommentableID uint                      `json:"commentableID"`
+	ReactableID   uint                      `json:"reactableID"`
+	ViewableID    uint                      `json:"viewableID"`
 }

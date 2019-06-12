@@ -11,4 +11,6 @@ type Comment struct {
 	OwnerID       uint      `json:"ownerID"`
 	Reactors      []string  `json:"reactors"`
 	ReactCount    int       `json:"reactCount"`
+	CommentableID uint      `json:"commentableID"`
+	ReactableID   uint      `json:"reactableID"`
 }

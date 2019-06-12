@@ -15,8 +15,8 @@ type Comment struct {
 	User          User
 	Replies       []Reply
 	ReplyCount    int      `gorm:"-"`
-	Reactors   []string `gorm:"-"`
-	ReactCount int      `gorm:"-"`
+	Reactors      []string `gorm:"-"`
+	ReactCount    int      `gorm:"-"`
 }
 
 func (c *Comment) ToDTO() dtomodels.Comment {
@@ -28,5 +28,7 @@ func (c *Comment) ToDTO() dtomodels.Comment {
 		OwnerFullname: c.User.Fullname,
 		OwnerID:       c.UserID,
 		ReactCount:    c.ReactCount,
-		Reactors:      c.Reactors}
+		Reactors:      c.Reactors,
+		CommentableID: c.CommentableID,
+		ReactableID:   c.ReactableID}
 }

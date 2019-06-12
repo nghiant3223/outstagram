@@ -9,7 +9,7 @@ import (
 type Reply struct {
 	gorm.Model
 	Content     *string `gorm:"not null"`
-	Comment Comment
+	Comment     Comment
 	CommentID   uint
 	UserID      uint
 	User        User
@@ -26,5 +26,6 @@ func (r *Reply) ToDTO() dtomodels.Reply {
 		OwnerID:       r.UserID,
 		OwnerFullname: r.User.Fullname,
 		Reactors:      r.Reactors,
-		ReactCount:    r.ReactCount}
+		ReactCount:    r.ReactCount,
+		ReactableID:   r.ReactableID}
 }

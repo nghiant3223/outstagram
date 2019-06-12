@@ -2,12 +2,10 @@ package postcontroller
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/jinzhu/copier"
 	"github.com/jinzhu/gorm"
 	"log"
 	"net/http"
 	"outstagram/server/dtos/postdtos"
-	"outstagram/server/dtos/dtomodels"
 	"outstagram/server/models"
 	"outstagram/server/utils"
 )
@@ -44,12 +42,6 @@ func (pc *Controller) CreatePost(c *gin.Context) {
 		return
 	}
 
-	resBody.ID = post.ID
-	if err = copier.Copy(&resBody, &post); err != nil {
-		utils.ResponseWithError(c, http.StatusInternalServerError, "Error while copying entity to dto", err.Error())
-		return
-	}
-
 	for _, file := range files {
 		image, err := pc.imageService.Save(file, userID)
 		if err != nil {
@@ -62,16 +54,26 @@ func (pc *Controller) CreatePost(c *gin.Context) {
 			utils.ResponseWithError(c, http.StatusInternalServerError, "Error while saving post's image", err.Error())
 			return
 		}
+	}
 
-		dtoPostImage := dtomodels.PostImage{ID: postImage.ID}
-		if err = copier.Copy(&dtoPostImage, &image); err != nil {
-			utils.ResponseWithError(c, http.StatusInternalServerError, "Error while copying entity to dto", err.Error())
+	savedPost, err := pc.postService.GetPostByID(post.ID, userID)
+	if err != nil {
+		if gorm.IsRecordNotFoundError(err) {
+			utils.ResponseWithError(c, http.StatusNotFound, "Post not found", err.Error())
 			return
 		}
 
-		resBody.Images = append(resBody.Images, dtoPostImage)
+		utils.ResponseWithError(c, http.StatusInternalServerError, "Error while retrieving post", err.Error())
+		return
 	}
 
+	dtoPost, err := pc.getDTOPost(savedPost, userID)
+	if err != nil {
+		utils.ResponseWithError(c, http.StatusInternalServerError, "Error while saving post", err.Error())
+		return
+	}
+
+	resBody.Post = *dtoPost
 	utils.ResponseWithSuccess(c, 200, "Create post successfully", resBody)
 }
 

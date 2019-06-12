@@ -29,6 +29,9 @@ func (pc *Controller) getDTOPost(post *models.Post, userID uint) (*dtomodels.Pos
 	// Set basic post's info
 	dtoPost := dtomodels.Post{
 		ID:            post.ID,
+		ViewableID:    post.ViewableID,
+		CommentableID: post.CommentableID,
+		ReactableID:   post.ReactableID,
 		CreatedAt:     post.CreatedAt,
 		Content:       post.Content,
 		Visibility:    post.Visibility,
@@ -43,13 +46,16 @@ func (pc *Controller) getDTOPost(post *models.Post, userID uint) (*dtomodels.Pos
 	for _, postImage := range post.Images {
 		image := postImage.Image
 		dtoPostImage := dtomodels.PostImage{
-			ID:     postImage.ID,
-			Tiny:   image.Tiny,
-			Origin: image.Origin,
-			Huge:   image.Huge, Big: image.Huge,
-			Medium: image.Medium,
-			Small:  image.Small,
-		}
+			ID:            postImage.ID,
+			Tiny:          image.Tiny,
+			Origin:        image.Origin,
+			Huge:          image.Huge,
+			Big:           image.Huge,
+			Medium:        image.Medium,
+			Small:         image.Small,
+			ReactableID:   postImage.ReactableID,
+			CommentableID: postImage.CommentableID,
+			ViewableID:    postImage.ViewableID}
 		dtoPost.Images = append(dtoPost.Images, dtoPostImage)
 	}
 
