@@ -1,6 +1,7 @@
 package cmtablecontroller
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	"log"
@@ -56,7 +57,7 @@ func (cc *Controller) GetComments(c *gin.Context) {
 	}
 
 	for _, comment := range commentable.Comments {
-		resBody.Comments = append(resBody.Comments, cc.getDTOComment(&comment))
+		resBody.Comments = append(resBody.Comments, comment.ToDTO())
 	}
 
 	resBody.CommentCount = commentable.CommentCount
@@ -109,6 +110,9 @@ func (cc *Controller) GetCommentReplies(c *gin.Context) {
 		comment, err = cc.commentService.GetRepliesWithLimit(cmtID, reqBody.Limit, reqBody.Offset)
 	}
 
+	fmt.Println(comment.Replies[0].Reactors)
+	
+
 	if err != nil {
 		utils.ResponseWithError(c, http.StatusInternalServerError, "Error while retrieving comment", err.Error())
 		return
@@ -116,7 +120,7 @@ func (cc *Controller) GetCommentReplies(c *gin.Context) {
 
 	resBody.ReplyCount = comment.ReplyCount
 	for _, reply := range comment.Replies {
-		dtoReply := cc.getDTOReply(&reply)
+		dtoReply := reply.ToDTO()
 		resBody.Replies = append(resBody.Replies, dtoReply)
 	}
 

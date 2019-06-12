@@ -8,4 +8,6 @@ type Reply struct {
 	OwnerID       uint      `json:"ownerID"`
 	OwnerFullname string    `json:"ownerFullname"`
 	CreatedAt     time.Time `json:"createdAt"`
+	Reactors      []string  `json:"reactors"`
+	ReactCount    int       `json:"reactCount"`
 }

@@ -42,7 +42,7 @@ func (cc *Controller) CreateComment(c *gin.Context) {
 		return
 	}
 
-	resBody.Comment = cc.getDTOComment(&comment)
+	resBody.Comment = comment.ToDTO()
 	utils.ResponseWithSuccess(c, http.StatusCreated, "Save comment successfully", resBody)
 }
 
@@ -91,6 +91,6 @@ func (cc *Controller) CreateCommentReplies(c *gin.Context) {
 		return
 	}
 
-	resBody.Reply = cc.getDTOReply(&reply)
+	resBody.Reply = reply.ToDTO()
 	utils.ResponseWithSuccess(c, http.StatusCreated, "Save reply successfully", resBody)
 }

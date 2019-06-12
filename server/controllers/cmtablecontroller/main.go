@@ -3,9 +3,7 @@ package cmtablecontroller
 import (
 	"github.com/jinzhu/gorm"
 	"net/http"
-	"outstagram/server/dtos/dtomodels"
 	postVisibility "outstagram/server/enums/postvisibility"
-	"outstagram/server/models"
 	"outstagram/server/services/cmtableservice"
 	"outstagram/server/services/cmtservice"
 	"outstagram/server/services/rctableservice"
@@ -24,29 +22,6 @@ type Controller struct {
 
 func New(commentableService *cmtableservice.CommentableService, commentService *cmtservice.CommentService, userService *userservice.UserService, reactableService *rctableservice.ReactableService, replyService *replyservice.ReplyService) *Controller {
 	return &Controller{commentableService: commentableService, commentService: commentService, userService: userService, reactableService: reactableService, replyService: replyService}
-}
-
-//getDTOComment maps comment into a DTO object
-func (cc *Controller) getDTOComment(comment *models.Comment) dtomodels.Comment {
-	return dtomodels.Comment{
-		ID:            comment.ID,
-		Content:       comment.Content,
-		ReplyCount:    comment.ReplyCount,
-		CreatedAt:     comment.CreatedAt,
-		OwnerFullname: comment.User.Fullname,
-		OwnerID:       comment.UserID,
-		ReactCount:    cc.reactableService.GetReactCount(comment.ReactableID),
-		Reactors:      cc.reactableService.GetReactors(comment.ReactableID)}
-}
-
-// getDTOReply maps a reply into a DTO object
-func (cc *Controller) getDTOReply(reply *models.Reply) dtomodels.Reply {
-	return dtomodels.Reply{
-		ID:            reply.ID,
-		Content:       reply.Content,
-		CreatedAt:     reply.CreatedAt,
-		OwnerID:       reply.UserID,
-		OwnerFullname: reply.User.Fullname}
 }
 
 // checkUserAuthorizationForCommentable checks if user has the authorization to see the post

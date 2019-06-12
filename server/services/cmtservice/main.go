@@ -7,16 +7,18 @@ import (
 	"outstagram/server/models"
 	"outstagram/server/repos/cmtrepo"
 	"outstagram/server/services/postservice"
+	"outstagram/server/services/rctableservice"
 	"outstagram/server/utils"
 )
 
 type CommentService struct {
-	commentRepo *cmtrepo.CommentRepo
-	postService *postservice.PostService
+	commentRepo      *cmtrepo.CommentRepo
+	postService      *postservice.PostService
+	reactableService *rctableservice.ReactableService
 }
 
-func New(commentRepo *cmtrepo.CommentRepo) *CommentService {
-	return &CommentService{commentRepo: commentRepo}
+func New(commentRepo *cmtrepo.CommentRepo, reactableService *rctableservice.ReactableService) *CommentService {
+	return &CommentService{commentRepo: commentRepo, reactableService: reactableService}
 }
 
 func (s *CommentService) Save(comment *models.Comment) error {
@@ -28,11 +30,34 @@ func (s *CommentService) GetReplyCount(commentableID uint) int {
 }
 
 func (s *CommentService) GetRepliesWithLimit(id uint, limit uint, offset uint) (*models.Comment, error) {
-	return s.commentRepo.GetRepliesWithLimit(id, limit, offset)
+	comment, err := s.commentRepo.GetRepliesWithLimit(id, limit, offset)
+	if err != nil {
+		return nil, err
+	}
+
+	for i := 0; i < len(comment.Replies); i++ {
+		reply := &comment.Replies[i]
+		reply.Reactors = s.reactableService.GetReactors(reply.ReactableID)
+		reply.ReactCount = s.reactableService.GetReactCount(reply.ReactableID)
+	}
+
+	return comment, nil
 }
 
 func (s *CommentService) GetReplies(id uint) (*models.Comment, error) {
-	return s.commentRepo.GetReplies(id)
+	comment, err := s.commentRepo.GetReplies(id)
+	if err != nil {
+		return nil, err
+	}
+
+	for i := 0; i < len(comment.Replies); i++ {
+		reply := &comment.Replies[i]
+		reply.Reactors = s.reactableService.GetReactors(reply.ReactableID)
+		reply.ReactCount = s.reactableService.GetReactCount(reply.ReactableID)
+		
+	}
+
+	return comment, nil
 }
 
 func (s *CommentService) CheckValidComment(postID, userID, commentID uint) *utils.HttpError {
