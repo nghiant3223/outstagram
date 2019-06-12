@@ -1,6 +1,7 @@
 package models
 
 import (
+	"outstagram/server/dtos/dtomodels"
 	"time"
 
 	"github.com/jinzhu/gorm"
@@ -19,4 +20,26 @@ type User struct {
 	Gender     bool
 	NotifBoard NotifBoard
 	StoryBoard StoryBoard
+}
+
+func (u *User) ToUserDTO() dtomodels.User {
+	return dtomodels.User{
+		ID:        u.ID,
+		Fullname:  u.Fullname,
+		Username:  u.Username,
+		Gender:    u.Gender,
+		Phone:     u.Phone,
+		Email:     u.Email,
+		AvatarURL: u.AvatarURL}
+}
+
+func (u *User) ToMeDTO() dtomodels.Me {
+	return dtomodels.Me{
+		ID:        u.ID,
+		Fullname:  u.Fullname,
+		Username:  u.Username,
+		Gender:    u.Gender,
+		Phone:     u.Phone,
+		Email:     u.Email,
+		AvatarURL: u.AvatarURL}
 }

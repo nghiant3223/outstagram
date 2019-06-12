@@ -98,3 +98,19 @@ func (r *ReactableRepo) GetVisibility(reactableID uint) (postVisibility.Visibili
 
 	return 0, 0, errors.New(fmt.Sprintf("Database error, invalid use of reactable_id = %v", reactableID))
 }
+
+func (r *ReactableRepo) GetReactors(reactableID, userID uint, limit int) []models.User {
+	var users []models.User
+	query := `
+SELECT reactors.*
+FROM 
+	(SELECT user.* FROM user INNER JOIN react on user.id = react.user_id WHERE reactable_id = ?) reactors
+	LEFT JOIN
+	(SELECT user.id as following_id, level_of_interest, avatar_url as avatarURL FROM user INNER JOIN follows ON user.id = user_followed_id WHERE user_follow_id = ?) followings
+	ON reactors.id = following_id
+ORDER BY level_of_interest DESC 
+LIMIT ?
+`
+	r.db.Raw(query, reactableID, userID, limit).Scan(&users)
+	return users
+}

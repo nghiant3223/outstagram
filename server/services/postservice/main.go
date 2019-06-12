@@ -32,7 +32,7 @@ func (s *PostService) GetUserPosts(userID uint) ([]models.Post, error) {
 }
 
 // GetUsersPostsWithLimit returns array of posts with their basic info
-func (s *PostService) GetUsersPostsWithLimit(userID uint, limit uint, offset uint) ([]models.Post, error) {
+func (s *PostService) GetUsersPostsWithLimit(userID, limit, offset uint) ([]models.Post, error) {
 	posts, err := s.postRepo.GetPostsByUserIDWithLimit(userID, limit, offset)
 	if err != nil {
 		return nil, err

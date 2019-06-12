@@ -1,7 +1,6 @@
 package cmtablecontroller
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	"log"
@@ -41,9 +40,9 @@ func (cc *Controller) GetComments(c *gin.Context) {
 	}
 	// If limit and offset are not specified
 	if reqBody.Offset == 0 && reqBody.Limit == 0 {
-		commentable, err = cc.commentableService.GetComments(cmtableID)
+		commentable, err = cc.commentableService.GetComments(cmtableID, userID)
 	} else {
-		commentable, err = cc.commentableService.GetCommentsWithLimit(cmtableID, reqBody.Limit, reqBody.Offset)
+		commentable, err = cc.commentableService.GetCommentsWithLimit(cmtableID, userID, reqBody.Limit, reqBody.Offset)
 	}
 
 	if err != nil {
@@ -105,13 +104,10 @@ func (cc *Controller) GetCommentReplies(c *gin.Context) {
 	}
 
 	if reqBody.Offset == 0 && reqBody.Limit == 0 {
-		comment, err = cc.commentService.GetReplies(cmtID)
+		comment, err = cc.commentService.GetReplies(cmtID, userID)
 	} else {
-		comment, err = cc.commentService.GetRepliesWithLimit(cmtID, reqBody.Limit, reqBody.Offset)
+		comment, err = cc.commentService.GetRepliesWithLimit(cmtID, userID, reqBody.Limit, reqBody.Offset)
 	}
-
-	fmt.Println(comment.Replies[0].Reactors)
-	
 
 	if err != nil {
 		utils.ResponseWithError(c, http.StatusInternalServerError, "Error while retrieving comment", err.Error())

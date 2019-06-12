@@ -44,7 +44,7 @@ func (r *PostRepo) FindByID(id uint) (*models.Post, error) {
 	return &post, nil
 }
 
-func (r *PostRepo) GetPostsByUserIDWithLimit(userID uint, limit uint, offset uint) ([]models.Post, error) {
+func (r *PostRepo) GetPostsByUserIDWithLimit(userID, limit, offset uint) ([]models.Post, error) {
 	var posts []models.Post
 	if err := r.db.Where("user_id = ?", userID).
 		Offset(offset).

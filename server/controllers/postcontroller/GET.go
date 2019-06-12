@@ -46,7 +46,7 @@ func (pc *Controller) GetPosts(c *gin.Context) {
 	}
 
 	for _, post := range posts {
-		dtoPost, err := pc.getDTOPost(&post)
+		dtoPost, err := pc.getDTOPost(&post, userID)
 		if err != nil {
 			if gorm.IsRecordNotFoundError(err) {
 				utils.ResponseWithError(c, http.StatusNotFound, "Post not found", err.Error())
@@ -89,7 +89,7 @@ func (pc *Controller) GetPost(c *gin.Context) {
 		return
 	}
 
-	dtoPost, err := pc.getDTOPost(post)
+	dtoPost, err := pc.getDTOPost(post, userID)
 	if err != nil {
 		if gorm.IsRecordNotFoundError(err) {
 			utils.ResponseWithError(c, http.StatusNotFound, "Post not found", err.Error())

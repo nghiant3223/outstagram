@@ -53,7 +53,7 @@ func (r *CommentRepo) GetReplies(id uint) (*models.Comment, error) {
 	return &comment, nil
 }
 
-func (r *CommentRepo) GetRepliesWithLimit(id uint, limit uint, offset uint) (*models.Comment, error) {
+func (r *CommentRepo) GetRepliesWithLimit(id , limit , offset uint) (*models.Comment, error) {
 	var comment models.Comment
 
 	if err := r.db.First(&comment, id).Error; err != nil {

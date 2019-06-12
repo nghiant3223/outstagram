@@ -29,7 +29,7 @@ func (s *CommentService) GetReplyCount(commentableID uint) int {
 	return s.commentRepo.GetReplyCount(commentableID)
 }
 
-func (s *CommentService) GetRepliesWithLimit(id uint, limit uint, offset uint) (*models.Comment, error) {
+func (s *CommentService) GetRepliesWithLimit(id, userID, limit, offset uint) (*models.Comment, error) {
 	comment, err := s.commentRepo.GetRepliesWithLimit(id, limit, offset)
 	if err != nil {
 		return nil, err
@@ -37,14 +37,14 @@ func (s *CommentService) GetRepliesWithLimit(id uint, limit uint, offset uint) (
 
 	for i := 0; i < len(comment.Replies); i++ {
 		reply := &comment.Replies[i]
-		reply.Reactors = s.reactableService.GetReactors(reply.ReactableID)
+		reply.Reactors = s.reactableService.GetReactorsFullname(reply.ReactableID, userID)
 		reply.ReactCount = s.reactableService.GetReactCount(reply.ReactableID)
 	}
 
 	return comment, nil
 }
 
-func (s *CommentService) GetReplies(id uint) (*models.Comment, error) {
+func (s *CommentService) GetReplies(id, userID uint) (*models.Comment, error) {
 	comment, err := s.commentRepo.GetReplies(id)
 	if err != nil {
 		return nil, err
@@ -52,9 +52,9 @@ func (s *CommentService) GetReplies(id uint) (*models.Comment, error) {
 
 	for i := 0; i < len(comment.Replies); i++ {
 		reply := &comment.Replies[i]
-		reply.Reactors = s.reactableService.GetReactors(reply.ReactableID)
+		reply.Reactors = s.reactableService.GetReactorsFullname(reply.ReactableID, userID)
 		reply.ReactCount = s.reactableService.GetReactCount(reply.ReactableID)
-		
+
 	}
 
 	return comment, nil

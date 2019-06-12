@@ -33,7 +33,7 @@ func (r *CommentableRepo) GetComments(id uint) (*models.Commentable, error) {
 	return &commentable, nil
 }
 
-func (r *CommentableRepo) GetCommentsWithLimit(id uint, limit uint, offset uint) (*models.Commentable, error) {
+func (r *CommentableRepo) GetCommentsWithLimit(id, limit, offset uint) (*models.Commentable, error) {
 	var commentable models.Commentable
 
 	if err := r.db.First(&commentable, id).Error; err != nil {

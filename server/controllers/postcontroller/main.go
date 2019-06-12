@@ -25,7 +25,7 @@ func New(postService *postservice.PostService, imageService *imgservice.ImageSer
 }
 
 // getDTOPost maps post, including post's images, post's comments into a DTO object
-func (pc *Controller) getDTOPost(post *models.Post) (*dtomodels.Post, error) {
+func (pc *Controller) getDTOPost(post *models.Post, userID uint) (*dtomodels.Post, error) {
 	// Set basic post's info
 	dtoPost := dtomodels.Post{
 		ID:            post.ID,
@@ -37,7 +37,7 @@ func (pc *Controller) getDTOPost(post *models.Post) (*dtomodels.Post, error) {
 		OwnerID:       post.UserID,
 		OwnerFullname: post.User.Fullname,
 		ReactCount:    pc.reactableService.GetReactCount(post.ReactableID),
-		Reactors:      pc.reactableService.GetReactors(post.ReactableID)}
+		Reactors:      pc.reactableService.GetReactorsFullname(post.ReactableID, userID)}
 
 	// Map post's images to DTO
 	for _, postImage := range post.Images {
@@ -54,7 +54,7 @@ func (pc *Controller) getDTOPost(post *models.Post) (*dtomodels.Post, error) {
 	}
 
 	// Get post's comments
-	commentable, err := pc.commentableService.GetCommentsWithLimit(post.CommentableID, 5, 0)
+	commentable, err := pc.commentableService.GetCommentsWithLimit(post.CommentableID, userID, 5, 0)
 	if err != nil {
 		return nil, err
 	}
