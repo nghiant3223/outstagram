@@ -1,7 +1,7 @@
 package cmtableservice
 
 import (
-	postVisibility "outstagram/server/enums/postvisibility"
+	postVisibility "outstagram/server/enums/postprivacy"
 	"outstagram/server/models"
 	"outstagram/server/repos/cmtablerepo"
 	"outstagram/server/services/rctableservice"
@@ -50,7 +50,7 @@ func (s *CommentableService) GetComments(id, userID uint) (*models.Commentable, 
 	return commentable, nil
 }
 
-func (s *CommentableService) GetVisibilityByID(commentableID uint) (postVisibility.Visibility, uint, error) {
+func (s *CommentableService) GetVisibilityByID(commentableID uint) (postVisibility.Privacy, uint, error) {
 	return s.commentableRepo.GetVisibility(commentableID)
 }
 

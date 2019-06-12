@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/jinzhu/gorm"
-	postVisibility "outstagram/server/enums/postvisibility"
+	postVisibility "outstagram/server/enums/postprivacy"
 	"outstagram/server/models"
 	"outstagram/server/repos/cmtablerepo"
 )
@@ -64,7 +64,7 @@ func (r *ReactableRepo) GetReactCount(reactableID uint) int {
 	return count
 }
 
-func (r *ReactableRepo) GetVisibility(reactableID uint) (postVisibility.Visibility, uint, error) {
+func (r *ReactableRepo) GetVisibility(reactableID uint) (postVisibility.Privacy, uint, error) {
 	var reactable models.Reactable
 	var post models.Post
 	var postImage models.PostImage

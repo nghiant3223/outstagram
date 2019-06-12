@@ -3,7 +3,7 @@ package cmtablecontroller
 import (
 	"github.com/jinzhu/gorm"
 	"net/http"
-	postVisibility "outstagram/server/enums/postvisibility"
+	postVisibility "outstagram/server/enums/postprivacy"
 	"outstagram/server/services/cmtableservice"
 	"outstagram/server/services/cmtservice"
 	"outstagram/server/services/rctableservice"

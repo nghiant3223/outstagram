@@ -3,7 +3,7 @@ package rctcontroller
 import (
 	"github.com/jinzhu/gorm"
 	"net/http"
-	postVisibility "outstagram/server/enums/postvisibility"
+	postVisibility "outstagram/server/enums/postprivacy"
 	"outstagram/server/services/rctableservice"
 	"outstagram/server/services/rctservice"
 	"outstagram/server/services/userservice"

@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/jinzhu/gorm"
-	postVisibility "outstagram/server/enums/postvisibility"
+	postVisibility "outstagram/server/enums/postprivacy"
 	"outstagram/server/models"
 )
 
@@ -66,7 +66,7 @@ func (r *CommentableRepo) GetCommentCount(id uint) int {
 }
 
 // GetVisibility returns visibility for an commentable
-func (r *CommentableRepo) 	GetVisibility(commentableID uint) (postVisibility.Visibility, uint, error) {
+func (r *CommentableRepo) 	GetVisibility(commentableID uint) (postVisibility.Privacy, uint, error) {
 	var commentable models.Commentable
 	var post models.Post
 	var postImage models.PostImage
@@ -77,13 +77,13 @@ func (r *CommentableRepo) 	GetVisibility(commentableID uint) (postVisibility.Vis
 
 	r.db.Model(&commentable).Related(&post)
 	if post.ID != 0 {
-		return post.Visibility, post.UserID, nil
+		return post.Privacy, post.UserID, nil
 	}
 
 	r.db.Model(&commentable).Related(&postImage)
 	if postImage.ID != 0 {
 		r.db.Model(&postImage).Related(&postImage.Post)
-		return postImage.Post.Visibility, postImage.Post.UserID, nil
+		return postImage.Post.Privacy, postImage.Post.UserID, nil
 	}
 
 	return 0, 0, errors.New(fmt.Sprintf("Database error, invalid use of commentable_id = %v", commentableID))

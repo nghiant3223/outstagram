@@ -2,7 +2,7 @@ package rctableservice
 
 import (
 	"outstagram/server/constants"
-	postVisibility "outstagram/server/enums/postvisibility"
+	postVisibility "outstagram/server/enums/postprivacy"
 	"outstagram/server/models"
 	"outstagram/server/repos/rctablerepo"
 )
@@ -27,7 +27,7 @@ func (s *ReactableService) GetReactCount(reactableID uint) int {
 	return s.reactableRepo.GetReactCount(reactableID)
 }
 
-func (s *ReactableService) GetVisibilityByID(reactableID uint) (postVisibility.Visibility, uint, error) {
+func (s *ReactableService) GetVisibilityByID(reactableID uint) (postVisibility.Privacy, uint, error) {
 	return s.reactableRepo.GetVisibility(reactableID)
 }
 

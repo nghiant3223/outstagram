@@ -36,7 +36,7 @@ func (pc *Controller) CreatePost(c *gin.Context) {
 		return
 	}
 
-	post := models.Post{Content: reqBody.Content, Visibility: reqBody.Visibility, UserID: userID}
+	post := models.Post{Content: reqBody.Content, Privacy: reqBody.Visibility, UserID: userID}
 	if err := pc.postService.Save(&post); err != nil {
 		utils.ResponseWithError(c, http.StatusInternalServerError, "Error while saving post", err.Error())
 		return

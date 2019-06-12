@@ -2,7 +2,7 @@ package postrepo
 
 import (
 	"outstagram/server/db"
-	"outstagram/server/enums/postvisibility"
+	"outstagram/server/enums/postprivacy"
 	"outstagram/server/models"
 	"outstagram/server/utils"
 	"testing"
@@ -13,13 +13,13 @@ var prRepo = New(dbConn)
 
 func TestPostRepository_Create(t *testing.T) {
 	post := models.Post{
-		Content:    utils.NewStringPointer("lmao"),
-		Visibility: postVisibility.OnlyFollowers,
+		Content: utils.NewStringPointer("lmao"),
+		Privacy: postPrivacy.OnlyFollowers,
 	}
 
 	prRepo.Save(&post)
 
-	if post.ID == 0 && post.Visibility != 1 {
+	if post.ID == 0 && post.Privacy != 1 {
 		t.Error("Post not created")
 	}
 }

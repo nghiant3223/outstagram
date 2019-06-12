@@ -2,7 +2,7 @@ package postservice
 
 import (
 	"github.com/jinzhu/gorm"
-	"outstagram/server/enums/postvisibility"
+	"outstagram/server/enums/postprivacy"
 	"outstagram/server/models"
 	"outstagram/server/repos/postrepo"
 	"outstagram/server/services/userservice"
@@ -55,11 +55,11 @@ func (s *PostService) GetPostByID(postID, userID uint) (*models.Post, error) {
 		return post, nil
 	}
 
-	if post.Visibility == postVisibility.Public {
+	if post.Privacy == postPrivacy.Public {
 		return post, nil
 	}
 
-	if post.Visibility == postVisibility.Private {
+	if post.Privacy == postPrivacy.Private {
 		return nil, gorm.ErrRecordNotFound
 	}
 
@@ -67,7 +67,7 @@ func (s *PostService) GetPostByID(postID, userID uint) (*models.Post, error) {
 		return nil, gorm.ErrRecordNotFound
 	}
 
-	// If post.Visibility is OnlyFollowers
+	// If post.Privacy is OnlyFollowers
 	ok, err := s.userService.CheckFollow(userID, post.UserID)
 	if err != nil {
 		return nil, err
