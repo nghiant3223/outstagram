@@ -112,5 +112,6 @@ ORDER BY level_of_interest DESC
 LIMIT ?
 `
 	r.db.Raw(query, reactableID, userID, limit).Scan(&users)
+
 	return users
 }

@@ -28,8 +28,8 @@ func (s *CommentableService) GetCommentsWithLimit(id, userID, limit, offset uint
 
 	for i := 0; i < len(commentable.Comments); i++ {
 		comment := &commentable.Comments[i]
-		comment.Reactors = s.reactableService.GetReactorsFullname(comment.CommentableID, userID)
-		comment.ReactCount = s.reactableService.GetReactCount(comment.CommentableID)
+		comment.Reactors = s.reactableService.GetReactorsFullname(comment.ReactableID, userID)
+		comment.ReactCount = s.reactableService.GetReactCount(comment.ReactableID)
 	}
 
 	return commentable, nil
@@ -43,8 +43,8 @@ func (s *CommentableService) GetComments(id, userID uint) (*models.Commentable, 
 
 	for i := 0; i < len(commentable.Comments); i++ {
 		comment := &commentable.Comments[i]
-		comment.Reactors = s.reactableService.GetReactorsFullname(comment.CommentableID, userID)
-		comment.ReactCount = s.reactableService.GetReactCount(comment.CommentableID)
+		comment.Reactors = s.reactableService.GetReactorsFullname(comment.ReactableID, userID)
+		comment.ReactCount = s.reactableService.GetReactCount(comment.ReactableID)
 	}
 
 	return commentable, nil

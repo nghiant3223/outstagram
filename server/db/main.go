@@ -26,8 +26,8 @@ func New() (*gorm.DB, error) {
 			log.Fatal(err.Error())
 		}
 
-		//dbInstance.LogMode(true)
-		//dbInstance.Debug()
+		dbInstance.LogMode(true)
+		dbInstance.Debug()
 
 		dbInstance.SingularTable(true)
 		dbInstance.AutoMigrate(
