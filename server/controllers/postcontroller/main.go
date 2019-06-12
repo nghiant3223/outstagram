@@ -1,17 +1,13 @@
 package postcontroller
 
 import (
-	"outstagram/server/dtos/cmtabledtos"
-	"outstagram/server/dtos/postdtos"
+	"outstagram/server/dtos/dtomodels"
 	"outstagram/server/models"
 	"outstagram/server/services/cmtableservice"
-	"outstagram/server/services/cmtservice"
 	"outstagram/server/services/imgservice"
 	"outstagram/server/services/postimgservice"
 	"outstagram/server/services/postservice"
 	"outstagram/server/services/rctableservice"
-	"outstagram/server/services/replyservice"
-	"outstagram/server/services/userservice"
 	"outstagram/server/services/vwableservice"
 )
 
@@ -20,21 +16,19 @@ type Controller struct {
 	imageService       *imgservice.ImageService
 	postImageService   *postimgservice.PostImageService
 	commentableService *cmtableservice.CommentableService
-	commentService     *cmtservice.CommentService
 	reactableService   *rctableservice.ReactableService
-	userService        *userservice.UserService
 	viewableService    *vwableservice.ViewableService
-	replyService       *replyservice.ReplyService
+
 }
 
-func New(postService *postservice.PostService, imageService *imgservice.ImageService, postImageService *postimgservice.PostImageService, commentableService *cmtableservice.CommentableService, commentService *cmtservice.CommentService, reactableService *rctableservice.ReactableService, userService *userservice.UserService, viewableService *vwableservice.ViewableService, replyService *replyservice.ReplyService) *Controller {
-	return &Controller{postService: postService, imageService: imageService, postImageService: postImageService, commentableService: commentableService, commentService: commentService, reactableService: reactableService, userService: userService, viewableService: viewableService, replyService:replyService}
+func New(postService *postservice.PostService, imageService *imgservice.ImageService, postImageService *postimgservice.PostImageService, commentableService *cmtableservice.CommentableService, reactableService *rctableservice.ReactableService, viewableService *vwableservice.ViewableService) *Controller {
+	return &Controller{postService: postService, imageService: imageService, postImageService: postImageService, commentableService: commentableService, reactableService: reactableService, viewableService: viewableService}
 }
 
 // getDTOPost maps post, including post's images, post's comments into a DTO object
-func (pc *Controller) getDTOPost(post *models.Post) (*postdtos.Post, error) {
+func (pc *Controller) getDTOPost(post *models.Post) (*dtomodels.Post, error) {
 	// Set basic post's info
-	dtoPost := postdtos.Post{
+	dtoPost := dtomodels.Post{
 		ID:            post.ID,
 		CreatedAt:     post.CreatedAt,
 		Content:       post.Content,
@@ -49,7 +43,7 @@ func (pc *Controller) getDTOPost(post *models.Post) (*postdtos.Post, error) {
 	// Map post's images to DTO
 	for _, postImage := range post.Images {
 		image := postImage.Image
-		dtoPostImage := postdtos.PostImage{
+		dtoPostImage := dtomodels.PostImage{
 			ID:     postImage.ID,
 			Tiny:   image.Tiny,
 			Origin: image.Origin,
@@ -77,8 +71,8 @@ func (pc *Controller) getDTOPost(post *models.Post) (*postdtos.Post, error) {
 }
 
 //getDTOComment maps comment into a DTO object
-func (pc *Controller) getDTOComment(comment *models.Comment) postdtos.Comment {
-	return postdtos.Comment{
+func (pc *Controller) getDTOComment(comment *models.Comment) dtomodels.Comment {
+	return dtomodels.Comment{
 		ID:            comment.ID,
 		Content:       comment.Content,
 		ReplyCount:    comment.ReplyCount,
@@ -90,8 +84,8 @@ func (pc *Controller) getDTOComment(comment *models.Comment) postdtos.Comment {
 }
 
 // getDTOReply maps a reply into a DTO object
-func (pc *Controller) getDTOReply(reply *models.Reply) cmtabledtos.Reply {
-	return cmtabledtos.Reply{
+func (pc *Controller) getDTOReply(reply *models.Reply) dtomodels.Reply {
+	return dtomodels.Reply{
 		ID:            reply.ID,
 		Content:       reply.Content,
 		CreatedAt:     reply.CreatedAt,

@@ -81,7 +81,7 @@ func (cc *Controller) CreateCommentReplies(c *gin.Context) {
 	}
 
 	if !cc.commentableService.CheckHasComment(cmtableID, cmtID) {
-		utils.ResponseWithError(c, http.StatusConflict, "Comment do not belong to commentable", nil)
+		utils.ResponseWithError(c, http.StatusConflict, "Comment does not belong to commentable", nil)
 		return
 	}
 

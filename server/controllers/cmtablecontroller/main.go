@@ -3,7 +3,7 @@ package cmtablecontroller
 import (
 	"github.com/jinzhu/gorm"
 	"net/http"
-	"outstagram/server/dtos/cmtabledtos"
+	"outstagram/server/dtos/dtomodels"
 	postVisibility "outstagram/server/enums/postvisibility"
 	"outstagram/server/models"
 	"outstagram/server/services/cmtableservice"
@@ -27,8 +27,8 @@ func New(commentableService *cmtableservice.CommentableService, commentService *
 }
 
 //getDTOComment maps comment into a DTO object
-func (cc *Controller) getDTOComment(comment *models.Comment) cmtabledtos.Comment {
-	return cmtabledtos.Comment{
+func (cc *Controller) getDTOComment(comment *models.Comment) dtomodels.Comment {
+	return dtomodels.Comment{
 		ID:            comment.ID,
 		Content:       comment.Content,
 		ReplyCount:    comment.ReplyCount,
@@ -40,8 +40,8 @@ func (cc *Controller) getDTOComment(comment *models.Comment) cmtabledtos.Comment
 }
 
 // getDTOReply maps a reply into a DTO object
-func (cc *Controller) getDTOReply(reply *models.Reply) cmtabledtos.Reply {
-	return cmtabledtos.Reply{
+func (cc *Controller) getDTOReply(reply *models.Reply) dtomodels.Reply {
+	return dtomodels.Reply{
 		ID:            reply.ID,
 		Content:       reply.Content,
 		CreatedAt:     reply.CreatedAt,

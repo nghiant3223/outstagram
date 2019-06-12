@@ -1,6 +1,7 @@
 package postdtos
 
 import (
+	"outstagram/server/dtos/dtomodels"
 	"outstagram/server/enums/postvisibility"
 )
 
@@ -14,5 +15,5 @@ type CreatePostResponse struct {
 	Content    *string                   `json:"content"`
 	NumViewed  int                       `json:"numViewed"`
 	Visibility postVisibility.Visibility `json:"visibility"`
-	Images     []PostImage               `json:"images"`
+	Images     []dtomodels.PostImage     `json:"images"`
 }

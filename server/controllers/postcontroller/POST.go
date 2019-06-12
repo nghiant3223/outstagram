@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"outstagram/server/dtos/postdtos"
+	"outstagram/server/dtos/dtomodels"
 	"outstagram/server/models"
 	"outstagram/server/utils"
 )
@@ -62,7 +63,7 @@ func (pc *Controller) CreatePost(c *gin.Context) {
 			return
 		}
 
-		dtoPostImage := postdtos.PostImage{ID: postImage.ID}
+		dtoPostImage := dtomodels.PostImage{ID: postImage.ID}
 		if err = copier.Copy(&dtoPostImage, &image); err != nil {
 			utils.ResponseWithError(c, http.StatusInternalServerError, "Error while copying entity to dto", err.Error())
 			return

@@ -1,4 +1,4 @@
-package cmtabledtos
+package dtomodels
 
 import "time"
 

@@ -1,4 +1,4 @@
-package postdtos
+package dtomodels
 
 type PostImage struct {
 	ID     uint   `json:"id"`

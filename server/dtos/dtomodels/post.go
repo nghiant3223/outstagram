@@ -1,4 +1,4 @@
-package postdtos
+package dtomodels
 
 import (
 	"outstagram/server/enums/postvisibility"

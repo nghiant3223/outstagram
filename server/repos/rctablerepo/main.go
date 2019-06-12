@@ -52,9 +52,9 @@ func (r *ReactableRepo) GetReactsWithLimit(id uint, limit uint, offset uint) (*m
 	return &reactable, nil
 }
 
-func (r *ReactableRepo) GetReactCount(id uint) int {
+func (r *ReactableRepo) GetReactCount(reactableID uint) int {
 	var count int
-	r.db.Model(&models.React{}).Where("reactable_id = ?", id).Count(&count)
+	r.db.Model(&models.React{}).Where("reactable_id = ?", reactableID).Count(&count)
 
 	return count
 }

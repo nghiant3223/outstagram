@@ -22,6 +22,6 @@ func (s *ReactableService) GetReactors(id uint) []string {
 	return []string{"go", "gin", "gorm"}
 }
 
-func (s *ReactableService) GetReactCount(id uint) int {
-	return s.reactableRepo.GetReactCount(id)
+func (s *ReactableService) GetReactCount(reactableID uint) int {
+	return s.reactableRepo.GetReactCount(reactableID)
 }

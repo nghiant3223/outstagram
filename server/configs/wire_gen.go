@@ -89,7 +89,7 @@ func InitializePostController() (*postcontroller.Controller, error) {
 	viewableService := vwableservice.New(viewableRepo)
 	replyRepo := replyrepo.New(gormDB)
 	replyService := replyservice.New(replyRepo)
-	controller := postcontroller.New(postService, imageService, postImageService, commentableService, commentService, reactableService, userService, viewableService, replyService)
+	controller := postcontroller.New(postService, imageService, postImageService, commentableService, reactableService, viewableService)
 	return controller, nil
 }
 

@@ -72,14 +72,14 @@ func InitializePostController() (*postcontroller.Controller, error) {
 		vwablerepo.New,
 		vwableservice.New,
 
-		userservice.New,
-		userrepo.New,
+		userservice.New
+		,
 
-		postservice.New,
-		postrepo.New,
+		postservice.New
+		,
 
-		postimgservice.New,
-		postimgrepo.New,
+		postimgservice.New
+		,
 
 		imgservice.New,
 		imgrepo.New,
