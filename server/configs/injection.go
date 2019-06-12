@@ -101,6 +101,14 @@ func InitializeReactController() (*rctcontroller.Controller, error) {
 		rctservice.New,
 		rctrepo.New,
 
+		rctableservice.New,
+		rctablerepo.New,
+
+		cmtablerepo.New,
+
+		userservice.New,
+		userrepo.New,
+
 		db.New)
 
 	return &rctcontroller.Controller{}, nil

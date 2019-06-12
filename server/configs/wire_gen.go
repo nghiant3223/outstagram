@@ -80,7 +80,7 @@ func InitializePostController() (*postcontroller.Controller, error) {
 	postImageRepo := postimgrepo.New(gormDB)
 	postImageService := postimgservice.New(postImageRepo)
 	commentableRepo := cmtablerepo.New(gormDB)
-	reactableRepo := rctablerepo.New(gormDB)
+	reactableRepo := rctablerepo.New(gormDB, commentableRepo)
 	reactableService := rctableservice.New(reactableRepo)
 	commentableService := cmtableservice.New(commentableRepo, reactableService)
 	viewableRepo := vwablerepo.New(gormDB)
@@ -96,7 +96,12 @@ func InitializeReactController() (*rctcontroller.Controller, error) {
 	}
 	reactRepo := rctrepo.New(gormDB)
 	reactService := rctservice.New(reactRepo)
-	controller := rctcontroller.New(reactService)
+	commentableRepo := cmtablerepo.New(gormDB)
+	reactableRepo := rctablerepo.New(gormDB, commentableRepo)
+	reactableService := rctableservice.New(reactableRepo)
+	userRepo := userrepo.New(gormDB)
+	userService := userservice.New(userRepo)
+	controller := rctcontroller.New(reactService, reactableService, userService)
 	return controller, nil
 }
 
@@ -106,7 +111,7 @@ func InitializeCommentableController() (*cmtablecontroller.Controller, error) {
 		return nil, err
 	}
 	commentableRepo := cmtablerepo.New(gormDB)
-	reactableRepo := rctablerepo.New(gormDB)
+	reactableRepo := rctablerepo.New(gormDB, commentableRepo)
 	reactableService := rctableservice.New(reactableRepo)
 	commentableService := cmtableservice.New(commentableRepo, reactableService)
 	commentRepo := cmtrepo.New(gormDB)

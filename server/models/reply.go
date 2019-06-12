@@ -9,6 +9,7 @@ import (
 type Reply struct {
 	gorm.Model
 	Content     *string `gorm:"not null"`
+	Comment Comment
 	CommentID   uint
 	UserID      uint
 	User        User

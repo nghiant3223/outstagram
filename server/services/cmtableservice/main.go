@@ -50,8 +50,8 @@ func (s *CommentableService) GetComments(id uint) (*models.Commentable, error) {
 	return commentable, nil
 }
 
-func (s *CommentableService) GetVisibilityByID(id uint) (postVisibility.Visibility, uint, error) {
-	return s.commentableRepo.GetVisibility(id)
+func (s *CommentableService) GetVisibilityByID(commentableID uint) (postVisibility.Visibility, uint, error) {
+	return s.commentableRepo.GetVisibility(commentableID)
 }
 
 func (s *CommentableService) CheckHasComment(cmtableID, cmtID uint) bool {

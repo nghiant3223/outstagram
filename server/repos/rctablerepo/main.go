@@ -1,16 +1,21 @@
 package rctablerepo
 
 import (
+	"errors"
+	"fmt"
 	"github.com/jinzhu/gorm"
+	postVisibility "outstagram/server/enums/postvisibility"
 	"outstagram/server/models"
+	"outstagram/server/repos/cmtablerepo"
 )
 
 type ReactableRepo struct {
-	db *gorm.DB
+	db              *gorm.DB
+	commentableRepo *cmtablerepo.CommentableRepo
 }
 
-func New(dbConnection *gorm.DB) *ReactableRepo {
-	return &ReactableRepo{db: dbConnection}
+func New(dbConnection *gorm.DB, commentableRepo *cmtablerepo.CommentableRepo) *ReactableRepo {
+	return &ReactableRepo{db: dbConnection, commentableRepo: commentableRepo}
 }
 
 func (r *ReactableRepo) GetReacts(id uint) ([]models.React, error) {
@@ -57,4 +62,39 @@ func (r *ReactableRepo) GetReactCount(reactableID uint) int {
 	r.db.Model(&models.React{}).Where("reactable_id = ?", reactableID).Count(&count)
 
 	return count
+}
+
+func (r *ReactableRepo) GetVisibility(reactableID uint) (postVisibility.Visibility, uint, error) {
+	var reactable models.Reactable
+	var post models.Post
+	var postImage models.PostImage
+	var comment models.Comment
+	var reply models.Reply
+
+	if err := r.db.First(&reactable, reactableID).Error; err != nil {
+		return 0, 0, nil
+	}
+
+	r.db.Model(&reactable).Related(&post)
+	if post.ID != 0 {
+		return r.commentableRepo.GetVisibility(post.CommentableID)
+	}
+
+	r.db.Model(&reactable).Related(&postImage)
+	if postImage.ID != 0 {
+		return r.commentableRepo.GetVisibility(postImage.CommentableID)
+	}
+
+	r.db.Model(&reactable).Related(&comment)
+	if comment.ID != 0 {
+		return r.commentableRepo.GetVisibility(comment.CommentableID)
+	}
+
+	r.db.Model(&reactable).Related(&reply)
+	if reply.ID != 0 {
+		r.db.Model(&reply).Related(&reply.Comment)
+		return r.commentableRepo.GetVisibility(reply.Comment.CommentableID)
+	}
+
+	return 0, 0, errors.New(fmt.Sprintf("Database error, invalid use of reactable_id = %v", reactableID))
 }

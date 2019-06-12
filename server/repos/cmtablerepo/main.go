@@ -65,12 +65,13 @@ func (r *CommentableRepo) GetCommentCount(id uint) int {
 	return count
 }
 
-func (r *CommentableRepo) GetVisibility(id uint) (postVisibility.Visibility, uint, error) {
+// GetVisibility returns visibility for an commentable
+func (r *CommentableRepo) 	GetVisibility(commentableID uint) (postVisibility.Visibility, uint, error) {
 	var commentable models.Commentable
 	var post models.Post
 	var postImage models.PostImage
 
-	if err := r.db.First(&commentable, id).Error; err != nil {
+	if err := r.db.First(&commentable, commentableID).Error; err != nil {
 		return 0, 0, nil
 	}
 
@@ -85,7 +86,7 @@ func (r *CommentableRepo) GetVisibility(id uint) (postVisibility.Visibility, uin
 		return postImage.Post.Visibility, postImage.Post.UserID, nil
 	}
 
-	return 0, 0, errors.New(fmt.Sprintf("Database error, invalid use of commentable_id = %v", id))
+	return 0, 0, errors.New(fmt.Sprintf("Database error, invalid use of commentable_id = %v", commentableID))
 }
 
 func (r *CommentableRepo) HasComment(cmtableID, cmtID uint) bool {
