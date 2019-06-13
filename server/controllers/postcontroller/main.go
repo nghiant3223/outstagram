@@ -36,7 +36,6 @@ func (pc *Controller) getDTOPost(post *models.Post, userID uint) (*dtomodels.Pos
 		Content:       post.Content,
 		Visibility:    post.Privacy,
 		ImageCount:    len(post.Images),
-		NumViewed:     post.NumViewed,
 		OwnerID:       post.UserID,
 		OwnerFullname: post.User.Fullname,
 		ReactCount:    pc.reactableService.GetReactCount(post.ReactableID),

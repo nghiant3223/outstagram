@@ -3,6 +3,7 @@ package userservice
 import (
 	"errors"
 	"github.com/jinzhu/gorm"
+	"outstagram/server/constants"
 	"outstagram/server/models"
 	"outstagram/server/repos/userrepo"
 )
@@ -66,4 +67,30 @@ func (s *UserService) GetFollowings(userID uint) []models.User {
 
 func (s *UserService) CheckFollow(following, follower uint) (bool, error) {
 	return s.userRepo.CheckFollow(following, follower)
+}
+
+func (s *UserService) Follow(following, follower uint) error {
+	hasFollowed, err := s.CheckFollow(following, follower)
+	if err != nil {
+		return err
+	}
+
+	if hasFollowed {
+		return errors.New(constants.AlreadyExisted)
+	}
+
+	return s.userRepo.Follow(following, follower)
+}
+
+func (s *UserService) Unfollow(following, follower uint) error {
+	hasFollowed, err := s.CheckFollow(following, follower)
+	if err != nil {
+		return err
+	}
+
+	if !hasFollowed {
+		return errors.New(constants.NotExisted)
+	}
+
+	return s.userRepo.Unfollow(following, follower)
 }

@@ -9,7 +9,6 @@ import (
 type Post struct {
 	gorm.Model
 	Content       *string
-	NumViewed     int                 `gorm:"default:0"`
 	Privacy       postPrivacy.Privacy `gorm:"default:0"`
 	CommentableID uint
 	ReactableID   uint

@@ -14,7 +14,6 @@ type Post struct {
 	CommentCount  int                 `json:"commentCount"`
 	Visibility    postPrivacy.Privacy `json:"visibility"`
 	Content       *string             `json:"content"`
-	NumViewed     int                 `json:"numViewed"`
 	Reactors      []string            `json:"reactors"`
 	ReactCount    int                 `json:"reactCount"`
 	OwnerFullname string              `json:"ownerFullname"`

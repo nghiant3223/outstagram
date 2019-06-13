@@ -104,11 +104,11 @@ func (r *ReactableRepo) GetReactors(reactableID, userID uint, limit int) []model
 	query := `
 SELECT reactors.*
 FROM 
-	(SELECT user.* FROM user INNER JOIN react on user.id = react.user_id WHERE reactable_id = ?) reactors
+	(SELECT user.* FROM user INNER JOIN react	 on user.id = react.user_id WHERE reactable_id = ?) reactors
 	LEFT JOIN
-	(SELECT user.id as following_id, level_of_interest, avatar_url as avatarURL FROM user INNER JOIN follows ON user.id = user_followed_id WHERE user_follow_id = ?) followings
+	(SELECT user.id as following_id, quality FROM user INNER JOIN follows ON user.id = user_followed_id WHERE user_follow_id = ?) followings
 	ON reactors.id = following_id
-ORDER BY level_of_interest DESC 
+ORDER BY quality DESC 
 LIMIT ?
 `
 	r.db.Raw(query, reactableID, userID, limit).Scan(&users)

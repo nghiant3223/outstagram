@@ -5,6 +5,8 @@ package configs
 import (
 	"outstagram/server/controllers/authcontroller"
 	"outstagram/server/controllers/cmtablecontroller"
+	"outstagram/server/controllers/flcontroller"
+	"outstagram/server/controllers/mecontroller"
 	"outstagram/server/controllers/postcontroller"
 	"outstagram/server/controllers/rctcontroller"
 	"outstagram/server/controllers/usercontroller"
@@ -137,3 +139,29 @@ func InitializeCommentableController() (*cmtablecontroller.Controller, error) {
 
 	return &cmtablecontroller.Controller{}, nil
 }
+
+func InitializeMeController() (*mecontroller.Controller, error) {
+	wire.Build(
+		mecontroller.New,
+
+		userservice.New,
+		userrepo.New,
+
+		db.New)
+
+	return &mecontroller.Controller{}, nil
+}
+
+
+func InitializeFollowController() (*flcontroller.Controller, error) {
+	wire.Build(
+		flcontroller.New,
+
+		userservice.New,
+		userrepo.New,
+
+		db.New)
+
+	return &flcontroller.Controller{}, nil
+}
+

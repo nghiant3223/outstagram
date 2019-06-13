@@ -8,6 +8,8 @@ package configs
 import (
 	"outstagram/server/controllers/authcontroller"
 	"outstagram/server/controllers/cmtablecontroller"
+	"outstagram/server/controllers/flcontroller"
+	"outstagram/server/controllers/mecontroller"
 	"outstagram/server/controllers/postcontroller"
 	"outstagram/server/controllers/rctcontroller"
 	"outstagram/server/controllers/usercontroller"
@@ -121,5 +123,27 @@ func InitializeCommentableController() (*cmtablecontroller.Controller, error) {
 	replyRepo := replyrepo.New(gormDB)
 	replyService := replyservice.New(replyRepo)
 	controller := cmtablecontroller.New(commentableService, commentService, userService, reactableService, replyService)
+	return controller, nil
+}
+
+func InitializeMeController() (*mecontroller.Controller, error) {
+	gormDB, err := db.New()
+	if err != nil {
+		return nil, err
+	}
+	userRepo := userrepo.New(gormDB)
+	userService := userservice.New(userRepo)
+	controller := mecontroller.New(userService)
+	return controller, nil
+}
+
+func InitializeFollowController() (*flcontroller.Controller, error) {
+	gormDB, err := db.New()
+	if err != nil {
+		return nil, err
+	}
+	userRepo := userrepo.New(gormDB)
+	userService := userservice.New(userRepo)
+	controller := flcontroller.New(userService)
 	return controller, nil
 }

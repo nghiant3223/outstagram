@@ -25,10 +25,12 @@ func main() {
 
 	apiRouter := router.Group("/api")
 	{
+		routers.MeAPIRouter(apiRouter.Group("/me"))
 		routers.AuthAPIRouter(apiRouter.Group("/auth"))
 		routers.UserAPIRouter(apiRouter.Group("/users"))
-		routers.StoryAPIRouter(apiRouter.Group("/stories"))
 		routers.PostAPIRouter(apiRouter.Group("/posts"))
+		routers.StoryAPIRouter(apiRouter.Group("/stories"))
+		routers.FollowAPIRouter(apiRouter.Group("/follows"))
 		routers.ReactAPIRouter(apiRouter.Group("/reactions"))
 		routers.CommentableAPIRouter(apiRouter.Group("/commentable"))
 	}

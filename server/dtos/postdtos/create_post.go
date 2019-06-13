@@ -11,10 +11,5 @@ type CreatePostRequest struct {
 }
 
 type CreatePostResponse struct {
-	//ID         uint                      `json:"id"`
-	//Content    *string                   `json:"content"`
-	//NumViewed  int                       `json:"numViewed"`
-	//Privacy postVisibility.Privacy `json:"visibility"`
-	//Images     []dtomodels.PostImage     `json:"images"`
-	Post 	dtomodels.Post `json:"post"`
+	Post dtomodels.Post `json:"post"`
 }

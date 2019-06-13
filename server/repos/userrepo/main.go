@@ -119,6 +119,14 @@ func (r *UserRepo) ExistsByEmail(email string) bool {
 	return !r.db.Where("email = ?", email).First(&user).RecordNotFound()
 }
 
+func (r *UserRepo) Follow(following, followID uint) error {
+	return r.db.Exec("INSERT INTO follows(user_follow_id, user_followed_id) VALUES (?, ?)", following, followID).Error
+}
+
+func (r *UserRepo) Unfollow(following, followID uint) error {
+	return r.db.Exec("DELETE FROM follows WHERE user_follow_id = ? AND user_followed_id = ?", following, followID).Error
+}
+
 func (r *UserRepo) GetFollowers(userID uint) []models.User {
 	var users []models.User
 	r.db.Raw("SELECT user.* FROM user INNER JOIN follows ON user_follow_id = user.id WHERE follows.user_followed_id = ?", userID).Scan(&users)
@@ -140,7 +148,7 @@ func (r *UserRepo) CheckFollow(following, follower uint) (bool, error) {
 	return rows.Next(), nil
 }
 
-func (r *UserRepo) GetPostFeed(userID, limit uint) []models.Post {
+func (r *UserRepo) GetPostFeed(userID uint) []models.Post {
 	var posts []models.Post
 	query := `
 SELECT candidate_post.*, seen_post.id as seen_id
@@ -156,7 +164,7 @@ FROM (SELECT p.id
      (SELECT p.*, f.quality
       FROM post AS p
                INNER JOIN follows AS f ON p.user_id = f.user_followed_id
-      WHERE f.user_follow_id = 1
+      WHERE f.user_follow_id = ?
         AND quality IS NOT NULL) AS candidate_post ON seen_post.id = candidate_post.id
 ORDER BY case
              when seen_post.id is NULL
@@ -167,7 +175,7 @@ ORDER BY case
              when seen_post.id is NULL
                  then candidate_post.popularity * 0.25 + candidate_post.quality * 0.75 end DESC,
          candidate_post.created_at DESC;`
-	r.db.Raw(query, userID, limit).Scan(&posts)
+	r.db.Raw(query, userID, userID).Scan(&posts)
 
 	return posts
 }
