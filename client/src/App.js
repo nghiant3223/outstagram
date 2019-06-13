@@ -1,21 +1,33 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import { connect } from 'react-redux';
+
+import Router from './router';
+
+import { getMe } from './actions/auth.action';
+
 import './App.css';
 
 class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to React</h2>
-        </div>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-      </div>
-    );
-  }
+    componentDidMount = () => {
+        const {getMe} = this.props;
+        getMe();
+    }
+
+    render() {
+        const { isLoading, isAuthenticated } = this.props;
+
+        if (isLoading) {
+            return <div>Loading...</div>
+        }
+
+        return <Router isAuthenticated={isAuthenticated} />;
+    }
 }
 
-export default App;
+const mapStateToProps = ({ auth: { isAuthenticated }, ui: { isLoading } }) => ({ isAuthenticated, isLoading });
+
+const mapDispatchToProps = (dispatch) => ({
+    getMe: () => dispatch(getMe())
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

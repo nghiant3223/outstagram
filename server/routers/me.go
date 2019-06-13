@@ -15,6 +15,6 @@ func MeAPIRouter(router *gin.RouterGroup) {
 
 	router.Use(middlewares.VerifyToken)
 
-	router.GET("/",  meController.GetMe)
+	router.GET("",  meController.GetMe)
 	router.GET("/feed", meController.GetNewsFeed)
 }
