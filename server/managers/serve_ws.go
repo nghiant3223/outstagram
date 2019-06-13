@@ -19,5 +19,5 @@ func ServeWs(c *gin.Context) {
 
 	HubInstance.Register <- s
 	go s.WritePump()
-	s.ReadPump()
+	go s.ReadPump()
 }

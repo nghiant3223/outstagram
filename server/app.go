@@ -2,10 +2,12 @@ package main
 
 import (
 	"fmt"
+	"github.com/gin-gonic/contrib/static"
 	"log"
+	"net/http"
 	"os"
-
 	"outstagram/server/managers"
+
 	"outstagram/server/routers"
 
 	"github.com/gin-gonic/gin"
@@ -22,6 +24,19 @@ func main() {
 
 	go managers.HubInstance.Run(managers.StoryManagerInstance.WSMux)
 	router.GET("/ws", managers.ServeWs)
+
+	if os.Getenv("APP_ENV") == "production" {
+		router.Use(static.Serve("/", static.LocalFile("../client/build", true)))
+		router.Use(func(c *gin.Context) {
+			c.Next()
+
+			if c.Writer.Status() == http.StatusNotFound {
+				c.File("../client/build/index.html")
+			}
+		})
+	}
+
+	router.Use(static.Serve("/images", static.LocalFile("./images", true)))
 
 	apiRouter := router.Group("/api")
 	{
