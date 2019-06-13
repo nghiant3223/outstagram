@@ -156,7 +156,7 @@ func (r *UserRepo) GetPostFeed(userID uint) []uint {
 SELECT candidate_post.id
 FROM (
 	SELECT p.id
-      FROM (
+	FROM (
 		SELECT *
             FROM views
 			INNER JOIN viewable 
