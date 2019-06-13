@@ -94,3 +94,7 @@ func (s *UserService) Unfollow(following, follower uint) error {
 
 	return s.userRepo.Unfollow(following, follower)
 }
+
+func (s *UserService) GetPostFeed(userID uint) []uint {
+	return s.userRepo.GetPostFeed(userID)
+}

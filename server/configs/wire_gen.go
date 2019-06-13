@@ -76,18 +76,18 @@ func InitializePostController() (*postcontroller.Controller, error) {
 	postRepo := postrepo.New(gormDB)
 	userRepo := userrepo.New(gormDB)
 	userService := userservice.New(userRepo)
-	postService := postservice.New(postRepo, userService)
-	imageRepo := imgrepo.New(gormDB)
-	imageService := imgservice.New(imageRepo)
-	postImageRepo := postimgrepo.New(gormDB)
-	postImageService := postimgservice.New(postImageRepo)
 	commentableRepo := cmtablerepo.New(gormDB)
 	reactableRepo := rctablerepo.New(gormDB, commentableRepo)
 	reactableService := rctableservice.New(reactableRepo)
 	commentableService := cmtableservice.New(commentableRepo, reactableService)
+	postService := postservice.New(postRepo, userService, reactableService, commentableService)
+	imageRepo := imgrepo.New(gormDB)
+	imageService := imgservice.New(imageRepo)
+	postImageRepo := postimgrepo.New(gormDB)
+	postImageService := postimgservice.New(postImageRepo)
 	viewableRepo := vwablerepo.New(gormDB)
 	viewableService := vwableservice.New(viewableRepo)
-	controller := postcontroller.New(postService, imageService, postImageService, commentableService, reactableService, viewableService)
+	controller := postcontroller.New(postService, imageService, postImageService, viewableService)
 	return controller, nil
 }
 
@@ -133,7 +133,13 @@ func InitializeMeController() (*mecontroller.Controller, error) {
 	}
 	userRepo := userrepo.New(gormDB)
 	userService := userservice.New(userRepo)
-	controller := mecontroller.New(userService)
+	postRepo := postrepo.New(gormDB)
+	commentableRepo := cmtablerepo.New(gormDB)
+	reactableRepo := rctablerepo.New(gormDB, commentableRepo)
+	reactableService := rctableservice.New(reactableRepo)
+	commentableService := cmtableservice.New(commentableRepo, reactableService)
+	postService := postservice.New(postRepo, userService, reactableService, commentableService)
+	controller := mecontroller.New(userService, postService)
 	return controller, nil
 }
 
