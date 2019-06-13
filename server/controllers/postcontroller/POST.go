@@ -67,7 +67,7 @@ func (pc *Controller) CreatePost(c *gin.Context) {
 		return
 	}
 
-	dtoPost, err := pc.getDTOPost(savedPost, userID)
+	dtoPost, err := pc.postService.GetDTOPost(savedPost, userID)
 	if err != nil {
 		utils.ResponseWithError(c, http.StatusInternalServerError, "Error while saving post", err.Error())
 		return

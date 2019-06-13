@@ -147,11 +147,19 @@ func InitializeMeController() (*mecontroller.Controller, error) {
 		userservice.New,
 		userrepo.New,
 
+		postservice.New,
+		postrepo.New,
+
+		cmtableservice.New,
+		cmtablerepo.New,
+
+		rctableservice.New,
+		rctablerepo.New,
+
 		db.New)
 
 	return &mecontroller.Controller{}, nil
 }
-
 
 func InitializeFollowController() (*flcontroller.Controller, error) {
 	wire.Build(
@@ -164,4 +172,3 @@ func InitializeFollowController() (*flcontroller.Controller, error) {
 
 	return &flcontroller.Controller{}, nil
 }
-
