@@ -4,12 +4,13 @@ import { connect } from 'react-redux';
 import Router from './router';
 
 import { getMe } from './actions/auth.action';
+import Socket from './socket';
 
 import './App.css';
 
 class App extends Component {
     componentDidMount = () => {
-        const {getMe} = this.props;
+        const { getMe } = this.props;
         getMe();
     }
 

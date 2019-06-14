@@ -2,6 +2,8 @@ import * as actionTypes from '../constants/actionTypes';
 import { setToken, getToken } from '../localStorage';
 import * as authServices from '../services/auth.service';
 
+import Socket from '../socket';
+
 export function loginUser(username, password) {
     return async function (dispatch) {
         try {
@@ -18,6 +20,7 @@ export function loginUser(username, password) {
 
 export function logoutUser() {
     localStorage.clear();
+    Socket.close();
     return { type: actionTypes.LOGOUT };
 }
 
