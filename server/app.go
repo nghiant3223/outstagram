@@ -3,16 +3,14 @@ package main
 import (
 	"fmt"
 	"github.com/gin-gonic/contrib/static"
+	"github.com/gin-gonic/gin"
+	_ "github.com/jinzhu/gorm/dialects/mysql"
+	"github.com/joho/godotenv"
 	"log"
 	"net/http"
 	"os"
 	"outstagram/server/managers"
-
 	"outstagram/server/routers"
-
-	"github.com/gin-gonic/gin"
-	_ "github.com/jinzhu/gorm/dialects/mysql"
-	"github.com/joho/godotenv"
 )
 
 func main() {
@@ -48,6 +46,21 @@ func main() {
 		routers.FollowAPIRouter(apiRouter.Group("/follows"))
 		routers.ReactAPIRouter(apiRouter.Group("/reactions"))
 		routers.CommentableAPIRouter(apiRouter.Group("/commentable"))
+	}
+
+	if os.Getenv("PROTOCOL") == "https" {
+		PORT := os.Getenv("PORT")
+		if PORT == "" {
+			err := router.RunTLS(":3000", "./cert/cert.pem", "./cert/key.pem")
+			if err != nil {
+				log.Fatal(err.Error())
+			}
+			return
+		}
+
+		if err := router.RunTLS(fmt.Sprintf(":%v", PORT), "./cert/cert.pem", "./cert/key.pem"); err != nil {
+			log.Fatal(err.Error())
+		}
 	}
 
 	PORT := os.Getenv("PORT")
