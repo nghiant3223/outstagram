@@ -11,7 +11,6 @@ class HomePage extends Component {
     componentDidMount() {
         Socket.get();
     }
-    
 
     render() {
         const socket = Socket.get();
