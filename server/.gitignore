@@ -5,3 +5,5 @@ gin-bin
 .env
 images/
 !images/.keep
+client-build
+configs/main.yml

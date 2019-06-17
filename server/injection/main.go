@@ -1,6 +1,6 @@
 //+build wireinject
 
-package configs
+package injection
 
 import (
 	"outstagram/server/controllers/authcontroller"

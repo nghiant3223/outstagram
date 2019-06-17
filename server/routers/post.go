@@ -3,12 +3,12 @@ package routers
 import (
 	"github.com/gin-gonic/gin"
 	"log"
-	"outstagram/server/configs"
+	"outstagram/server/injection"
 	"outstagram/server/middlewares"
 )
 
 func PostAPIRouter(router *gin.RouterGroup) {
-	postController, err := configs.InitializePostController()
+	postController, err := injection.InitializePostController()
 	if err != nil {
 		log.Fatal(err.Error())
 	}

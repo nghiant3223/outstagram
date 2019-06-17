@@ -4,8 +4,8 @@ import (
 	"flag"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
+	"github.com/spf13/viper"
 	"log"
-	"os"
 	"outstagram/server/models"
 )
 
@@ -19,7 +19,7 @@ func New() (*gorm.DB, error) {
 		if flag.Lookup("test.v") != nil {
 			dbInstance, err = gorm.Open("mysql", "root:root@/outstagram?charset=utf8&parseTime=True&loc=Local")
 		} else {
-			dbInstance, err = gorm.Open("mysql", os.ExpandEnv("${DB_USERNAME}:${DB_PASSWORD}@/${DB_SCHEMA}?charset=utf8&parseTime=True&loc=Local"))
+			dbInstance, err = gorm.Open(viper.GetString("db.dialect"), viper.GetString("db.url"))
 		}
 
 		if err != nil {

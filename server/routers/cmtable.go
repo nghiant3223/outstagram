@@ -3,12 +3,12 @@ package routers
 import (
 	"github.com/gin-gonic/gin"
 	"log"
-	"outstagram/server/configs"
+	"outstagram/server/injection"
 	"outstagram/server/middlewares"
 )
 
 func CommentableAPIRouter(router *gin.RouterGroup) {
-	commentableController, err := configs.InitializeCommentableController()
+	commentableController, err := injection.InitializeCommentableController()
 	if err != nil {
 		log.Fatal(err.Error())
 	}

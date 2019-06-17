@@ -32,7 +32,7 @@ func (fc *Controller) CreateFollow(c *gin.Context) {
 			return
 		}
 
-		if err.Error() == constants.AlreadyExisted {
+		if err.Error() == constants.AlreadyExist {
 			utils.ResponseWithError(c, http.StatusNotFound, "Already followed", err.Error())
 			return
 		}

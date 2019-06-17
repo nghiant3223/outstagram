@@ -76,7 +76,7 @@ func (s *UserService) Follow(following, follower uint) error {
 	}
 
 	if hasFollowed {
-		return errors.New(constants.AlreadyExisted)
+		return errors.New(constants.AlreadyExist)
 	}
 
 	return s.userRepo.Follow(following, follower)
@@ -89,7 +89,7 @@ func (s *UserService) Unfollow(following, follower uint) error {
 	}
 
 	if !hasFollowed {
-		return errors.New(constants.NotExisted)
+		return errors.New(constants.NotExist)
 	}
 
 	return s.userRepo.Unfollow(following, follower)

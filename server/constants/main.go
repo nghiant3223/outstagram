@@ -2,6 +2,5 @@ package constants
 
 var ReactorCount = 10
 
-var AlreadyExisted = "entity already existed"
-
-var NotExisted = "entity not exist"
+var AlreadyExist = "entity already exist"
+var NotExist = "entity not exist"

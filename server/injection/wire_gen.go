@@ -3,7 +3,7 @@
 //go:generate wire
 //+build !wireinject
 
-package configs
+package injection
 
 import (
 	"outstagram/server/controllers/authcontroller"
@@ -40,7 +40,7 @@ import (
 	"outstagram/server/services/vwableservice"
 )
 
-// Injectors from injection.go:
+// Injectors from main.go:
 
 func InitializeUserController() (*usercontroller.Controller, error) {
 	gormDB, err := db.New()

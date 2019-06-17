@@ -27,7 +27,7 @@ func (fc *Controller) RemoveFollow(c *gin.Context) {
 			return
 		}
 
-		if err.Error() == constants.NotExisted {
+		if err.Error() == constants.NotExist {
 			utils.ResponseWithError(c, http.StatusNotFound, "Not followed yet", err.Error())
 			return
 		}

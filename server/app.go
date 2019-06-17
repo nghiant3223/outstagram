@@ -5,32 +5,30 @@ import (
 	"github.com/gin-gonic/contrib/static"
 	"github.com/gin-gonic/gin"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
-	"github.com/joho/godotenv"
+	"github.com/spf13/viper"
 	"log"
-	"net/http"
-	"os"
 	"outstagram/server/managers"
+	"outstagram/server/pkg/configutils"
 	"outstagram/server/routers"
 )
 
 func main() {
-	if err := godotenv.Load(); err != nil {
-		log.Fatal("Cannot load .env file")
-	}
+	configutils.LoadConfiguration("outstagram", "main", "configs")
 
 	router := gin.Default()
 
 	go managers.HubInstance.Run(managers.StoryManagerInstance.WSMux)
 	router.GET("/ws", managers.ServeWs)
 
-	if os.Getenv("APP_ENV") == "production" {
-		router.Use(static.Serve("/", static.LocalFile("../client/build", true)))
-		router.Use(func(c *gin.Context) {
-			c.Next()
+	if viper.GetString("env") == "production" {
+		router.Use(static.Serve("/", static.LocalFile("./client-build", true)))
 
-			if c.Writer.Status() == http.StatusNotFound {
-				c.File("../client/build/index.html")
-			}
+		router.NoMethod(func(c *gin.Context) {
+			c.File("./client-build/index.html")
+		})
+
+		router.NoRoute(func(c *gin.Context) {
+			c.File("./client-build/index.html")
 		})
 	}
 
@@ -48,22 +46,7 @@ func main() {
 		routers.CommentableAPIRouter(apiRouter.Group("/commentable"))
 	}
 
-	if os.Getenv("PROTOCOL") == "https" {
-		PORT := os.Getenv("PORT")
-		if PORT == "" {
-			err := router.RunTLS(":3000", "./cert/cert.pem", "./cert/key.pem")
-			if err != nil {
-				log.Fatal(err.Error())
-			}
-			return
-		}
-
-		if err := router.RunTLS(fmt.Sprintf(":%v", PORT), "./cert/cert.pem", "./cert/key.pem"); err != nil {
-			log.Fatal(err.Error())
-		}
-	}
-
-	PORT := os.Getenv("PORT")
+	PORT := viper.GetString("port")
 	if PORT == "" {
 		err := router.Run(":3000")
 		if err != nil {
