@@ -3,7 +3,7 @@ services:
   web:
     build: .
     ports:
-      - "12345:3000"
+      - "3000:3000"
     expose:
       - "3000"
     # Comment the two following lines for production
