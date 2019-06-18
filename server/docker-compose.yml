@@ -1,9 +1,25 @@
-version: '1'
+version: '2'
 services:
   web:
     build: .
     ports:
       - "12345:3000"
+    expose:
+      - "3000"
     # Comment the two following lines for production
     volumes:
       - .:/outstagram
+  db:
+    image: mysql
+    environment:
+      MYSQL_USERNAME: "root"
+      MYSQL_PASSWORD: "root"
+      MYSQL_DATABASE: "outstagram"
+    ports:
+      - "33060:3306"
+    expose:
+      - "3306"
+    volumes:
+      - mysql:/var/lib/mysql
+volumes:
+  mysql:
