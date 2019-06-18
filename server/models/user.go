@@ -18,8 +18,8 @@ type User struct {
 	AvatarURL  *string
 	LastLogin  *time.Time
 	Gender     bool
-	NotifBoard NotifBoard
-	StoryBoard StoryBoard
+	NotifBoard NotifBoard `gorm:"association_autoupdate:false"`
+	StoryBoard StoryBoard `gorm:"association_autoupdate:false"`
 }
 
 func (u *User) ToUserDTO() dtomodels.User {
