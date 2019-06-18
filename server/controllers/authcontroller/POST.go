@@ -36,7 +36,7 @@ func (ac *Controller) Login(c *gin.Context) {
 		return
 	}
 
-	utils.ResponseWithSuccess(c, http.StatusOK, "Login successfully", token)
+	utils.ResponseWithSuccess(c, http.StatusOK, "Login successfullyy", token)
 }
 
 func (ac *Controller) Register(c *gin.Context) {
