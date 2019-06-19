@@ -46,7 +46,7 @@ func New() (*gorm.DB, error) {
 				&models.Reply{},
 				&models.Room{},
 				&models.StoryBoard{},
-				&models.StoryImage{},
+				&models.Story{},
 				&models.User{},
 				&models.Viewable{})
 		}

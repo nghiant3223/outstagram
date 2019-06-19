@@ -16,3 +16,7 @@ func New(dbConnection *gorm.DB) *StoryBoardRepo {
 func (r *StoryBoardRepo) Save(board *models.StoryBoard) error {
 	return r.db.Create(board).Error
 }
+
+func (r *StoryBoardRepo) SaveStory(story *models.Story) error {
+	return nil
+}
