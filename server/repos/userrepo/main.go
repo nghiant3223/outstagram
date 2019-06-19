@@ -133,9 +133,20 @@ func (r *UserRepo) GetFollowers(userID uint) []models.User {
 	return users
 }
 
-func (r *UserRepo) GetFollowings(userID uint) []models.User {
-	var users []models.User
+func (r *UserRepo) GetFollowings(userID uint) []*models.User {
+	var users []*models.User
 	r.db.Raw("SELECT user.* FROM user INNER JOIN follows ON user_followed_id = user.id WHERE follows.user_follow_id = ?", userID).Scan(&users)
+	return users
+}
+
+func (r *UserRepo) GetFollowingsWithAffinity(userID uint) []*models.User {
+	var users []*models.User
+	r.db.Raw("SELECT user.* FROM user INNER JOIN follows ON user_followed_id = user.id WHERE follows.user_follow_id = ? ORDER BY quality DESC", userID).Scan(&users)
+	for i := 0; i < len(users); i++ {
+		user := users[i]
+		r.db.Model(&user).Related(&user.StoryBoard)
+	}
+
 	return users
 }
 

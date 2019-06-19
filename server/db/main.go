@@ -17,7 +17,7 @@ func New() (*gorm.DB, error) {
 
 		// If on TEST mode
 		if flag.Lookup("test.v") != nil {
-			dbConn, err = gorm.Open("mysql", "root:root@/outstagram?charset=utf8&parseTime=True&loc=Local")
+			dbConn, err = gorm.Open("mysql", "root:root@tcp(172.24.21.56:33060)/outstagram?charset=utf8mb4&parseTime=True&loc=Local")
 		} else {
 			dbConn, err = gorm.Open(viper.GetString("db.dialect"), viper.GetString("db.url"))
 		}

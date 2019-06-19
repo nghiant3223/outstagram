@@ -9,6 +9,7 @@ import (
 	"outstagram/server/controllers/mecontroller"
 	"outstagram/server/controllers/postcontroller"
 	"outstagram/server/controllers/rctcontroller"
+	"outstagram/server/controllers/storycontroller"
 	"outstagram/server/controllers/usercontroller"
 	"outstagram/server/db"
 	"outstagram/server/repos/cmtablerepo"
@@ -153,8 +154,14 @@ func InitializeMeController() (*mecontroller.Controller, error) {
 		cmtableservice.New,
 		cmtablerepo.New,
 
+		storybservice.New,
+		storybrepo.New,
+
 		rctableservice.New,
 		rctablerepo.New,
+
+		imgservice.New,
+		imgrepo.New,
 
 		db.New)
 
@@ -171,4 +178,25 @@ func InitializeFollowController() (*flcontroller.Controller, error) {
 		db.New)
 
 	return &flcontroller.Controller{}, nil
+}
+
+func InitializeStoryController() (*storycontroller.Controller, error) {
+	wire.Build(
+		storycontroller.New,
+
+		imgservice.New,
+		imgrepo.New,
+
+		vwableservice.New,
+		vwablerepo.New,
+
+		storybservice.New,
+		storybrepo.New,
+
+		userservice.New,
+		userrepo.New,
+
+		db.New)
+
+	return &storycontroller.Controller{}, nil
 }

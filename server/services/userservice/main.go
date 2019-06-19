@@ -61,7 +61,7 @@ func (s *UserService) GetFollowers(userID uint) []models.User {
 	return s.userRepo.GetFollowers(userID)
 }
 
-func (s *UserService) GetFollowings(userID uint) []models.User {
+func (s *UserService) GetFollowings(userID uint) []*models.User {
 	return s.userRepo.GetFollowings(userID)
 }
 
@@ -97,4 +97,8 @@ func (s *UserService) Unfollow(following, follower uint) error {
 
 func (s *UserService) GetPostFeed(userID uint) []uint {
 	return s.userRepo.GetPostFeed(userID)
+}
+
+func (s *UserService) GetFollowingsWithAffinity(userID uint) []*	models.User {
+	return s.userRepo.GetFollowingsWithAffinity(userID)
 }

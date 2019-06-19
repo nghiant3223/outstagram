@@ -15,3 +15,7 @@ func New(viewableRepo *vwablerepo.ViewableRepo) *ViewableService {
 func (s *ViewableService) IncrementView(userID, viewableID uint) error {
 	return s.viewableRepo.IncrementView(userID, viewableID)
 }
+
+func (s *ViewableService) SaveView(userID, viewableID uint) error {
+	return s.viewableRepo.SaveView(userID, viewableID)
+}

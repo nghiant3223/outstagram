@@ -1,11 +1,19 @@
 package storycontroller
 
-import "outstagram/server/services/userservice"
+import (
+	"outstagram/server/services/imgservice"
+	"outstagram/server/services/storybservice"
+	"outstagram/server/services/userservice"
+	"outstagram/server/services/vwableservice"
+)
 
 type Controller struct {
-	service *userservice.UserService
+	imageService      *imgservice.ImageService
+	viewableService   *vwableservice.ViewableService
+	storyBoardService *storybservice.StoryBoardService
+	userService       *userservice.UserService
 }
 
-func New(userService *userservice.UserService) *Controller {
-	return &Controller{service: userService}
+func New(imageService *imgservice.ImageService, viewableService *vwableservice.ViewableService, storyBoardService *storybservice.StoryBoardService, userService *userservice.UserService) *Controller {
+	return &Controller{imageService: imageService, viewableService: viewableService, storyBoardService: storyBoardService, userService: userService}
 }
