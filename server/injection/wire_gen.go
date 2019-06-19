@@ -12,6 +12,7 @@ import (
 	"outstagram/server/controllers/mecontroller"
 	"outstagram/server/controllers/postcontroller"
 	"outstagram/server/controllers/rctcontroller"
+	"outstagram/server/controllers/storycontroller"
 	"outstagram/server/controllers/usercontroller"
 	"outstagram/server/db"
 	"outstagram/server/repos/cmtablerepo"
@@ -63,7 +64,7 @@ func InitializeAuthController() (*authcontroller.Controller, error) {
 	notifBoardRepo := notifbrepo.New(gormDB)
 	notifBoardService := notifbservice.New(notifBoardRepo)
 	storyBoardRepo := storybrepo.New(gormDB)
-	storyBoardService := storybservice.New(storyBoardRepo)
+	storyBoardService := storybservice.New(storyBoardRepo, userService)
 	controller := authcontroller.New(userService, notifBoardService, storyBoardService)
 	return controller, nil
 }
@@ -139,7 +140,11 @@ func InitializeMeController() (*mecontroller.Controller, error) {
 	reactableService := rctableservice.New(reactableRepo)
 	commentableService := cmtableservice.New(commentableRepo, reactableService)
 	postService := postservice.New(postRepo, userService, reactableService, commentableService)
-	controller := mecontroller.New(userService, postService)
+	storyBoardRepo := storybrepo.New(gormDB)
+	storyBoardService := storybservice.New(storyBoardRepo, userService)
+	imageRepo := imgrepo.New(gormDB)
+	imageService := imgservice.New(imageRepo)
+	controller := mecontroller.New(userService, postService, storyBoardService, imageService)
 	return controller, nil
 }
 
@@ -151,5 +156,22 @@ func InitializeFollowController() (*flcontroller.Controller, error) {
 	userRepo := userrepo.New(gormDB)
 	userService := userservice.New(userRepo)
 	controller := flcontroller.New(userService)
+	return controller, nil
+}
+
+func InitializeStoryController() (*storycontroller.Controller, error) {
+	gormDB, err := db.New()
+	if err != nil {
+		return nil, err
+	}
+	imageRepo := imgrepo.New(gormDB)
+	imageService := imgservice.New(imageRepo)
+	viewableRepo := vwablerepo.New(gormDB)
+	viewableService := vwableservice.New(viewableRepo)
+	storyBoardRepo := storybrepo.New(gormDB)
+	userRepo := userrepo.New(gormDB)
+	userService := userservice.New(userRepo)
+	storyBoardService := storybservice.New(storyBoardRepo, userService)
+	controller := storycontroller.New(imageService, viewableService, storyBoardService, userService)
 	return controller, nil
 }
