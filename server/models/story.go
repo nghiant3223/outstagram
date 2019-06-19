@@ -4,8 +4,8 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-// StoryImage entity
-type StoryImage struct {
+// Story entity
+type Story struct {
 	gorm.Model
 	ImageID uint  `gorm:"not null"`
 	Image   Image `gorm:"foreignkey:ImageID"`
