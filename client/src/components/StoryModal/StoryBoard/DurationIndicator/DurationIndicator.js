@@ -50,9 +50,9 @@ class DurationIndicator extends Component {
         let style;
         if (index === activeStoryIndex) {
             if (percentage == 0) {
-                style = { width: `${percentage}%` }
+                style = { width: `0%` }
             } else if (percentage == 100) {
-                style = { transition: `width ${duration}s linear`, width: `${percentage}%` }
+                style = { transition: `width ${duration}ms linear`, width: `100%` }
             }
         } else {
             style = { width: `${percentage}%` }
