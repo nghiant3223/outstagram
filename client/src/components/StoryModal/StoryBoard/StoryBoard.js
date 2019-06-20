@@ -15,7 +15,7 @@ class StoryBoard extends Component {
         const { activeStoryIndex } = this.state;
 
         this.storyTimeout = setTimeout(() => {
-            this.onNextClick();
+            this.nextStory();
         }, stories[activeStoryIndex].duration * 1000)
     }
 
@@ -25,9 +25,7 @@ class StoryBoard extends Component {
 
         if (activeStoryIndex !== prevState.activeStoryIndex) {
             clearTimeout(this.storyTimeout);
-            this.storyTimeout = setTimeout(() => {
-                this.onNextClick();
-            }, stories[activeStoryIndex].duration * 1000)
+            this.storyTimeout = setTimeout(this.nextStory, stories[activeStoryIndex].duration * 1000)
         }
     }
 
@@ -35,17 +33,18 @@ class StoryBoard extends Component {
         clearTimeout(this.storyTimeout);
     }
 
-    onNextClick = () => {
+    nextStory = () => {
         const { activeStoryIndex } = this.state;
+        const { stories } = this.props;
 
-        if (activeStoryIndex == this.props.stories.length - 1) {
+        if (activeStoryIndex == stories.length - 1) {
             return;
         }
 
         this.setState((prevState) => ({ activeStoryIndex: prevState.activeStoryIndex + 1 }));
     }
 
-    onPrevClick = () => {
+    prevStory = () => {
         const { activeStoryIndex } = this.state;
 
         if (activeStoryIndex == 0) {
@@ -85,13 +84,11 @@ class StoryBoard extends Component {
                 </div>
 
                 <div className="StoryBoard__Prev">
-                    <Button icon='chevron left' circular color="white" onClick={this.onPrevClick} />
-
+                    <Button icon='chevron left' circular color="white" onClick={this.prevStory} />
                 </div>
 
                 <div className="StoryBoard__Next">
-                    <Button icon='chevron right' circular color="white" onClick={this.onNextClick} />
-
+                    <Button icon='chevron right' circular color="white" onClick={this.nextStory} />
                 </div>
             </div>
         )
