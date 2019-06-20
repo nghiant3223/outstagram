@@ -11,35 +11,36 @@ class DurationIndicator extends Component {
         const { index, activeStoryIndex } = this.props;
 
         if (index === activeStoryIndex) {
-            this.setState({ percentage: 0 });
-
-            setTimeout(() => {
-                this.setState({ percentage: 100 });
-            }, 0);       
-         }
+            this.setEmptyIndicator();
+            setTimeout(this.setFullIndicator, 0);
+        }
     }
 
 
     componentDidUpdate(prevProps) {
         const { index, activeStoryIndex } = this.props;
+        const { activeStoryIndex: prevActiveStoryIndex } = prevProps;
 
-        if (activeStoryIndex === prevProps.activeStoryIndex) {
+        if (activeStoryIndex === prevActiveStoryIndex) {
             return;
         }
 
         if (index == activeStoryIndex) {
-            this.setState({ percentage: 0 });
-
-            setTimeout(() => {
-                this.setState({ percentage: 100 });
-
-            }, 0);
-
+            this.setEmptyIndicator();
+            setTimeout(this.setFullIndicator, 0);
         } else if (index < activeStoryIndex) {
-            this.setState({ percentage: 100 });
+            this.setFullIndicator();
         } else {
-            this.setState({ percentage: 0 });
+            this.setEmptyIndicator();
         }
+    }
+
+    setFullIndicator = () => {
+        this.setState({ percentage: 100 });
+    }
+
+    setEmptyIndicator = () => {
+        this.setState({ percentage: 0 });
     }
 
     render() {
@@ -56,8 +57,6 @@ class DurationIndicator extends Component {
         } else {
             style = { width: `${percentage}%` }
         }
-
-        console.log(index, activeStoryIndex, style);
 
         return (
             <div className="DurationIndicator">
