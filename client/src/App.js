@@ -2,10 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import Router from './router';
-
-import { getMe } from './actions/auth.action';
-import Socket from './socket';
-
+import * as authActions from './actions/auth.action';
 import './App.css';
 
 class App extends Component {
@@ -28,7 +25,7 @@ class App extends Component {
 const mapStateToProps = ({ auth: { isAuthenticated }, ui: { isLoading } }) => ({ isAuthenticated, isLoading });
 
 const mapDispatchToProps = (dispatch) => ({
-    getMe: () => dispatch(getMe())
+    getMe: () => dispatch(authActions.getMe())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
