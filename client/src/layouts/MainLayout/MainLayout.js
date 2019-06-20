@@ -5,6 +5,7 @@ import Header from '../../components/Header/Header';
 import Footer from '../../components/Footer/Footer';
 
 import './MainLayout.css';
+import StoryModal from '../../components/StoryModal/StoryModal';
 
 const MainLayout = (props) => (
     <div>
@@ -25,6 +26,8 @@ const MainLayout = (props) => (
         </Grid>
 
         <Footer />
+
+        <StoryModal />
     </div>
 );
 

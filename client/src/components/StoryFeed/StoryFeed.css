@@ -1,0 +1,23 @@
+.StoryFeed__Header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1em;
+}
+
+.StoryFeed__Main {
+    display: flex;
+}
+
+.StoryFeed__Main>div {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.StoryFeed__Main>div:first-child {
+    margin-left: 0;
+}
+
+
+.StoryFeed__Main>div:last-child {
+    margin-right: 0;
+}
