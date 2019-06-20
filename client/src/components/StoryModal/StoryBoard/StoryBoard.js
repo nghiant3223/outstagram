@@ -4,6 +4,7 @@ import { Dropdown, Button } from 'semantic-ui-react';
 import './StoryBoard.css';
 import Avatar from '../../Avatar/Avatar';
 import DurationIndicator from './DurationIndicator/DurationIndicator';
+import { getDiffFromPast } from '../../../utils/time';
 
 class StoryBoard extends Component {
     state = {
@@ -16,7 +17,7 @@ class StoryBoard extends Component {
 
         this.storyTimeout = setTimeout(() => {
             this.nextStory();
-        }, stories[activeStoryIndex].duration * 1000)
+        }, stories[activeStoryIndex].duration)
     }
 
     componentDidUpdate(_, prevState) {
@@ -25,7 +26,7 @@ class StoryBoard extends Component {
 
         if (activeStoryIndex !== prevState.activeStoryIndex) {
             clearTimeout(this.storyTimeout);
-            this.storyTimeout = setTimeout(this.nextStory, stories[activeStoryIndex].duration * 1000)
+            this.storyTimeout = setTimeout(this.nextStory, stories[activeStoryIndex].duration)
         }
     }
 
@@ -70,7 +71,7 @@ class StoryBoard extends Component {
                         </div>
                         <div className="StoryBoard__Header__Left__Info">
                             <div><b>Trọng Nghĩa</b></div>
-                            <div>9hr</div>
+                            <div>{getDiffFromPast(stories[activeStoryIndex].createdAt)}</div>
                         </div>
 
                     </div>
