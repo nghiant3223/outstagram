@@ -7,36 +7,53 @@ import DurationIndicator from './DurationIndicator/DurationIndicator';
 
 class StoryBoard extends Component {
     state = {
-        activeStoryIndex: -1
+        activeStoryIndex: 0
     }
-
-    storyTimeouts = []
 
     componentDidMount() {
         const { stories, onNextStoryBoard } = this.props;
-        let accumulatedTime = 0;
+        const { activeStoryIndex } = this.state;
 
-        stories.forEach((story, index) => {
-            ((immediateTimeout) => {
-                const storyTimeout = setTimeout(() => {
-                    this.setState({ activeStoryIndex: index });
-                }, immediateTimeout);
+        this.storyTimeout = setTimeout(() => {
+            this.onNextClick();
+        }, stories[activeStoryIndex].duration * 1000)
+    }
 
-                this.storyTimeouts.push(storyTimeout);
-            })(accumulatedTime * 1000);
+    componentDidUpdate(_, prevState) {
+        const { stories } = this.props;
+        const { activeStoryIndex } = this.state;
 
-            accumulatedTime += story.duration;
-        });
-
-        // setTimeout(() => {
-        //     onNextStoryBoard();
-        // }, accumulatedTime * 1000);
+        if (activeStoryIndex !== prevState.activeStoryIndex) {
+            clearTimeout(this.storyTimeout);
+            this.storyTimeout = setTimeout(() => {
+                this.onNextClick();
+            }, stories[activeStoryIndex].duration * 1000)
+        }
     }
 
     componentWillUnmount() {
-        this.storyTimeouts.forEach((timeout) => clearTimeout(timeout));
+        clearTimeout(this.storyTimeout);
     }
 
+    onNextClick = () => {
+        const { activeStoryIndex } = this.state;
+
+        if (activeStoryIndex == this.props.stories.length - 1) {
+            return;
+        }
+
+        this.setState((prevState) => ({ activeStoryIndex: prevState.activeStoryIndex + 1 }));
+    }
+
+    onPrevClick = () => {
+        const { activeStoryIndex } = this.state;
+
+        if (activeStoryIndex == 0) {
+            return;
+        }
+
+        this.setState((prevState) => ({ activeStoryIndex: prevState.activeStoryIndex - 1 }));
+    }
 
     render() {
         const { stories } = this.props;
@@ -45,7 +62,7 @@ class StoryBoard extends Component {
         return (
             <div className="StoryBoard" style={activeStoryIndex >= 0 ? { backgroundImage: `url(/images/${stories[activeStoryIndex].huge})` } : null} >
                 <div className="StoryBoard__Progress">
-                    {stories.map((story, index) => <DurationIndicator duration={story.duration} active={index == activeStoryIndex} />)}
+                    {stories.map((story, index) => <DurationIndicator duration={story.duration} activeStoryIndex={activeStoryIndex} index={index} key={index} />)}
                 </div>
                 <div className="StoryBoard__Header" >
                     <div className="StoryBoard__Header__Left">
@@ -68,15 +85,14 @@ class StoryBoard extends Component {
                 </div>
 
                 <div className="StoryBoard__Prev">
-                    <Button icon='chevron left' circular  color="white" />
+                    <Button icon='chevron left' circular color="white" onClick={this.onPrevClick} />
 
                 </div>
 
                 <div className="StoryBoard__Next">
-                    <Button icon='chevron right' circular  color="white" />
+                    <Button icon='chevron right' circular color="white" onClick={this.onNextClick} />
 
                 </div>
-
             </div>
         )
     }
