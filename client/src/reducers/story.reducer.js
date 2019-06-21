@@ -16,7 +16,7 @@ export default function storyReducer(state = initialState, action) {
             const [activeStoryBoardLL, inactiveStoryBoardLL] = initStoryBoardLinkedList(action.payload);
             console.log(activeStoryBoardLL);
 
-            return { ...state, activeStoryBoardLL, inactiveStoryBoardLL, storyBoardLL: inactiveStoryBoardLL, isLoading: false }
+            return { ...state, activeStoryBoardLL, inactiveStoryBoardLL, storyBoardLL: activeStoryBoardLL, isLoading: false }
 
         case actionTypes.OPEN_STORY_MODAL:
             return { ...state, isModalOpen: true, onDisplayStoryBoard: action.payload }
