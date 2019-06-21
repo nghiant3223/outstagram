@@ -7,7 +7,7 @@ const initialState = {
     activeStoryBoardLL: null,
     inactiveStoryBoardLL: null,
     storyBoardLL: null,
-    onDisplayStoryBoard: null
+    storyBoardNode: null
 };
 
 export default function storyReducer(state = initialState, action) {
@@ -19,13 +19,13 @@ export default function storyReducer(state = initialState, action) {
             return { ...state, activeStoryBoardLL, inactiveStoryBoardLL, storyBoardLL: activeStoryBoardLL, isLoading: false }
 
         case actionTypes.OPEN_STORY_MODAL:
-            return { ...state, isModalOpen: true, onDisplayStoryBoard: action.payload }
+            return { ...state, isModalOpen: true, storyBoardNode: action.payload }
 
         case actionTypes.SET_ON_DISPLAY_STORY_BOARD_NODE:
-            return { ...state, onDisplayStoryBoard: action.payload }
+            return { ...state, storyBoardNode: action.payload }
 
         case actionTypes.CLOSE_STORY_MODAL:
-            return { ...state, isModalOpen: false, onDisplayStoryBoard: null }
+            return { ...state, isModalOpen: false, storyBoardNode: null }
         default:
             return state
     }
