@@ -23,6 +23,6 @@ function entrancePage(props) {
 
 }
 
-const mapStateToProps = ({ auth: { isAuthenticated } }) => ({ isAuthenticated });
+const mapStateToProps = ({ authReducer: { isAuthenticated } }) => ({ isAuthenticated });
 
 export default connect(mapStateToProps)(entrancePage);

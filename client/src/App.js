@@ -4,11 +4,13 @@ import { connect } from 'react-redux';
 import Router from './router';
 import * as authActions from './actions/auth.action';
 import './App.css';
+import { getStories } from './actions/story.action';
 
 class App extends Component {
     componentDidMount = () => {
-        const { getMe } = this.props;
+        const { getMe, getStories } = this.props;
         getMe();
+        getStories();
     }
 
     render() {
@@ -22,10 +24,11 @@ class App extends Component {
     }
 }
 
-const mapStateToProps = ({ auth: { isAuthenticated }, ui: { isLoading } }) => ({ isAuthenticated, isLoading });
+const mapStateToProps = ({ authReducer: { isAuthenticated }, uiReducer: { isLoading } }) => ({ isAuthenticated, isLoading });
 
 const mapDispatchToProps = (dispatch) => ({
-    getMe: () => dispatch(authActions.getMe())
+    getMe: () => dispatch(authActions.getMe()),
+    getStories: () => dispatch(getStories())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

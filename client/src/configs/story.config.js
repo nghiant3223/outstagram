@@ -1,0 +1,1 @@
+export const STORY_CARD_SIZE = "huge";
