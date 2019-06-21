@@ -6,18 +6,21 @@ import (
 )
 
 // Story entity
-type 	Story struct {
+type Story struct {
 	gorm.Model
 	ImageID      uint  `gorm:"not null"`
 	Image        Image `gorm:"foreignkey:ImageID"`
 	StoryBoardID uint
 	ReactableID  uint
 	ViewableID   uint
+	Duration     uint
 }
 
 func (s *Story) ToDTO() dtomodels.Story {
 	return dtomodels.Story{
 		ID:          s.ID,
+		CreatedAt:   s.CreatedAt,
+		Duration:    s.Duration,
 		ViewableID:  s.ViewableID,
 		ReactableID: s.ReactableID,
 		Small:       s.Image.Small,

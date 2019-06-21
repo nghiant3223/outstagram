@@ -49,7 +49,7 @@ func (sc *Controller) CreateStory(c *gin.Context) {
 			return
 		}
 
-		story := models.Story{ImageID: image.ID, StoryBoardID: user.StoryBoard.ID}
+		story := models.Story{ImageID: image.ID, StoryBoardID: user.StoryBoard.ID, Duration: 3000}
 		if err := sc.storyBoardService.SaveStory(&story); err != nil {
 			utils.ResponseWithError(c, http.StatusInternalServerError, "Error while saving story's image", err.Error())
 			return
