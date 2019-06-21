@@ -48,7 +48,7 @@ const Header = (props) => {
         </header>
     );
 }
-const mapStateToProps = ({ auth: { user } }) => ({ user });
+const mapStateToProps = ({ authReducer: { user } }) => ({ user });
 
 const mapDispatchToProps = (dispatch) => ({
     logoutUser: () => dispatch(authActions.logoutUser())

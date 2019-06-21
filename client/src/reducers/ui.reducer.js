@@ -13,12 +13,6 @@ export default function uiReducer(state = initialState, action) {
         case actionTypes.AUTH_FAIL:
             return { ...state, isLoading: false }
 
-        case actionTypes.OPEN_STORY_MODAL: 
-        return {...state, isStoryModalOpen: true}
-
-        case actionTypes.CLOSE_STORY_MODAL:
-            return {...state, isStoryModalOpen: false}
-
         default:
             return state;
     }

@@ -14,6 +14,6 @@ class HomePage extends Component {
     }
 }
 
-const mapStateToProps = ({ auth: { user } }) => ({ user });
+const mapStateToProps = ({ authReducer: { user } }) => ({ user });
 
 export default connect(mapStateToProps)(HomePage);

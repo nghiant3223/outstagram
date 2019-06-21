@@ -1,10 +1,15 @@
 import React, { Component } from 'react'
-import  StoryCard  from './StoryCard/StoryCard';
+import { connect } from 'react-redux';
+
+import StoryCard from './StoryCard/StoryCard';
 
 import "./StoryFeed.css";
 
 class StoryFeed extends Component {
     render() {
+        const { storyBoards, currentUserID } = this.props;
+
+
         return (
             <div className="StoryFeed">
                 <div className="StoryFeed__Header">
@@ -13,13 +18,13 @@ class StoryFeed extends Component {
                 </div>
 
                 <div className="StoryFeed__Main">
-                    <StoryCard text="Nguyen Trong Nghia" isMy />
-                    <StoryCard text="Nguyen Trong" isActive/>
-                    <StoryCard text="Nguyen" />
+                    {storyBoards.map((board) => <StoryCard key={board.userID} isMy={board.userID === currentUserID} latestStory={board.stories[0]} isActive={board.hasNewStory} text={board.fullname} />)}
                 </div>
             </div>
         )
     }
 }
 
-export default StoryFeed;
+const mapStateToProps = ({ storyReducer: { storyBoards }, authReducer: { userID: currentUserID } }) => ({ storyBoards, currentUserID });
+
+export default connect(mapStateToProps)(StoryFeed);
