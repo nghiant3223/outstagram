@@ -9,7 +9,6 @@ import (
 	"outstagram/server/dtos/dtomodels"
 	"outstagram/server/dtos/medtos"
 	"outstagram/server/dtos/storydtos"
-	"outstagram/server/models"
 	"outstagram/server/utils"
 )
 
@@ -73,71 +72,30 @@ func (mc *Controller) GetStoryFeed(c *gin.Context) {
 	}
 
 	var storyBoardResponse storydtos.GetStoryFeedResponse
+	var activeStoryBoard []*dtomodels.StoryBoard
+	var inactiveStoryBoard []*dtomodels.StoryBoard
 
 	followings := mc.userService.GetFollowingsWithAffinity(userID)
-	users, boundaryIndex, err := mc.groupStoryBoardByActive(userID, followings)
+	for _, following := range followings {
+		storyBoardDTO, err := mc.storyBoardService.GetUserStoryBoardDTO(userID, following)
 
-	if err != nil {
-		if gorm.IsRecordNotFoundError(err) {
-			utils.ResponseWithError(c, http.StatusNotFound, "Not found", err.Error())
-			return
-		}
-
-		utils.ResponseWithError(c, http.StatusInternalServerError, "Error while sorting story board", err.Error())
-		return
-	}
-
-	for i, user := range users {
-		stories, err := mc.storyBoardService.GetStories(user.StoryBoard.ID)
 		if err != nil {
 			if gorm.IsRecordNotFoundError(err) {
 				utils.ResponseWithError(c, http.StatusNotFound, "Not found", err.Error())
 				return
 			}
 
-			utils.ResponseWithError(c, http.StatusInternalServerError, "Error while sorting story board", err.Error())
+			utils.ResponseWithError(c, http.StatusInternalServerError, "Error while retrieving story board", err.Error())
 			return
 		}
 
-		if len(stories) < 1 {
-			continue
-		}
-
-		dtoStoryBoard := dtomodels.StoryBoard{
-			UserID:      user.ID,
-			Fullname:    user.Fullname,
-			AvatarURL:   user.AvatarURL,
-			HasNewStory: i < boundaryIndex}
-
-		dtoStoryBoard.StoryCount = len(stories)
-		for _, story := range stories {
-			dtoStoryBoard.Stories = append(dtoStoryBoard.Stories, story.ToDTO())
-		}
-
-		storyBoardResponse.StoryBoards = append(storyBoardResponse.StoryBoards, dtoStoryBoard)
-	}
-
-	utils.ResponseWithSuccess(c, http.StatusOK, "Retrieve story feed successfully", storyBoardResponse)
-}
-
-// groupStoryBoardByActive puts user that has new story at the front, user that has old story at the back
-// Each user group is also sorted by the affinity between the user and their followings
-func (mc *Controller) groupStoryBoardByActive(userID uint, followings []*models.User) ([]*models.User, int, error) {
-	var viewed []*models.User
-	var notViewed []*models.User
-
-	for _, user := range followings {
-		isNew, err := mc.storyBoardService.IsActiveStoryBoard(userID, user.ID)
-		if err != nil {
-			return nil, -1, err
-		}
-
-		if isNew {
-			notViewed = append(notViewed, user)
+		if storyBoardDTO.HasNewStory {
+			activeStoryBoard = append(activeStoryBoard, storyBoardDTO)
 		} else {
-			viewed = append(viewed, user)
+			inactiveStoryBoard = append(inactiveStoryBoard, storyBoardDTO)
 		}
 	}
 
-	return append(notViewed, viewed...), len(notViewed), nil
+	storyBoardResponse.StoryBoards = append(activeStoryBoard, inactiveStoryBoard...)
+	utils.ResponseWithSuccess(c, http.StatusOK, "Retrieve story feed successfully", storyBoardResponse)
 }
