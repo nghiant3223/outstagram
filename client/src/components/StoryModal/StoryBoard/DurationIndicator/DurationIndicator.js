@@ -18,10 +18,10 @@ class DurationIndicator extends Component {
 
 
     componentDidUpdate(prevProps) {
-        const { index, activeStoryIndex } = this.props;
+        const { index, activeStoryIndex, onDisplayStoryBoard } = this.props;
         const { activeStoryIndex: prevActiveStoryIndex } = prevProps;
 
-        if (activeStoryIndex === prevActiveStoryIndex) {
+        if (activeStoryIndex === prevActiveStoryIndex && onDisplayStoryBoard === prevProps.onDisplayStoryBoard) {
             return;
         }
 

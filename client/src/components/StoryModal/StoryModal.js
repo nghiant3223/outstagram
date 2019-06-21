@@ -5,11 +5,12 @@ import { connect } from 'react-redux';
 import * as storyService from '../../services/story.service';
 
 import * as uiActions from '../../actions/ui.action';
+import * as storyActions from '../../actions/ui.action';
 import StoryBoard from './StoryBoard/StoryBoard';
 
 class StoryModal extends Component {
     render() {
-        const { closeModal, isModalOpen, storyBoards } = this.props;
+        const { closeModal, isModalOpen } = this.props;
 
         return (
             <Modal
@@ -18,13 +19,13 @@ class StoryModal extends Component {
                 closeOnDimmerClick
                 open={isModalOpen}
                 onClose={closeModal}>
-                <StoryBoard {...storyBoards[0]} />
+                <StoryBoard/>
             </Modal>
         );
     }
 }
 
-const mapStateToProps = ({ storyReducer: { isModalOpen, storyBoards } }) => ({ isModalOpen, storyBoards });
+const mapStateToProps = ({ storyReducer: { isModalOpen } }) => ({ isModalOpen });
 
 const mapDispatchToProps = (dispatch) => ({
     closeModal: () => dispatch(uiActions.closeStoryModal())

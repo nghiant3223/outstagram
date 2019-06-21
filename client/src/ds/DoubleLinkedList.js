@@ -1,5 +1,5 @@
-import DoublyLinkedListNode from './DoublyLinkedListNode';
-import Comparator from './comparator';
+import DoublyLinkedListNode from './DoubleLinkedListNode';
+import Comparator from './Comparator';
 
 export default class DoublyLinkedList {
     /**
@@ -259,5 +259,13 @@ export default class DoublyLinkedList {
         this.head = prevNode;
 
         return this;
+    }
+
+    getTail() {
+        return this.tail;
+    }
+
+    getHead() {
+        return this.head;
     }
 }

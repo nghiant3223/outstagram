@@ -7,8 +7,14 @@ import "./StoryFeed.css";
 
 class StoryFeed extends Component {
     render() {
-        const { storyBoards, currentUserID } = this.props;
+        const { storyBoardLL, currentUserID } = this.props;
+        const storyCards = [];
 
+        let storyBoardNode = storyBoardLL.getHead();
+        while (storyBoardNode !== null) {
+            storyCards.push(<StoryCard key={storyBoardNode.getValue().userID} storyBoardNode={storyBoardNode} currentUserID={currentUserID} />);
+            storyBoardNode = storyBoardNode.next;
+        }
 
         return (
             <div className="StoryFeed">
@@ -18,13 +24,13 @@ class StoryFeed extends Component {
                 </div>
 
                 <div className="StoryFeed__Main">
-                    {storyBoards.map((board) => <StoryCard key={board.userID} isMy={board.userID === currentUserID} latestStory={board.stories[0]} isActive={board.hasNewStory} text={board.fullname} />)}
+                    {storyCards}
                 </div>
             </div>
         )
     }
 }
 
-const mapStateToProps = ({ storyReducer: { storyBoards }, authReducer: { userID: currentUserID } }) => ({ storyBoards, currentUserID });
+const mapStateToProps = ({ storyReducer: { storyBoardLL }, authReducer: { userID: currentUserID } }) => ({ storyBoardLL, currentUserID, });
 
 export default connect(mapStateToProps)(StoryFeed);

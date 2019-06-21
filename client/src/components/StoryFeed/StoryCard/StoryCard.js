@@ -12,16 +12,19 @@ import defaultBackground from '../../../images/x.png';
 import Avatar from '../../Avatar/Avatar';
 
 function StoryCard(props) {
-    const { isMy, isActive, text, latestStory, openModal } = props;
+    const { storyBoardNode, currentUserID, openModal } = props;
 
-    console.log(latestStory);
-    console.log(storyConfigs.STORY_CARD_SIZE);
-    console.error(latestStory[storyConfigs.STORY_CARD_SIZE]);
+    const board = storyBoardNode.getValue();
+    const isMy = board.userID === currentUserID,
+        latestStory = board.stories[0],
+        isActive = board.hasNewStory,
+        text = board.fullname;
+
     return (
         <div
             className="StoryCard"
             style={{ backgroundImage: `url("/images/${latestStory[storyConfigs.STORY_CARD_SIZE]}")`, cursor: "pointer" }}
-            onClick={openModal}>
+            onClick={() => openModal(storyBoardNode)}>
             {
                 isMy ?
                     <div className="StoryCard__Circle StoryCard__Add">
@@ -36,7 +39,7 @@ function StoryCard(props) {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-    openModal: () => dispatch(uiActions.openStoryModal())
+    openModal: (storyBoardNode) => dispatch(uiActions.openStoryModal(storyBoardNode))
 });
 
 export default connect(null, mapDispatchToProps)(StoryCard);

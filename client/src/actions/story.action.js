@@ -16,3 +16,5 @@ export const getStories = () =>
             console.log(e);
         }
     }
+
+export const setOnDisplayStoryBoardNode = (storyBoardNode) => ({ type: actionTypes.SET_ON_DISPLAY_STORY_BOARD_NODE, payload: storyBoardNode });
