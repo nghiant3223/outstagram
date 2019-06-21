@@ -43,6 +43,10 @@ func (s *StoryBoardService) GetUserStoryBoardDTO(userAID uint, userB *models.Use
 		return nil, err
 	}
 
+	if len(stories) < 1 {
+		return nil, nil
+	}
+
 	dtoStoryBoard := dtomodels.StoryBoard{
 		UserID:     userB.ID,
 		Fullname:   userB.Fullname,

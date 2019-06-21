@@ -66,9 +66,14 @@ class StoryBoard extends Component {
 
     prevStory = () => {
         const { activeStoryIndex } = this.state;
-        const { setOnDisplayStoryBoardNode, onDisplayStoryBoard } = this.props;
+        const { setOnDisplayStoryBoardNode, onDisplayStoryBoard, closeStoryModal } = this.props;
         if (activeStoryIndex == 0) {
-            setOnDisplayStoryBoardNode(onDisplayStoryBoard.prev);
+            if (onDisplayStoryBoard.previous == null) {
+                closeStoryModal();
+                return;
+            }
+
+            setOnDisplayStoryBoardNode(onDisplayStoryBoard.previous);
             return;
         }
 
@@ -76,7 +81,7 @@ class StoryBoard extends Component {
     }
 
     render() {
-        const { stories } = this.props.onDisplayStoryBoard.getValue();
+        const { stories, fullname } = this.props.onDisplayStoryBoard.getValue();
         const { activeStoryIndex } = this.state;
 
         console.log(this.props.onDisplayStoryBoard, activeStoryIndex);
@@ -92,7 +97,7 @@ class StoryBoard extends Component {
                             <Avatar />
                         </div>
                         <div className="StoryBoard__Header__Left__Info">
-                            <div><b>Trọng Nghĩa</b></div>
+                            <div><b>{fullname}</b></div>
                             <div>{getDiffFromPast(stories[activeStoryIndex].createdAt)}</div>
                         </div>
 
@@ -118,7 +123,7 @@ class StoryBoard extends Component {
     }
 }
 
-const mapStateToProps = ({ storyReducer: { onDisplayStoryBoard } }) => ({ onDisplayStoryBoard });
+const mapStateToProps = ({ storyReducer: { onDisplayStoryBoard } }) => ({ onDisplayStoryBoard, storyBoard: onDisplayStoryBoard.getValue() });
 
 const mapDispatchToProps = (dispatch) => ({
     setOnDisplayStoryBoardNode: (storyBoardNode) => dispatch(storyActions.setOnDisplayStoryBoardNode(storyBoardNode)),

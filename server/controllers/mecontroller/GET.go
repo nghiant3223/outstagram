@@ -89,6 +89,10 @@ func (mc *Controller) GetStoryFeed(c *gin.Context) {
 			return
 		}
 
+		if storyBoardDTO == nil {
+			continue
+		}
+
 		if storyBoardDTO.HasNewStory {
 			activeStoryBoard = append(activeStoryBoard, storyBoardDTO)
 		} else {
