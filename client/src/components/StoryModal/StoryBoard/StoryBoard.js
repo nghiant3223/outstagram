@@ -16,28 +16,28 @@ class StoryBoard extends Component {
     }
 
     componentDidMount() {
-        const { stories } = this.props.onDisplayStoryBoard.getValue();
+        const { stories } = this.props.storyBoard;
         const { activeStoryIndex } = this.state;
 
         this.storyTimeout = setTimeout(this.nextStory, stories[activeStoryIndex].duration)
     }
 
     componentWillReceiveProps = (nextProps) => {
-        const { onDisplayStoryBoard } = this.props;
+        const { storyBoardNode } = this.props;
 
         // If story board changes, restart the count
-        if (onDisplayStoryBoard != nextProps.onDisplayStoryBoard) {
+        if (storyBoardNode != nextProps.storyBoardNode) {
             this.setState({ activeStoryIndex: 0 });
         }
     }
 
     componentDidUpdate(prevProps, prevState) {
-        const { onDisplayStoryBoard } = this.props;
+        const { storyBoardNode } = this.props;
         const { activeStoryIndex } = this.state;
-        const { stories } = onDisplayStoryBoard.getValue();
+        const { stories } = this.props.storyBoard;
 
         // If story in a story board changes or story board changes
-        if (activeStoryIndex !== prevState.activeStoryIndex || onDisplayStoryBoard !== prevProps.onDisplayStoryBoard) {
+        if (activeStoryIndex !== prevState.activeStoryIndex || storyBoardNode !== prevProps.storyBoardNode) {
             clearTimeout(this.storyTimeout);
             this.storyTimeout = setTimeout(this.nextStory, stories[activeStoryIndex].duration)
         }
@@ -49,15 +49,15 @@ class StoryBoard extends Component {
 
     nextStory = () => {
         const { activeStoryIndex } = this.state;
-        const { setOnDisplayStoryBoardNode, onDisplayStoryBoard, closeStoryModal } = this.props;
-        const { stories } = this.props.onDisplayStoryBoard.getValue();
+        const { setOnDisplayStoryBoardNode, storyBoardNode, closeStoryModal } = this.props;
+        const { stories } = this.props.storyBoard;
 
         if (activeStoryIndex == stories.length - 1) {
-            if (onDisplayStoryBoard.next == null) {
+            if (storyBoardNode.next == null) {
                 closeStoryModal();
                 return;
             }
-            setOnDisplayStoryBoardNode(onDisplayStoryBoard.next);
+            setOnDisplayStoryBoardNode(storyBoardNode.next);
             return;
         }
 
@@ -66,14 +66,14 @@ class StoryBoard extends Component {
 
     prevStory = () => {
         const { activeStoryIndex } = this.state;
-        const { setOnDisplayStoryBoardNode, onDisplayStoryBoard, closeStoryModal } = this.props;
+        const { setOnDisplayStoryBoardNode, storyBoardNode, closeStoryModal } = this.props;
         if (activeStoryIndex == 0) {
-            if (onDisplayStoryBoard.previous == null) {
+            if (storyBoardNode.previous == null) {
                 closeStoryModal();
                 return;
             }
 
-            setOnDisplayStoryBoardNode(onDisplayStoryBoard.previous);
+            setOnDisplayStoryBoardNode(storyBoardNode.previous);
             return;
         }
 
@@ -81,15 +81,19 @@ class StoryBoard extends Component {
     }
 
     render() {
-        const { stories, fullname } = this.props.onDisplayStoryBoard.getValue();
+        const { stories, fullname } = this.props.storyBoard;
         const { activeStoryIndex } = this.state;
-
-        console.log(this.props.onDisplayStoryBoard, activeStoryIndex);
 
         return (
             <div className="StoryBoard" style={activeStoryIndex >= 0 ? { backgroundImage: `url(/images/${stories[activeStoryIndex].huge})` } : null} >
                 <div className="StoryBoard__Progress">
-                    {stories.map((story, index) => <DurationIndicator duration={story.duration} onDisplayStoryBoard={this.props.onDisplayStoryBoard} activeStoryIndex={activeStoryIndex} index={index} key={index} />)}
+                    {stories.map((story, index) =>
+                        <DurationIndicator
+                            key={index}
+                            index={index}
+                            duration={story.duration}
+                            storyBoardNode={this.props.storyBoardNode}
+                            activeStoryIndex={activeStoryIndex} />)}
                 </div>
                 <div className="StoryBoard__Header" >
                     <div className="StoryBoard__Header__Left">
@@ -123,7 +127,7 @@ class StoryBoard extends Component {
     }
 }
 
-const mapStateToProps = ({ storyReducer: { onDisplayStoryBoard } }) => ({ onDisplayStoryBoard, storyBoard: onDisplayStoryBoard.getValue() });
+const mapStateToProps = ({ storyReducer: { storyBoardNode } }) => ({ storyBoardNode, storyBoard: storyBoardNode.getValue() });
 
 const mapDispatchToProps = (dispatch) => ({
     setOnDisplayStoryBoardNode: (storyBoardNode) => dispatch(storyActions.setOnDisplayStoryBoardNode(storyBoardNode)),
