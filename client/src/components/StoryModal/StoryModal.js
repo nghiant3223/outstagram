@@ -25,14 +25,14 @@ class StoryModal extends Component {
 
 
     render() {
-        const { closeModal, isStoryModalOpen } = this.props;
+        const { closeModal, isModalOpen } = this.props;
 
         return (
             <Modal
                 closeOnEscape
                 centered={false}
                 closeOnDimmerClick
-                open={isStoryModalOpen}
+                open={isModalOpen}
                 onClose={closeModal} style={{padding: 0}}>
                     {this.state.storyBoards.map((board) => <StoryBoard {...board} />)}
             </Modal>
@@ -40,7 +40,7 @@ class StoryModal extends Component {
     }
 }
 
-const mapStateToProps = ({ ui: { isStoryModalOpen } }) => ({ isStoryModalOpen });
+const mapStateToProps = ({ story: { isModalOpen } }) => ({ isModalOpen });
 
 const mapDispatchToProps = (dispatch) => ({
     closeModal: () => dispatch(uiActions.closeStoryModal())
