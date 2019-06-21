@@ -8,4 +8,8 @@ export default class DoublyLinkedListNode {
     toString(callback) {
         return callback ? callback(this.value) : `${this.value}`;
     }
+
+    getValue() {
+        return this.value;
+    }
 }
