@@ -1,6 +1,7 @@
 package storybservice
 
 import (
+	"outstagram/server/dtos/dtomodels"
 	"outstagram/server/models"
 	"outstagram/server/repos/storybrepo"
 	"outstagram/server/services/userservice"
@@ -35,33 +36,34 @@ func (s *StoryBoardService) CheckUserViewedStory(userID, storyID uint) (bool, er
 	return s.storyBoardRepo.CheckUserViewedStory(userID, storyID)
 }
 
-// IsActiveStoryBoard returns true if user A has not see some of user B's story
-func (s *StoryBoardService) IsActiveStoryBoard(userAID, userBID uint) (bool, error) {
-	userA, err := s.userService.FindByID(userAID)
-	if err != nil {
-		return false, err
-	}
-
-	userB, err := s.userService.FindByID(userBID)
-	if err != nil {
-		return false, err
-	}
-
+// GetUserStoryBoardDTO return story of userA towards userB
+func (s *StoryBoardService) GetUserStoryBoardDTO(userAID uint, userB *models.User) (*dtomodels.StoryBoard, error) {
 	stories, err := s.GetStories(userB.StoryBoard.ID)
 	if err != nil {
-		return false, err
+		return nil, err
 	}
 
+	dtoStoryBoard := dtomodels.StoryBoard{
+		UserID:     userB.ID,
+		Fullname:   userB.Fullname,
+		AvatarURL:  userB.AvatarURL,
+		StoryCount: len(stories)}
+
+	hasNewStoryFlag := false
 	for _, story := range stories {
-		viewed, err := s.CheckUserViewedStory(userA.ID, story.ID)
+		dtoStory := story.ToDTO()
+		seen, err := s.CheckUserViewedStory(userAID, story.ID)
 		if err != nil {
-			return false, err
+			return nil, err
 		}
 
-		if !viewed {
-			return true, nil
+		dtoStory.Seen = seen
+		if !hasNewStoryFlag && !seen {
+			dtoStoryBoard.HasNewStory = true
+			hasNewStoryFlag = true
 		}
+		dtoStoryBoard.Stories = append(dtoStoryBoard.Stories, dtoStory)
 	}
 
-	return false, nil
+	return &dtoStoryBoard, nil
 }
