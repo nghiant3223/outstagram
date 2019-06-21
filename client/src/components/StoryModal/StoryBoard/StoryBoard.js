@@ -87,7 +87,13 @@ class StoryBoard extends Component {
         return (
             <div className="StoryBoard" style={activeStoryIndex >= 0 ? { backgroundImage: `url(/images/${stories[activeStoryIndex].huge})` } : null} >
                 <div className="StoryBoard__Progress">
-                    {stories.map((story, index) => <DurationIndicator duration={story.duration} storyBoardNode={this.props.storyBoardNode} activeStoryIndex={activeStoryIndex} index={index} key={index} />)}
+                    {stories.map((story, index) =>
+                        <DurationIndicator
+                            key={index}
+                            index={index}
+                            duration={story.duration}
+                            storyBoardNode={this.props.storyBoardNode}
+                            activeStoryIndex={activeStoryIndex} />)}
                 </div>
                 <div className="StoryBoard__Header" >
                     <div className="StoryBoard__Header__Left">
