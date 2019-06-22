@@ -12,27 +12,24 @@ import defaultBackground from '../../../images/x.png';
 import Avatar from '../../Avatar/Avatar';
 
 function StoryCard(props) {
-    const { storyBoardNode, currentUserID, openModal } = props;
+    const { sbNode, openModal, isMy } = props;
 
-    const board = storyBoardNode.getValue();
-    const isMy = board.userID === currentUserID,
-        latestStory = board.stories[0],
-        isActive = board.hasNewStory,
-        text = board.fullname;
+    const sb = sbNode.getValue(),
+        text = sb.fullname,
+        stories = sb.stories,
+        isActive = sb.hasNewStory,
+        latestStoryURL = stories !== null ? `url("/images/${sb.stories[0][storyConfigs.STORY_CARD_SIZE]}")` : null;
+
+    const circleIcon = isMy ?
+        (<div className="StoryCard__Circle StoryCard__Add">  <img src={addIcon} /> </div>) :
+        (<Avatar isActive={isActive} style={{ position: "absolute", top: "0.5em", left: "0.5em" }} />)
 
     return (
         <div
             className="StoryCard"
-            style={{ backgroundImage: `url("/images/${latestStory[storyConfigs.STORY_CARD_SIZE]}")`, cursor: "pointer" }}
-            onClick={() => openModal(storyBoardNode)}>
-            {
-                isMy ?
-                    <div className="StoryCard__Circle StoryCard__Add">
-                        <img src={addIcon} />
-                    </div>
-                    :
-                    <Avatar isActive={isActive} style={{ position: "absolute", top: "0.5em", left: "0.5em" }} />
-            }
+            style={{ backgroundImage: latestStoryURL, cursor: "pointer" }}
+            onClick={() => openModal(sbNode)} >
+            {circleIcon}
             <b className="StoryCard__Text">{isMy ? "Add your story" : text}</b>
         </div>
     )

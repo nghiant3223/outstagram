@@ -1,31 +1,32 @@
 import * as actionTypes from '../constants/actionTypes';
-import { initStoryBoardLinkedList } from '../services/story.service';
+import StoryFeedManager from '../StoryFeedManager';
 
 const initialState = {
     isLoading: true,
     isModalOpen: false,
-    activeStoryBoardLL: null,
-    inactiveStoryBoardLL: null,
-    storyBoardLL: null,
     storyBoardNode: null
 };
 
 export default function storyReducer(state = initialState, action) {
     switch (action.type) {
-        case actionTypes.GET_STORY_FEED:
-            const [activeStoryBoardLL, inactiveStoryBoardLL] = initStoryBoardLinkedList(action.payload);
-            console.log(activeStoryBoardLL);
+        case actionTypes.GET_STORY_FEED: {
+            const boards = action.payload;
+            return { ...state, storyFeedManager: new StoryFeedManager(boards), isLoading: false }
+        }
 
-            return { ...state, activeStoryBoardLL, inactiveStoryBoardLL, storyBoardLL: activeStoryBoardLL, isLoading: false }
+        case actionTypes.OPEN_STORY_MODAL: {
+            const board = action.payload.getValue()
+            return board.stories === null ? state : { ...state, isModalOpen: true, storyBoardNode: action.payload }
+        }
 
-        case actionTypes.OPEN_STORY_MODAL:
-            return { ...state, isModalOpen: true, storyBoardNode: action.payload }
-
-        case actionTypes.DISPLAY_STORY_BOARD_NODE:
-            return { ...state, storyBoardNode: action.payload }
+        case actionTypes.DISPLAY_STORY_BOARD_NODE: {
+            const board = action.payload.getValue()
+            return board.stories === null ? state : { ...state, storyBoardNode: action.payload }
+        }
 
         case actionTypes.CLOSE_STORY_MODAL:
             return { ...state, isModalOpen: false, storyBoardNode: null }
+
         default:
             return state
     }

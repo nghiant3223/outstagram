@@ -127,7 +127,7 @@ class StoryBoard extends Component {
 
                     </div>
                     <div className="StoryBoard__Header__Right">
-                        <Dropdown icon="ellipsis vertical" className="icon">
+                        <Dropdown icon="ellipsis vertical" className="StoryBoard__Header__Right__Icon" direction="left">
                             <Dropdown.Menu>
                                 <Dropdown.Item text='Report' />
                             </Dropdown.Menu>

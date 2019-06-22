@@ -30,9 +30,8 @@ const Header = (props) => {
                                     </div>
                                     <div>{user.fullname}</div>
                                 </div>
-                                <Dropdown item simple direction='left'>
+                                <Dropdown direction='left'>
                                     <Dropdown.Menu>
-
                                         <Dropdown.Item onClick={props.logoutUser} text="Logout" />
                                     </Dropdown.Menu>
 
