@@ -1,6 +1,4 @@
 import * as actionTypes from '../constants/actionTypes';
-import StoryFeedManager from '../StoryFeedManager';
-
 const initialState = {
     isLoading: true,
     isModalOpen: false,
@@ -10,8 +8,7 @@ const initialState = {
 export default function storyReducer(state = initialState, action) {
     switch (action.type) {
         case actionTypes.GET_STORY_FEED: {
-            const boards = action.payload;
-            return { ...state, storyFeedManager: new StoryFeedManager(boards), isLoading: false }
+            return { ...state, isLoading: false }
         }
 
         case actionTypes.OPEN_STORY_MODAL: {

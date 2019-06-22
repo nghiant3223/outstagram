@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import { connect } from 'react-redux';
+
+import StoryFeedManager from '../../StoryFeedManager';
 
 import StoryCard from './StoryCard/StoryCard';
 
@@ -7,8 +8,7 @@ import "./StoryFeed.css";
 
 class StoryFeed extends Component {
     render() {
-        const { firstSBNode } = this.props;
-        const storyCards = [];
+        const firstSBNode = StoryFeedManager.getInstance().getFirstSBNode(), storyCards = [];
 
         let sbNode = firstSBNode;
         while (sbNode !== null) {
@@ -31,6 +31,4 @@ class StoryFeed extends Component {
     }
 }
 
-const mapStateToProps = ({ storyReducer: { storyFeedManager } }) => ({ firstSBNode: storyFeedManager.getFirstSBNode() });
-
-export default connect(mapStateToProps)(StoryFeed);
+export default StoryFeed;
