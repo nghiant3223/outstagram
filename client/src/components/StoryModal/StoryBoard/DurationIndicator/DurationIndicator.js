@@ -4,7 +4,7 @@ import './DurationIndicator.css';
 
 class DurationIndicator extends Component {
     state = {
-        percentage: 0
+        isFull: false
     }
 
     componentDidMount() {
@@ -16,12 +16,11 @@ class DurationIndicator extends Component {
         }
     }
 
-
     componentDidUpdate(prevProps) {
         const { index, activeStoryIndex, storyBoardNode } = this.props;
-        const { activeStoryIndex: prevActiveStoryIndex } = prevProps;
 
-        if (activeStoryIndex === prevActiveStoryIndex && storyBoardNode === prevProps.storyBoardNode) {
+        if (activeStoryIndex === prevProps.activeStoryIndex
+            && storyBoardNode === prevProps.storyBoardNode) {
             return;
         }
 
@@ -36,26 +35,26 @@ class DurationIndicator extends Component {
     }
 
     setFullIndicator = () => {
-        this.setState({ percentage: 100 });
+        this.setState({ isFull: true });
     }
 
     setEmptyIndicator = () => {
-        this.setState({ percentage: 0 });
+        this.setState({ isFull: false });
     }
 
     render() {
-        const { percentage } = this.state;
+        const { isFull } = this.state;
         const { duration, index, activeStoryIndex } = this.props;
 
         let style;
         if (index === activeStoryIndex) {
-            if (percentage == 0) {
+            if (!isFull) {
                 style = { width: `0%` }
-            } else if (percentage == 100) {
+            } else {
                 style = { transition: `width ${duration}ms linear`, width: `100%` }
             }
         } else {
-            style = { width: `${percentage}%` }
+            style = { width: `${isFull ? 100 : 0}%` }
         }
 
         return (
