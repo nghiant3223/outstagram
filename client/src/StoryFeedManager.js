@@ -35,8 +35,6 @@ class StoryFeedManager {
             this.ll.head.setNext(inactiveLLHead);
             inactiveLLHead.setPrevious(this.ll.head);
         }
-
-        console.log(this.ll);
     }
 
     getFirstSBNode() {
@@ -44,4 +42,27 @@ class StoryFeedManager {
     }
 }
 
-export default StoryFeedManager;
+export default (function () {
+    let storyFeedManager;
+
+    function initStoryFeedManager(boards) {
+        if (storyFeedManager === undefined) {
+            storyFeedManager = new StoryFeedManager(boards);
+        } else {
+            throw "StoryFeedManager has already existed";
+        }
+    }
+
+    function getInstance() {
+        if (storyFeedManager === undefined) {
+            throw "StoryFeedManager hasn't been created yet";
+        } else {
+            return storyFeedManager;
+        }
+    }
+
+    return {
+        getInstance,
+        initStoryFeedManager
+    }
+})();

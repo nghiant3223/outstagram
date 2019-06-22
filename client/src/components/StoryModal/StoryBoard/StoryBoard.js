@@ -136,11 +136,11 @@ class StoryBoard extends Component {
                 </div>
 
                 <div className="StoryBoard__Prev">
-                    <Button icon='chevron left' circular color="white" onClick={this.prevStory} />
+                    <Button icon='chevron left' circular onClick={this.prevStory} />
                 </div>
 
                 <div className="StoryBoard__Next">
-                    <Button icon='chevron right' circular color="white" onClick={this.nextStory} />
+                    <Button icon='chevron right' circular onClick={this.nextStory} />
                 </div>
             </div>
         )
