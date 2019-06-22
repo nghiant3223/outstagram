@@ -8,7 +8,6 @@ import StoryModal from '../../components/StoryModal/StoryModal';
 
 import './HomePage.css';
 
-
 class HomePage extends Component {
     componentDidMount() {
         const { getStories } = this.props;
@@ -16,14 +15,7 @@ class HomePage extends Component {
         getStories();
     }
 
-
     render() {
-        const { isLoading } = this.props;
-
-        if (isLoading) {
-            return null;
-        }
-
         return (
             <div>
                 <StoryFeed />
@@ -33,11 +25,8 @@ class HomePage extends Component {
     }
 }
 
-const mapStateToProps = ({ storyReducer: { isLoading } }) => ({ isLoading });
-
 const mapDispatchToProps = (dispatch) => ({
     getStories: () => dispatch(storyActions.getStories())
 });
 
-
-export default connect(mapStateToProps, mapDispatchToProps)(HomePage);
+export default connect(null, mapDispatchToProps)(HomePage);

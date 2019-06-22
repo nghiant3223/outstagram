@@ -1,20 +1,16 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react';
+import { connect } from 'react-redux';
 
 import StoryFeedManager from '../../StoryFeedManager';
 
 import StoryCard from './StoryCard/StoryCard';
+import StoryCardPlaceholder from './StoryCardPlaceholder/StoryCardPlaceholder';
 
 import "./StoryFeed.css";
 
 class StoryFeed extends Component {
     render() {
-        const firstSBNode = StoryFeedManager.getInstance().getFirstSBNode(), storyCards = [];
-
-        let sbNode = firstSBNode;
-        while (sbNode !== null) {
-            storyCards.push(<StoryCard key={sbNode.getValue().userID} sbNode={sbNode} />);
-            sbNode = sbNode.getNext();
-        }
+        const { isLoading } = this.props;
 
         return (
             <div className="StoryFeed">
@@ -24,11 +20,22 @@ class StoryFeed extends Component {
                 </div>
 
                 <div className="StoryFeed__Main">
-                    {storyCards}
+                    {isLoading ?
+                        (
+                            <Fragment>
+                                <StoryCardPlaceholder />
+                                <StoryCardPlaceholder />
+                                <StoryCardPlaceholder />
+                            </Fragment>
+                        ) :
+                        StoryFeedManager.getInstance().map((sbNode) => <StoryCard key={sbNode.getValue().userID} sbNode={sbNode} />)
+                    }
                 </div>
             </div>
-        )
+        );
     }
 }
 
-export default StoryFeed;
+const mapStateToProps = ({ storyReducer: { isLoading } }) => ({ isLoading });
+
+export default connect(mapStateToProps)(StoryFeed);

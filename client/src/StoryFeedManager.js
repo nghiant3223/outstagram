@@ -40,6 +40,18 @@ class StoryFeedManager {
     getFirstSBNode() {
         return this.ll.getHead();
     }
+
+    map(hof) {
+        let sbNode = this.ll.getHead();
+        let results = [];
+
+        while (sbNode != null) {
+            results.push(hof(sbNode));
+            sbNode = sbNode.getNext();
+        }
+
+        return results;
+    }
 }
 
 export default (function () {
