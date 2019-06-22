@@ -75,9 +75,21 @@ func (mc *Controller) GetStoryFeed(c *gin.Context) {
 	var activeStoryBoard []*dtomodels.StoryBoard
 	var inactiveStoryBoard []*dtomodels.StoryBoard
 
+	userStoryBoardDTO, err := mc.storyBoardService.GetUserStoryBoardDTO(userID)
+	if err != nil {
+		if gorm.IsRecordNotFoundError(err) {
+			utils.ResponseWithError(c, http.StatusNotFound, "Not found", err.Error())
+			return
+		}
+
+		utils.ResponseWithError(c, http.StatusInternalServerError, "Error while retrieving story board", err.Error())
+		return
+	}
+
+	storyBoardResponse.StoryBoards = append(storyBoardResponse.StoryBoards, userStoryBoardDTO)
 	followings := mc.userService.GetFollowingsWithAffinity(userID)
 	for _, following := range followings {
-		storyBoardDTO, err := mc.storyBoardService.GetUserStoryBoardDTO(userID, following)
+		storyBoardDTO, err := mc.storyBoardService.GetFollowingStoryBoardDTO(userID, following)
 
 		if err != nil {
 			if gorm.IsRecordNotFoundError(err) {
@@ -100,6 +112,7 @@ func (mc *Controller) GetStoryFeed(c *gin.Context) {
 		}
 	}
 
-	storyBoardResponse.StoryBoards = append(activeStoryBoard, inactiveStoryBoard...)
+	storyBoardResponse.StoryBoards = append(storyBoardResponse.StoryBoards, activeStoryBoard...)
+	storyBoardResponse.StoryBoards = append(storyBoardResponse.StoryBoards, inactiveStoryBoard...)
 	utils.ResponseWithSuccess(c, http.StatusOK, "Retrieve story feed successfully", storyBoardResponse)
 }

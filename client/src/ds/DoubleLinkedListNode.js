@@ -12,4 +12,20 @@ export default class DoublyLinkedListNode {
     getValue() {
         return this.value;
     }
+
+    getNext() {
+        return this.next;
+    }
+
+    setNext(node) {
+        this.next = node;
+    }
+
+    getPrevious() {
+        return this.previous;
+    }
+
+    setPrevious(node) {
+        this.previous = node;
+    }
 }

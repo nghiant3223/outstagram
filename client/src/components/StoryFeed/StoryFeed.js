@@ -13,7 +13,7 @@ class StoryFeed extends Component {
         let storyBoardNode = storyBoardLL.getHead();
         while (storyBoardNode !== null) {
             storyCards.push(<StoryCard key={storyBoardNode.getValue().userID} storyBoardNode={storyBoardNode} currentUserID={currentUserID} />);
-            storyBoardNode = storyBoardNode.next;
+            storyBoardNode = storyBoardNode.getNext();
         }
 
         return (
