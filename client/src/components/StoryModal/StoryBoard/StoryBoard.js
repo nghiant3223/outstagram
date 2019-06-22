@@ -70,12 +70,12 @@ class StoryBoard extends Component {
         const { stories } = this.props.storyBoard;
 
         if (activeStoryIndex == stories.length - 1) {
-            if (storyBoardNode.next == null) {
+            if (storyBoardNode.getNext() == null) {
                 closeStoryModal();
                 return;
             }
 
-            displayStoryBoardNode(storyBoardNode.next);
+            displayStoryBoardNode(storyBoardNode.getNext());
             return;
         }
 
@@ -87,12 +87,12 @@ class StoryBoard extends Component {
         const { displayStoryBoardNode, storyBoardNode, closeStoryModal } = this.props;
 
         if (activeStoryIndex == 0) {
-            if (storyBoardNode.previous == null) {
+            if (storyBoardNode.getPrevious() == null) {
                 closeStoryModal();
                 return;
             }
 
-            displayStoryBoardNode(storyBoardNode.previous);
+            displayStoryBoardNode(storyBoardNode.getPrevious());
             return;
         }
 

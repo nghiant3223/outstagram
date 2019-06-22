@@ -36,8 +36,8 @@ func (s *StoryBoardService) CheckUserViewedStory(userID, storyID uint) (bool, er
 	return s.storyBoardRepo.CheckUserViewedStory(userID, storyID)
 }
 
-// GetUserStoryBoardDTO return story of userA towards userB
-func (s *StoryBoardService) GetUserStoryBoardDTO(userAID uint, userB *models.User) (*dtomodels.StoryBoard, error) {
+// GetFollowingStoryBoardDTO return story of userA towards userB, whom userA follows
+func (s *StoryBoardService) GetFollowingStoryBoardDTO(userAID uint, userB *models.User) (*dtomodels.StoryBoard, error) {
 	stories, err := s.GetStories(userB.StoryBoard.ID)
 	if err != nil {
 		return nil, err
@@ -68,6 +68,28 @@ func (s *StoryBoardService) GetUserStoryBoardDTO(userAID uint, userB *models.Use
 		}
 		dtoStoryBoard.Stories = append(dtoStoryBoard.Stories, dtoStory)
 	}
+
+	return &dtoStoryBoard, nil
+}
+
+// GetUserStoryBoardDTO return story of a user
+func (s *StoryBoardService) GetUserStoryBoardDTO(userID uint) (*dtomodels.StoryBoard, error) {
+	user, err := s.userService.FindByID(userID)
+	if err != nil {
+		return nil, err
+	}
+
+	stories, err := s.GetStories(userID)
+	if err != nil {
+		return nil, err
+	}
+
+	dtoStoryBoard := dtomodels.StoryBoard{
+		UserID:     user.ID,
+		Fullname:   user.Fullname,
+		AvatarURL:  user.AvatarURL,
+		StoryCount: len(stories),
+		IsMy:       true}
 
 	return &dtoStoryBoard, nil
 }
