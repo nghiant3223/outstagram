@@ -7,13 +7,13 @@ import "./StoryFeed.css";
 
 class StoryFeed extends Component {
     render() {
-        const { storyBoardLL, currentUserID } = this.props;
+        const { firstSBNode } = this.props;
         const storyCards = [];
 
-        let storyBoardNode = storyBoardLL.getHead();
-        while (storyBoardNode !== null) {
-            storyCards.push(<StoryCard key={storyBoardNode.getValue().userID} storyBoardNode={storyBoardNode} currentUserID={currentUserID} />);
-            storyBoardNode = storyBoardNode.getNext();
+        let sbNode = firstSBNode;
+        while (sbNode !== null) {
+            storyCards.push(<StoryCard key={sbNode.getValue().userID} sbNode={sbNode} />);
+            sbNode = sbNode.getNext();
         }
 
         return (
@@ -31,6 +31,6 @@ class StoryFeed extends Component {
     }
 }
 
-const mapStateToProps = ({ storyReducer: { storyBoardLL }, authReducer: { userID: currentUserID } }) => ({ storyBoardLL, currentUserID, });
+const mapStateToProps = ({ storyReducer: { storyFeedManager } }) => ({ firstSBNode: storyFeedManager.getFirstSBNode() });
 
 export default connect(mapStateToProps)(StoryFeed);

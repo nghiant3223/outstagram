@@ -268,4 +268,8 @@ export default class DoublyLinkedList {
     getHead() {
         return this.head;
     }
+
+    isEmpty() {
+        return this.head == null;
+    }
 }
