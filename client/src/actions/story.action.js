@@ -17,4 +17,4 @@ export const getStories = () =>
         }
     }
 
-export const displayStoryBoardNode = (storyBoardNode) => ({ type: actionTypes.SET_ON_DISPLAY_STORY_BOARD_NODE, payload: storyBoardNode });
+export const displayStoryBoardNode = (storyBoardNode) => ({ type: actionTypes.DISPLAY_STORY_BOARD_NODE, payload: storyBoardNode });

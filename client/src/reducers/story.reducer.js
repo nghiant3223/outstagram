@@ -21,7 +21,7 @@ export default function storyReducer(state = initialState, action) {
         case actionTypes.OPEN_STORY_MODAL:
             return { ...state, isModalOpen: true, storyBoardNode: action.payload }
 
-        case actionTypes.SET_ON_DISPLAY_STORY_BOARD_NODE:
+        case actionTypes.DISPLAY_STORY_BOARD_NODE:
             return { ...state, storyBoardNode: action.payload }
 
         case actionTypes.CLOSE_STORY_MODAL:

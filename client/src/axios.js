@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { getToken } from './localStorage';
+import { getToken } from './sessionStorage';
 
 export const noAuthApi = axios.create({
     baseURL: "/api",

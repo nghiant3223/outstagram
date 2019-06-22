@@ -1,5 +1,5 @@
 import * as actionTypes from '../constants/actionTypes';
-import { setToken, getToken } from '../localStorage';
+import { setToken } from '../sessionStorage';
 import * as authServices from '../services/auth.service';
 
 import Socket from '../socket';
