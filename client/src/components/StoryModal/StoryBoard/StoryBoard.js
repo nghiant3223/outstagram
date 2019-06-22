@@ -37,7 +37,8 @@ class StoryBoard extends Component {
         const { stories } = this.props.storyBoard;
 
         // If story in a story board changes or story board changes
-        if (activeStoryIndex !== prevState.activeStoryIndex || storyBoardNode !== prevProps.storyBoardNode) {
+        if (activeStoryIndex !== prevState.activeStoryIndex
+            || storyBoardNode !== prevProps.storyBoardNode) {
             clearTimeout(this.storyTimeout);
             this.storyTimeout = setTimeout(this.nextStory, stories[activeStoryIndex].duration)
         }
@@ -49,7 +50,7 @@ class StoryBoard extends Component {
 
     nextStory = () => {
         const { activeStoryIndex } = this.state;
-        const { setOnDisplayStoryBoardNode, storyBoardNode, closeStoryModal } = this.props;
+        const { displayStoryBoardNode, storyBoardNode, closeStoryModal } = this.props;
         const { stories } = this.props.storyBoard;
 
         if (activeStoryIndex == stories.length - 1) {
@@ -57,7 +58,8 @@ class StoryBoard extends Component {
                 closeStoryModal();
                 return;
             }
-            setOnDisplayStoryBoardNode(storyBoardNode.next);
+
+            displayStoryBoardNode(storyBoardNode.next);
             return;
         }
 
@@ -66,14 +68,15 @@ class StoryBoard extends Component {
 
     prevStory = () => {
         const { activeStoryIndex } = this.state;
-        const { setOnDisplayStoryBoardNode, storyBoardNode, closeStoryModal } = this.props;
+        const { displayStoryBoardNode, storyBoardNode, closeStoryModal } = this.props;
+
         if (activeStoryIndex == 0) {
             if (storyBoardNode.previous == null) {
                 closeStoryModal();
                 return;
             }
 
-            setOnDisplayStoryBoardNode(storyBoardNode.previous);
+            displayStoryBoardNode(storyBoardNode.previous);
             return;
         }
 
@@ -81,18 +84,19 @@ class StoryBoard extends Component {
     }
 
     render() {
-        const { stories, fullname } = this.props.storyBoard;
+        const { storyBoardNode } = this.props;
         const { activeStoryIndex } = this.state;
+        const { stories, fullname } = this.props.storyBoard;
 
         return (
             <div className="StoryBoard" style={activeStoryIndex >= 0 ? { backgroundImage: `url(/images/${stories[activeStoryIndex].huge})` } : null} >
                 <div className="StoryBoard__Progress">
                     {stories.map((story, index) =>
                         <DurationIndicator
-                            key={index}
+                            key={story.id}
                             index={index}
                             duration={story.duration}
-                            storyBoardNode={this.props.storyBoardNode}
+                            storyBoardNode={storyBoardNode}
                             activeStoryIndex={activeStoryIndex} />)}
                 </div>
                 <div className="StoryBoard__Header" >
@@ -130,7 +134,7 @@ class StoryBoard extends Component {
 const mapStateToProps = ({ storyReducer: { storyBoardNode } }) => ({ storyBoardNode, storyBoard: storyBoardNode.getValue() });
 
 const mapDispatchToProps = (dispatch) => ({
-    setOnDisplayStoryBoardNode: (storyBoardNode) => dispatch(storyActions.setOnDisplayStoryBoardNode(storyBoardNode)),
+    displayStoryBoardNode: (storyBoardNode) => dispatch(storyActions.displayStoryBoardNode(storyBoardNode)),
     closeStoryModal: () => dispatch(uiActions.closeStoryModal())
 });
 
