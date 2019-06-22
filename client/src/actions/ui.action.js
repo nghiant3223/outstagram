@@ -1,7 +1,7 @@
 import * as actionTypes from '../constants/actionTypes';
 
-export function openStoryModal(storyBoardNode) {
-    return { type: actionTypes.OPEN_STORY_MODAL, payload: storyBoardNode }
+export function openStoryModal(sbNode) {
+    return { type: actionTypes.OPEN_STORY_MODAL, payload: sbNode }
 }
 
 export function closeStoryModal() {

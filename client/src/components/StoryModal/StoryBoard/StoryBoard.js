@@ -38,22 +38,22 @@ class StoryBoard extends Component {
     }
 
     componentWillReceiveProps = (nextProps) => {
-        const { storyBoardNode } = this.props;
+        const { sbNode } = this.props;
 
         // If story board changes, restart the count
-        if (storyBoardNode != nextProps.storyBoardNode) {
+        if (sbNode != nextProps.sbNode) {
             this.setState({ activeStoryIndex: 0 });
         }
     }
 
     componentDidUpdate(prevProps, prevState) {
-        const { storyBoardNode } = this.props;
+        const { sbNode } = this.props;
         const { activeStoryIndex } = this.state;
         const { stories } = this.props.storyBoard;
 
         // If story in a story board changes or story board changes
         if (activeStoryIndex !== prevState.activeStoryIndex
-            || storyBoardNode !== prevProps.storyBoardNode) {
+            || sbNode !== prevProps.sbNode) {
             clearTimeout(this.storyTimeout);
             this.storyTimeout = setTimeout(this.nextStory, stories[activeStoryIndex].duration)
         }
@@ -66,16 +66,16 @@ class StoryBoard extends Component {
 
     nextStory = () => {
         const { activeStoryIndex } = this.state;
-        const { displayStoryBoardNode, storyBoardNode, closeStoryModal } = this.props;
+        const { displayStoryBoardNode, sbNode, closeStoryModal } = this.props;
         const { stories } = this.props.storyBoard;
 
         if (activeStoryIndex == stories.length - 1) {
-            if (storyBoardNode.getNext() == null) {
+            if (sbNode.getNext() == null) {
                 closeStoryModal();
                 return;
             }
 
-            displayStoryBoardNode(storyBoardNode.getNext());
+            displayStoryBoardNode(sbNode.getNext());
             return;
         }
 
@@ -84,15 +84,15 @@ class StoryBoard extends Component {
 
     prevStory = () => {
         const { activeStoryIndex } = this.state;
-        const { displayStoryBoardNode, storyBoardNode, closeStoryModal } = this.props;
+        const { displayStoryBoardNode, sbNode, closeStoryModal } = this.props;
 
         if (activeStoryIndex == 0) {
-            if (storyBoardNode.getPrevious() == null) {
+            if (sbNode.getPrevious() == null) {
                 closeStoryModal();
                 return;
             }
 
-            displayStoryBoardNode(storyBoardNode.getPrevious());
+            displayStoryBoardNode(sbNode.getPrevious());
             return;
         }
 
@@ -100,7 +100,7 @@ class StoryBoard extends Component {
     }
 
     render() {
-        const { storyBoardNode } = this.props;
+        const { sbNode } = this.props;
         const { activeStoryIndex } = this.state;
         const { stories, fullname } = this.props.storyBoard;
 
@@ -112,7 +112,7 @@ class StoryBoard extends Component {
                             key={story.id}
                             index={index}
                             duration={story.duration}
-                            storyBoardNode={storyBoardNode}
+                            sbNode={sbNode}
                             activeStoryIndex={activeStoryIndex} />)}
                 </div>
                 <div className="StoryBoard__Header" >
@@ -147,10 +147,10 @@ class StoryBoard extends Component {
     }
 }
 
-const mapStateToProps = ({ storyReducer: { storyBoardNode } }) => ({ storyBoardNode, storyBoard: storyBoardNode.getValue() });
+const mapStateToProps = ({ storyReducer: { onDisplaySBNode: sbNode } }) => ({ sbNode, storyBoard: sbNode.getValue() });
 
 const mapDispatchToProps = (dispatch) => ({
-    displayStoryBoardNode: (storyBoardNode) => dispatch(storyActions.displayStoryBoardNode(storyBoardNode)),
+    displayStoryBoardNode: (sbNode) => dispatch(storyActions.displayStoryBoardNode(sbNode)),
     closeStoryModal: () => dispatch(uiActions.closeStoryModal())
 });
 

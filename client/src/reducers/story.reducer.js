@@ -4,7 +4,7 @@ import StoryFeedManager from '../StoryFeedManager';
 const initialState = {
     isLoading: true,
     isModalOpen: false,
-    storyBoardNode: null
+    onDisplaySBNode: null
 };
 
 export default function storyReducer(state = initialState, action) {
@@ -16,16 +16,16 @@ export default function storyReducer(state = initialState, action) {
 
         case actionTypes.OPEN_STORY_MODAL: {
             const board = action.payload.getValue()
-            return board.stories === null ? state : { ...state, isModalOpen: true, storyBoardNode: action.payload }
+            return board.stories === null ? state : { ...state, isModalOpen: true, onDisplaySBNode: action.payload }
         }
 
         case actionTypes.DISPLAY_STORY_BOARD_NODE: {
             const board = action.payload.getValue()
-            return board.stories === null ? state : { ...state, storyBoardNode: action.payload }
+            return board.stories === null ? state : { ...state, onDisplaySBNode: action.payload }
         }
 
         case actionTypes.CLOSE_STORY_MODAL:
-            return { ...state, isModalOpen: false, storyBoardNode: null }
+            return { ...state, isModalOpen: false, onDisplaySBNode: null }
 
         default:
             return state

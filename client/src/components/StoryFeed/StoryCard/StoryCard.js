@@ -36,7 +36,7 @@ function StoryCard(props) {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-    openModal: (storyBoardNode) => dispatch(uiActions.openStoryModal(storyBoardNode))
+    openModal: (sbNode) => dispatch(uiActions.openStoryModal(sbNode))
 });
 
 export default connect(null, mapDispatchToProps)(StoryCard);
