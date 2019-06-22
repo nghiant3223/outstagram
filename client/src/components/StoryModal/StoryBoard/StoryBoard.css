@@ -16,23 +16,6 @@
     margin-right: 2px;
 }
 
-.StoryCard__Circle {
-    height: 2.5em;
-    width: 2.5em;
-    background: white;
-    border-radius: 50%;
-    position: absolute;
-    top: 0.5em;
-    left: 0.5em;
-}
-
-.StoryCard__Circle>img {
-    height: 100%;
-    width: 100%;
-    border-radius: 50%;
-    object-fit: cover;
-}
-
 .StoryBoard__Header {
     display: flex;
     justify-content: space-between;
