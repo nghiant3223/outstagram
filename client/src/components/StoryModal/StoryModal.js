@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
-import { Button, Header, Image, Modal } from 'semantic-ui-react';
+import { Modal } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 
-import * as storyService from '../../services/story.service';
-
 import * as uiActions from '../../actions/ui.action';
-import * as storyActions from '../../actions/ui.action';
+
 import StoryBoard from './StoryBoard/StoryBoard';
 
 class StoryModal extends Component {
@@ -19,7 +17,7 @@ class StoryModal extends Component {
                 closeOnDimmerClick
                 open={isModalOpen}
                 onClose={closeModal}>
-                <StoryBoard/>
+                <StoryBoard />
             </Modal>
         );
     }

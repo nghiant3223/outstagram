@@ -14,7 +14,7 @@ class StoryFeedManager {
         }
 
         while (i < storyBoards.length) {
-            this.inactiveStoryBoards.append(storyBoards[i++]);
+            this.inactiveLL.append(storyBoards[i++]);
         }
 
         if (!this.activeLL.isEmpty()) {
