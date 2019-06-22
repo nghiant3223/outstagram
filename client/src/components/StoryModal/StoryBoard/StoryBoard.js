@@ -20,6 +20,21 @@ class StoryBoard extends Component {
         const { activeStoryIndex } = this.state;
 
         this.storyTimeout = setTimeout(this.nextStory, stories[activeStoryIndex].duration)
+        window.addEventListener("keydown", this.onArrowKeyDown);
+    }
+
+    onArrowKeyDown = (event) => {
+        // If right arrow or down arrow is pressed
+        if (event.keyCode === 39 || event.keyCode === 40) {
+            this.nextStory();
+            return;
+        }
+
+        // If left arrow or up arrow is pressed
+        if (event.keyCode === 37 || event.keyCode === 38) {
+            this.prevStory();
+            return;
+        }
     }
 
     componentWillReceiveProps = (nextProps) => {
@@ -46,6 +61,7 @@ class StoryBoard extends Component {
 
     componentWillUnmount() {
         clearTimeout(this.storyTimeout);
+        window.removeEventListener("keydown", this.onArrowKeyDown);
     }
 
     nextStory = () => {
