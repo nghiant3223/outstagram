@@ -22,15 +22,15 @@ function StoryCard(props) {
             { backgroundImage: `url("/images/${sb.stories[0][storyConfigs.STORY_CARD_SIZE]}")` };
 
     const circleIcon = isMy ?
-        (<div className="StoryCard__Circle StoryCard__Add"> <img src={addIcon} /> </div>) :
+        (<div className="StoryCard__Circle StoryCard__Add" onClick={() => alert("1" )}> <img src={addIcon} /> </div>) :
         (<div className="StoryCard__Circle"><Avatar isActive={isActive} /></div>)
 
     return (
         <div
             className="StoryCard"
-            style={{ ...backgroundStyle, cursor: "pointer" }}
-            onClick={() => openModal(sbNode)} >
+            style={{ ...backgroundStyle, cursor: "pointer" }}>
             {circleIcon}
+            <div className="StoryCard__Background" onClick={() => openModal(sbNode)} ></div>
             <b className="StoryCard__Text">{isMy ? "Add your story" : text}</b>
         </div>
     )
