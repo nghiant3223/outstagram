@@ -14,7 +14,6 @@ export default function authReducer(state = initialState, action) {
             return { ...state, isAuthenticated: false, user: undefined };
 
         case actionTypes.AUTH_SUCCESS:
-            console.log(action.payload);
             return { ...state, isAuthenticated: true, user: action.payload };
 
         default:

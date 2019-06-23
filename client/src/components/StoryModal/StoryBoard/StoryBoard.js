@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 import './StoryBoard.css';
 import Avatar from '../../Avatar/Avatar';
-import DurationIndicator from './DurationIndicator/DurationIndicator';
+import DurationIndicator from './TimeSlicer/TimeSlicer';
 import { getDiffFromPast } from '../../../utils/time';
 
 import * as storyActions from '../../../actions/story.action';
@@ -16,8 +16,14 @@ class StoryBoard extends Component {
     }
 
     componentDidMount() {
-        const { stories } = this.props.storyBoard;
+        const { sbNode, addToVisitedSBNodes } = this.props;
+        const { stories, hasNewStory } = this.props.storyBoard;
         const { activeStoryIndex } = this.state;
+
+        if (hasNewStory) {
+            stories[activeStoryIndex].seen = true;
+            addToVisitedSBNodes(sbNode);
+        }
 
         this.storyTimeout = setTimeout(this.nextStory, stories[activeStoryIndex].duration)
         window.addEventListener("keydown", this.onArrowKeyDown);
@@ -37,7 +43,7 @@ class StoryBoard extends Component {
         }
     }
 
-    componentWillReceiveProps = (nextProps) => {
+    componentWillReceiveProps(nextProps) {
         const { sbNode } = this.props;
 
         // If story board changes, restart the count
@@ -47,9 +53,14 @@ class StoryBoard extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        const { sbNode } = this.props;
+        const { sbNode, addToVisitedSBNodes } = this.props;
         const { activeStoryIndex } = this.state;
-        const { stories } = this.props.storyBoard;
+        const { stories, hasNewStory } = this.props.storyBoard;
+
+        if (hasNewStory) {
+            stories[activeStoryIndex].seen = true;
+            addToVisitedSBNodes(sbNode);
+        }
 
         // If story in a story board changes or story board changes
         if (activeStoryIndex !== prevState.activeStoryIndex

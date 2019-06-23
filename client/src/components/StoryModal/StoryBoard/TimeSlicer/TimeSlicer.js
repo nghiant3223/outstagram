@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 
-import './DurationIndicator.css';
+import './TimeSlicer.css';
 
-class DurationIndicator extends Component {
+class TimeSlicer extends Component {
     state = {
         isFull: false
     }
@@ -65,4 +65,4 @@ class DurationIndicator extends Component {
     }
 }
 
-export default DurationIndicator;
+export default TimeSlicer;
