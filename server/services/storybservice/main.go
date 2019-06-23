@@ -48,10 +48,11 @@ func (s *StoryBoardService) GetFollowingStoryBoardDTO(userAID uint, userB *model
 	}
 
 	dtoStoryBoard := dtomodels.StoryBoard{
-		UserID:     userB.ID,
-		Fullname:   userB.Fullname,
-		AvatarURL:  userB.AvatarURL,
-		StoryCount: len(stories)}
+		StoryBoardID: userB.StoryBoard.ID,
+		UserID:       userB.ID,
+		Fullname:     userB.Fullname,
+		AvatarURL:    userB.AvatarURL,
+		StoryCount:   len(stories)}
 
 	hasNewStoryFlag := false
 	for _, story := range stories {
@@ -85,11 +86,18 @@ func (s *StoryBoardService) GetUserStoryBoardDTO(userID uint) (*dtomodels.StoryB
 	}
 
 	dtoStoryBoard := dtomodels.StoryBoard{
-		UserID:     user.ID,
-		Fullname:   user.Fullname,
-		AvatarURL:  user.AvatarURL,
-		StoryCount: len(stories),
-		IsMy:       true}
+		StoryBoardID: user.StoryBoard.ID,
+		UserID:       user.ID,
+		Fullname:     user.Fullname,
+		AvatarURL:    user.AvatarURL,
+		StoryCount:   len(stories),
+		IsMy:         true,
+		HasNewStory:  len(stories) > 0}
+
+	for _, story := range stories {
+		dtoStory := story.ToDTO()
+		dtoStoryBoard.Stories = append(dtoStoryBoard.Stories, dtoStory)
+	}
 
 	return &dtoStoryBoard, nil
 }
