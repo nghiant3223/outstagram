@@ -2,6 +2,7 @@ import React, { Component, Fragment, } from 'react';
 import { connect } from 'react-redux';
 
 import StoryFeedManager from '../../StoryFeedManager';
+import * as storyActions from '../../actions/story.action';
 
 import StoryCard from './StoryCard/StoryCard';
 import StoryCardPlaceholder from './StoryCardPlaceholder/StoryCardPlaceholder';
@@ -14,19 +15,21 @@ class StoryFeed extends Component {
     }
 
     render() {
-        const { isLoading } = this.props;
+        const { isLoading, displayFirstSB } = this.props;
 
         return (
             <div className="StoryFeed">
                 <div className="StoryFeed__Header">
                     <b>Story</b>
-                    <i>See all</i>
+                    <i className="StoryFeed__Header__SeeAll" onClick={displayFirstSB}>See all</i>
                 </div>
 
                 <div className="StoryFeed__Main">
                     {isLoading ?
                         (
                             <Fragment>
+                                <StoryCardPlaceholder />
+                                <StoryCardPlaceholder />
                                 <StoryCardPlaceholder />
                                 <StoryCardPlaceholder />
                                 <StoryCardPlaceholder />
@@ -42,4 +45,8 @@ class StoryFeed extends Component {
 
 const mapStateToProps = ({ storyReducer: { isLoading, isModalOpen } }) => ({ isLoading, isModalOpen });
 
-export default connect(mapStateToProps, null, null, { forwardRef: true })(StoryFeed);
+const mapDispatchToProps = (dispatch) => ({
+    displayFirstSB: () => dispatch(storyActions.displayFirstSBNode())
+});
+
+export default connect(mapStateToProps, mapDispatchToProps, null, { forwardRef: true })(StoryFeed);

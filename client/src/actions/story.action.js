@@ -14,4 +14,8 @@ export const getStories = () =>
         }
     }
 
-export const displayStoryBoardNode = (sbNode) => ({ type: actionTypes.DISPLAY_STORY_BOARD_NODE, payload: sbNode });
+export const displayStoryBoardNode = (sbNode) =>
+    ({ type: actionTypes.DISPLAY_STORY_BOARD_NODE, payload: sbNode });
+
+export const displayFirstSBNode = () =>
+    ({ type: actionTypes.DISPLAY_STORY_BOARD_NODE, payload: StoryFeedManager.getInstance().getFirstSBNode() });

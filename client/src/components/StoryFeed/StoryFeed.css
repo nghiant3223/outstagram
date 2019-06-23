@@ -8,6 +8,10 @@
     display: flex;
 }
 
+.StoryFeed__Header__SeeAll {
+    cursor: pointer;
+}
+
 .StoryFeed__Main>div {
     margin-left: 10px;
     margin-right: 10px;

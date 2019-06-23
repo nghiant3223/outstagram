@@ -12,7 +12,12 @@ class StoryFeedManager {
     }
 
     getFirstSBNode() {
-        return this.ll.getHead();
+        const head = this.ll.getHead();
+        if (head.stories === null) {
+            return head.getNext();
+        }
+
+        return head;
     }
 
     map(hof) {

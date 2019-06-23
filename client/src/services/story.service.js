@@ -1,6 +1,9 @@
 import { requireAuthApi } from '../axios';
-import DoublyLinkedList from '../ds/DoubleLinkedList';
 
 export function getStoryFeed() {
     return requireAuthApi.get("/me/storyfeed")
+}
+
+export function createStoryView(storyID) {
+    return requireAuthApi.post(`/stories/${storyID}/views`);
 }

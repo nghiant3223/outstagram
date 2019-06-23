@@ -4,11 +4,13 @@ import { connect } from 'react-redux';
 
 import './StoryBoard.css';
 import Avatar from '../../Avatar/Avatar';
-import DurationIndicator from './TimeSlicer/TimeSlicer';
+import TimeSlicer from './TimeSlicer/TimeSlicer';
 import { getDiffFromPast } from '../../../utils/time';
 
 import * as storyActions from '../../../actions/story.action';
 import * as uiActions from '../../../actions/ui.action';
+
+import * as storyServices from '../../../services/story.service';
 
 class StoryBoard extends Component {
     state = {
@@ -58,6 +60,7 @@ class StoryBoard extends Component {
         const { stories, hasNewStory } = this.props.storyBoard;
 
         if (hasNewStory) {
+            storyServices.createStoryView(stories[activeStoryIndex].id);
             stories[activeStoryIndex].seen = true;
             addToVisitedSBNodes(sbNode);
         }
@@ -119,7 +122,7 @@ class StoryBoard extends Component {
             <div className="StoryBoard" style={activeStoryIndex >= 0 ? { backgroundImage: `url(/images/${stories[activeStoryIndex].huge})` } : null} >
                 <div className="StoryBoard__Progress">
                     {stories.map((story, index) =>
-                        <DurationIndicator
+                        <TimeSlicer
                             key={story.id}
                             index={index}
                             duration={story.duration}
