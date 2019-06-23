@@ -9,17 +9,25 @@ import StoryModal from '../../components/StoryModal/StoryModal';
 import './HomePage.css';
 
 class HomePage extends Component {
+    constructor(props) {
+        super(props);
+    }
+
     componentDidMount() {
         const { getStories } = this.props;
 
         getStories();
     }
 
+    updateStoryFeed = () => {
+        this.storyFeed.updateStoryFeed();
+    }
+
     render() {
         return (
             <div>
-                <StoryFeed />
-                <StoryModal />
+                <StoryFeed ref={(cmp) => { if (cmp) { this.storyFeed = cmp } }} />
+                <StoryModal updateStoryFeed={this.updateStoryFeed} />
             </div>
         );
     }

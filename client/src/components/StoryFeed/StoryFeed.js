@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component, Fragment, } from 'react';
 import { connect } from 'react-redux';
 
 import StoryFeedManager from '../../StoryFeedManager';
@@ -9,6 +9,10 @@ import StoryCardPlaceholder from './StoryCardPlaceholder/StoryCardPlaceholder';
 import "./StoryFeed.css";
 
 class StoryFeed extends Component {
+    updateStoryFeed() {
+        this.forceUpdate();
+    }
+
     render() {
         const { isLoading } = this.props;
 
@@ -28,7 +32,7 @@ class StoryFeed extends Component {
                                 <StoryCardPlaceholder />
                             </Fragment>
                         ) :
-                        StoryFeedManager.getInstance().map((sbNode) => <StoryCard key={sbNode.getValue().userID} sbNode={sbNode} />)
+                        StoryFeedManager.getInstance().map((sbNode) => <StoryCard key={sbNode.getValue().storyBoardID} sbNode={sbNode} />)
                     }
                 </div>
             </div>
@@ -36,6 +40,6 @@ class StoryFeed extends Component {
     }
 }
 
-const mapStateToProps = ({ storyReducer: { isLoading } }) => ({ isLoading });
+const mapStateToProps = ({ storyReducer: { isLoading, isModalOpen } }) => ({ isLoading, isModalOpen });
 
-export default connect(mapStateToProps)(StoryFeed);
+export default connect(mapStateToProps, null, null, { forwardRef: true })(StoryFeed);

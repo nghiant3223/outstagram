@@ -36,7 +36,7 @@ export default class DoublyLinkedList {
             this.tail = newNode;
         }
 
-        return this;
+        return newNode;
     }
 
     /**
@@ -63,7 +63,7 @@ export default class DoublyLinkedList {
         // Set new node to be the tail of linked list.
         this.tail = newNode;
 
-        return this;
+        return newNode;
     }
 
     /**
