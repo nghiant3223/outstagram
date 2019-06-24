@@ -14,5 +14,5 @@ type Story struct {
 	Origin      string    `json:"origin"`
 	ReactableID uint      `json:"reactableID"`
 	ViewableID  uint      `json:"viewableID"`
-	Seen        bool      `json:"seen"`
+	Seen        *bool     `json:"seen"`
 }

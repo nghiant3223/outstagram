@@ -5,6 +5,7 @@ import (
 	"outstagram/server/models"
 	"outstagram/server/repos/storybrepo"
 	"outstagram/server/services/userservice"
+	"outstagram/server/utils"
 )
 
 type StoryBoardService struct {
@@ -62,7 +63,7 @@ func (s *StoryBoardService) GetFollowingStoryBoardDTO(userAID uint, userB *model
 			return nil, err
 		}
 
-		dtoStory.Seen = seen
+		dtoStory.Seen = utils.NewBoolPointer(seen)
 		if !hasNewStoryFlag && !seen {
 			dtoStoryBoard.HasNewStory = true
 			hasNewStoryFlag = true
