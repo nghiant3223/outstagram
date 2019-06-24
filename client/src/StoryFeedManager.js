@@ -44,7 +44,7 @@ class StoryFeedManager {
     }
 
     setInactive(sbNode) {
-        if (sbNode == this.ll.getHead()) {
+        if (sbNode === this.ll.getHead()) {
             return;
         }
 
@@ -64,13 +64,13 @@ export default (function () {
         if (storyFeedManager === undefined) {
             storyFeedManager = new StoryFeedManager(boards);
         } else {
-            throw "StoryFeedManager has already existed";
+            throw new Error("StoryFeedManager has already existed");
         }
     }
 
     function getInstance() {
         if (storyFeedManager === undefined) {
-            throw "StoryFeedManager hasn't been created yet";
+            throw new Error("StoryFeedManager hasn't been created yet");
         } else {
             return storyFeedManager;
         }

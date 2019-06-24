@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Dropdown, Grid, Image } from 'semantic-ui-react';
+import { Dropdown, Grid } from 'semantic-ui-react';
 
 import * as authActions from '../../actions/auth.action';
 
@@ -26,7 +26,7 @@ const Header = (props) => {
 
                                 <div className="Header__Right__Info">
                                     <div className="Header__Right__Info__Avatar" >
-                                        <img src={defaultAvatar} />
+                                        <img src={defaultAvatar} alt="avatar"/>
                                     </div>
                                     <div>{user.fullname}</div>
                                 </div>

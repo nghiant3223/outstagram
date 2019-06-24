@@ -24,7 +24,7 @@ class TimeSlicer extends Component {
             return;
         }
 
-        if (index == activeStoryIndex) {
+        if (index === activeStoryIndex) {
             this.setEmptyIndicator();
             setTimeout(this.setFullIndicator, 0);
         } else if (index < activeStoryIndex) {

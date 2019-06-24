@@ -51,7 +51,7 @@ class StoryBoard extends Component {
         const { sbNode } = this.props;
 
         // If story board changes, restart the count
-        if (sbNode != nextProps.sbNode) {
+        if (sbNode !== nextProps.sbNode) {
             this.setState({ activeStoryIndex: 0 });
         }
     }
@@ -86,7 +86,7 @@ class StoryBoard extends Component {
         const { displayStoryBoardNode, sbNode, closeStoryModal } = this.props;
         const { stories } = this.props.storyBoard;
 
-        if (activeStoryIndex == stories.length - 1) {
+        if (activeStoryIndex === stories.length - 1) {
             if (sbNode.getNext() == null) {
                 closeStoryModal();
                 return;
@@ -103,7 +103,7 @@ class StoryBoard extends Component {
         const { activeStoryIndex } = this.state;
         const { displayStoryBoardNode, sbNode, closeStoryModal } = this.props;
 
-        if (activeStoryIndex == 0) {
+        if (activeStoryIndex === 0) {
             if (sbNode.getPrevious() == null) {
                 closeStoryModal();
                 return;

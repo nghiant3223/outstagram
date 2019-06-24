@@ -1,5 +1,4 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React from 'react';
 import { connect } from 'react-redux';
 
 import * as storyConfigs from "../../../configs/story.config";
@@ -10,7 +9,7 @@ import "./StoryCard.css";
 import addIcon from '../../../images/add.png';
 import Avatar from '../../Avatar/Avatar';
 
-function StoryCard(props) {
+function storyCard(props) {
     const { sbNode, openStoryFeedModal, openCreatorModal } = props;
 
     const sb = sbNode.getValue(),
@@ -23,7 +22,7 @@ function StoryCard(props) {
             { backgroundImage: `url("/images/${sb.stories[0][storyConfigs.STORY_CARD_SIZE]}")` };
 
     const circleIcon = isMy ?
-        (<div className="StoryCard__Circle StoryCard__Add" onClick={openCreatorModal}> <img src={addIcon} /> </div>) :
+        (<div className="StoryCard__Circle StoryCard__Add" onClick={openCreatorModal}> <img src={addIcon} alt="plus icon" /> </div>) :
         (<div className="StoryCard__Circle"><Avatar isActive={isActive} /></div>)
 
     return (
@@ -42,4 +41,4 @@ const mapDispatchToProps = (dispatch) => ({
     openCreatorModal: () => dispatch(creatorActions.openCreatorModal())
 });
 
-export default connect(null, mapDispatchToProps)(StoryCard);
+export default connect(null, mapDispatchToProps)(storyCard);
