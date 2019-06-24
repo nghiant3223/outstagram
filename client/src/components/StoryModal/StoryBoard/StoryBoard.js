@@ -60,7 +60,8 @@ class StoryBoard extends Component {
         const { stories, hasNewStory } = this.props.storyBoard;
 
         if (hasNewStory) {
-            storyServices.createStoryView(stories[activeStoryIndex].id);
+            // UNCOMMENT
+            // storyServices.createStoryView(stories[activeStoryIndex].id);
             stories[activeStoryIndex].seen = true;
             addToVisitedSBNodes(sbNode);
         }
