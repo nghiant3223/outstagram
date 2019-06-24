@@ -13,11 +13,22 @@ class StoryFeedManager {
 
     getFirstSBNode() {
         const head = this.ll.getHead();
+
         if (head.stories === null) {
             return head.getNext();
         }
 
         return head;
+    }
+
+    prependUserStory(story) {
+        let headStories = this.ll.getHead().getValue().stories;
+
+        if (headStories === null) {
+            headStories = [];
+        }
+
+        headStories.unshift(story);
     }
 
     map(hof) {

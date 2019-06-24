@@ -5,14 +5,11 @@ import * as storyActions from '../../actions/story.action';
 
 import StoryFeed from '../../components/StoryFeed/StoryFeed';
 import StoryModal from '../../components/StoryModal/StoryModal';
+import CreatorModal from '../../components/CreatorModal/CreatorModal';
 
 import './HomePage.css';
 
 class HomePage extends Component {
-    constructor(props) {
-        super(props);
-    }
-
     componentDidMount() {
         const { getStories } = this.props;
 
@@ -28,6 +25,7 @@ class HomePage extends Component {
             <div>
                 <StoryFeed ref={(cmp) => { if (cmp) { this.storyFeed = cmp } }} />
                 <StoryModal updateStoryFeed={this.updateStoryFeed} />
+                <CreatorModal updateStoryFeed={this.updateStoryFeed} />
             </div>
         );
     }

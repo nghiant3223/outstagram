@@ -10,11 +10,16 @@ import StoryCardPlaceholder from './StoryCardPlaceholder/StoryCardPlaceholder';
 import "./StoryFeed.css";
 
 class StoryFeed extends Component {
+    state = {
+        shouldUpdate: false
+    }
+
     updateStoryFeed() {
-        this.forceUpdate();
+        this.setState((prevState) => ({ shouldUpdate: !prevState.shouldUpdate }));
     }
 
     render() {
+        const { shouldUpdate } = this.state;
         const { isLoading, displayFirstSB } = this.props;
 
         return (
@@ -35,7 +40,7 @@ class StoryFeed extends Component {
                                 <StoryCardPlaceholder />
                             </Fragment>
                         ) :
-                        StoryFeedManager.getInstance().map((sbNode) => <StoryCard key={sbNode.getValue().storyBoardID} sbNode={sbNode} />)
+                        StoryFeedManager.getInstance().map((sbNode) => <StoryCard key={sbNode.getValue().storyBoardID} sbNode={sbNode} shouldUpdate={shouldUpdate} />)
                     }
                 </div>
             </div>

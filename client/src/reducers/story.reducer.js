@@ -1,4 +1,5 @@
 import * as actionTypes from '../constants/actionTypes';
+
 const initialState = {
     isLoading: true,
     isModalOpen: false,

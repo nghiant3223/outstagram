@@ -23,6 +23,8 @@ class StoryBoard extends Component {
         const { activeStoryIndex } = this.state;
 
         if (hasNewStory) {
+            // HACK: Comment the following line for not creating view when view story
+            storyServices.createStoryView(stories[activeStoryIndex].id);
             stories[activeStoryIndex].seen = true;
             addToVisitedSBNodes(sbNode);
         }
@@ -60,8 +62,8 @@ class StoryBoard extends Component {
         const { stories, hasNewStory } = this.props.storyBoard;
 
         if (hasNewStory) {
-            // UNCOMMENT
-            // storyServices.createStoryView(stories[activeStoryIndex].id);
+            // HACK: Comment the following line for not creating view when view story
+            storyServices.createStoryView(stories[activeStoryIndex].id);
             stories[activeStoryIndex].seen = true;
             addToVisitedSBNodes(sbNode);
         }
