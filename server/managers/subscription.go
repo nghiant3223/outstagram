@@ -17,7 +17,7 @@ type Subscription struct {
 func (s Subscription) ReadPump() {
 	c := s.Conn
 	defer func() {
-		HubInstance.Unregister <- s
+		Hub.Unregister <- s
 		c.WS.Close()
 	}()
 
@@ -35,7 +35,7 @@ func (s Subscription) ReadPump() {
 			break
 		}
 		m := WSMessage{TransmitData: transmitData, From: c}
-		HubInstance.BroadcastChannel <- m
+		Hub.BroadcastChannel <- m
 	}
 }
 

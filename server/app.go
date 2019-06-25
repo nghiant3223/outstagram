@@ -17,7 +17,7 @@ func main() {
 
 	router := gin.Default()
 
-	go managers.HubInstance.Run(managers.StoryManagerInstance.WSMux)
+	go managers.Hub.Run(managers.StoryManager.WSMux)
 	router.GET("/ws", managers.ServeWs)
 
 	if viper.GetString("env") == "production" {

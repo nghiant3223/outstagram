@@ -17,7 +17,7 @@ func ServeWs(c *gin.Context) {
 	conn := &Connection{Send: make(chan TransmitData), WS: ws}
 	s := Subscription{conn}
 
-	HubInstance.Register <- s
+	Hub.Register <- s
 	go s.WritePump()
 	go s.ReadPump()
 }
