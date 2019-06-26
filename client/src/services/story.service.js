@@ -1,7 +1,11 @@
-import { requireAuthApi } from '../axios';
+import { requireAuthApi, noAuthApi } from '../axios';
 
 export function getStoryFeed() {
-    return requireAuthApi.get("/me/storyfeed")
+    return requireAuthApi.get("/me/storyfeed");
+}
+
+export function getUserStoryBoard(userID) {
+    return noAuthApi.get(`/users/${userID}/storyboard`);
 }
 
 export function createStoryView(storyID) {

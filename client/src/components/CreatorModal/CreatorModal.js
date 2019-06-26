@@ -5,7 +5,8 @@ import { Modal, Button } from 'semantic-ui-react';
 import * as storyServices from '../../services/story.service';
 import * as creatorActions from '../../actions/creator.action';
 
-import StoryManager from '../../StoryFeedManager';
+import StoryFeedManager from '../../StoryFeedManager';
+import socket from '../../Socket';
 
 class CreatorModal extends Component {
     state = {
@@ -16,14 +17,15 @@ class CreatorModal extends Component {
     onImagesUpload = async () => {
         const { uploadImages } = this.state;
         const { updateStoryFeed, closeModal } = this.props;
-        const storyManager = StoryManager.getInstance();
+        const storyFeedManager = StoryFeedManager.getInstance();
 
         try {
             this.setState({ isLoading: true });
 
             const { data: { data: { stories } } } = await storyServices.createStory(uploadImages);
 
-            stories.forEach((story) => storyManager.prependUserStory(story));
+            stories.forEach((story) => storyFeedManager.prependStory(story));
+            socket.emit("STORY.CLIENT.POST_STORY", stories);
             updateStoryFeed();
             closeModal();
         } catch (e) {

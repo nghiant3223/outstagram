@@ -2,7 +2,7 @@ import * as actionTypes from '../constants/actionTypes';
 import { setToken } from '../sessionStorage';
 import * as authServices from '../services/auth.service';
 
-import Socket from '../socket';
+import Socket from '../Socket';
 
 export const loginUser = (username, password) =>
     async (dispatch) => {

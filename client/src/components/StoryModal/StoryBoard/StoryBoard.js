@@ -50,7 +50,7 @@ class StoryBoard extends Component {
     componentWillReceiveProps(nextProps) {
         const { sbNode } = this.props;
 
-        // If story board changes, restart the count
+        // If storyboard changes, restart the count
         if (sbNode !== nextProps.sbNode) {
             this.setState({ activeStoryIndex: 0 });
         }
@@ -68,7 +68,7 @@ class StoryBoard extends Component {
             addToVisitedSBNodes(sbNode);
         }
 
-        // If story in a story board changes or story board changes
+        // If story in a storyboard changes or storyboard changes
         if (activeStoryIndex !== prevState.activeStoryIndex
             || sbNode !== prevProps.sbNode) {
             clearTimeout(this.storyTimeout);

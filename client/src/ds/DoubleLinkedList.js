@@ -272,4 +272,12 @@ export default class DoublyLinkedList {
     isEmpty() {
         return this.head == null;
     }
+
+    setTail(node) {
+        this.tail = node;
+    }
+
+    setHead(node) {
+        this.head = node;
+    }
 }
