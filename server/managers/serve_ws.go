@@ -2,6 +2,7 @@ package managers
 
 import (
 	"log"
+	"outstagram/server/utils"
 
 	"github.com/gin-gonic/gin"
 )
@@ -14,10 +15,17 @@ func ServeWs(c *gin.Context) {
 		return
 	}
 
-	conn := &Connection{Send: make(chan TransmitData), WS: ws}
-	s := Subscription{conn}
+	var connection *Connection
+	if userID, err := utils.StringToUint(c.Query("userID")); err != nil {
+		connection = &Connection{Send: make(chan TransmitMessageDTO), WS: ws}
+	} else {
+		connection = &Connection{Send: make(chan TransmitMessageDTO), WS: ws, UserID: utils.NewUintPointer(userID)}
+	}
 
-	Hub.Register <- s
-	go s.WritePump()
-	go s.ReadPump()
+	subscription := Subscription{connection}
+
+	Hub.Register <- subscription
+
+	go subscription.WritePump()
+	go subscription.ReadPump()
 }

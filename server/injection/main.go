@@ -47,6 +47,9 @@ func InitializeUserController() (*usercontroller.Controller, error) {
 		userservice.New,
 		userrepo.New,
 
+		storybservice.New,
+		storybrepo.New,
+
 		db.New)
 	return &usercontroller.Controller{}, nil
 }

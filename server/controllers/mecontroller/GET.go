@@ -86,6 +86,7 @@ func (mc *Controller) GetStoryFeed(c *gin.Context) {
 		return
 	}
 
+	userStoryBoardDTO.IsMy = true
 	storyBoardResponse.StoryBoards = append(storyBoardResponse.StoryBoards, userStoryBoardDTO)
 	followings := mc.userService.GetFollowingsWithAffinity(userID)
 	for _, following := range followings {

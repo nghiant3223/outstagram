@@ -27,6 +27,7 @@ func (s Subscription) ReadPump() {
 
 	for {
 		var transmitData TransmitData
+
 		err := c.WS.ReadJSON(&transmitData)
 		if err != nil {
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway) {
@@ -34,7 +35,8 @@ func (s Subscription) ReadPump() {
 			}
 			break
 		}
-		m := WSMessage{TransmitData: transmitData, From: c}
+
+		m := TransmitMessage{TransmitData: transmitData, Connection: c}
 		Hub.BroadcastChannel <- m
 	}
 }
@@ -50,16 +52,23 @@ func (s *Subscription) WritePump() {
 
 	for {
 		select {
-		case transmitData, ok := <-c.Send:
+		case transmitMessageDTO, ok := <-c.Send:
 			if !ok {
-				c.Write(websocket.CloseMessage, []byte{})
+				err := c.Write(websocket.CloseMessage, []byte("Connection closed"))
+				if err != nil {
+					log.Println(err.Error())
+				}
 				return
 			}
-			if transmitDataJSON, errJSON := json.Marshal(transmitData); errJSON != nil {
+
+			if transmitMessageJSON, err := json.Marshal(transmitMessageDTO); err != nil {
+				log.Println(err.Error())
 				return
-			} else if err := c.Write(websocket.TextMessage, transmitDataJSON); err != nil {
+			} else if err := c.Write(websocket.TextMessage, transmitMessageJSON); err != nil {
+				log.Println(err.Error())
 				return
 			}
+			
 		case <-ticker.C:
 			if err := c.Write(websocket.PingMessage, []byte{}); err != nil {
 				return

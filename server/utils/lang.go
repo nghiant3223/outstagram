@@ -17,6 +17,10 @@ func NewBoolPointer(b bool) *bool {
 	return &b
 }
 
+func NewUintPointer(u uint) *uint {
+	return &u
+}
+
 func StringToUint(s string) (uint, error) {
 	num, err := strconv.ParseUint(s, 10, 32)
 	if err != nil {

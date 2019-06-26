@@ -13,10 +13,17 @@ type TransmitData struct {
 	Type string      `json:"type"`
 }
 
-// WSMessage is WebSocket WSMessage
-type WSMessage struct {
-	TransmitData
-	From *Connection
+// TransmitMessage is wrapper for data transmitted from client to server
+type TransmitMessage struct {
+	TransmitData TransmitData
+	Connection   *Connection
+}
+
+// TransmitDataDTO is transmitted from server to client
+type TransmitMessageDTO struct {
+	Data    interface{} `json:"data"`
+	Type    string      `json:"type"`
+	ActorID *uint       `json:"actorID"`
 }
 
 const (

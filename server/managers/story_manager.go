@@ -1,6 +1,8 @@
 package managers
 
-import "log"
+import (
+	"log"
+)
 
 // storyManager manages WebSocket events related to Story
 type storyManager struct {
@@ -13,10 +15,10 @@ func NewStoryManager(hub *hub) *storyManager {
 }
 
 // WSMux multiplexes WebSocket event to corresponding handler
-func (sm *storyManager) WSMux(from *Connection, transmitData TransmitData) {
+func (sm *storyManager) WSMux(c *Connection, transmitData TransmitData) {
 	switch transmitData.Type {
 	case "STORY.CLIENT.POST_STORY":
-		sm.Hub.Emit(TransmitData{Data: "A new story", Type: "STORY.SERVER.POST_STORY"})
+		sm.Hub.Broadcast(c, TransmitMessageDTO{Data:transmitData.Data, Type:"STORY.SERVER.POST_STORY",ActorID:c.UserID})
 	default:
 		log.Fatal("Event not supported")
 	}

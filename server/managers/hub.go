@@ -8,7 +8,7 @@ type hub struct {
 	Connections map[*Connection]bool
 
 	// Inbound WSMessages from the Connections.
-	BroadcastChannel chan WSMessage
+	BroadcastChannel chan TransmitMessage
 
 	// Register requests from the Connections.
 	Register chan Subscription
@@ -20,7 +20,7 @@ type hub struct {
 // NewHub returns new hub instance
 func NewHub() *hub {
 	return &hub{
-		BroadcastChannel: make(chan WSMessage),
+		BroadcastChannel: make(chan TransmitMessage),
 		Register:         make(chan Subscription),
 		Unregister:       make(chan Subscription),
 		Rooms:            make(map[string]map[*Connection]bool),
@@ -41,57 +41,58 @@ func (h *hub) Run(wsMuxes ...func(from *Connection, transmitData TransmitData)) 
 			}
 		case m := <-h.BroadcastChannel:
 			for _, wsMux := range wsMuxes {
-				wsMux(m.From, m.TransmitData)
+				wsMux(m.Connection, m.TransmitData)
 			}
 		}
 	}
 }
 
 // Emit emits TransmitData `m` to all sockets
-func (h *hub) Emit(transmitData TransmitData) {
+func (h *hub) Emit(transmitMessage TransmitMessageDTO) {
 	connections := h.Connections
+
 	for c := range connections {
-		c.Send <- transmitData
+		c.Send <- transmitMessage
 	}
 }
 
 // EmitTo emits TransmitData `m` to all sockets in room `room`
-func (h *hub) EmitTo(transmitData TransmitData, room string) {
+func (h *hub) EmitTo(transmitMessage TransmitMessageDTO, room string) {
 	connections := h.Rooms[room]
 	for c := range connections {
-		c.Send <- transmitData
+		c.Send <- transmitMessage
 	}
 }
 
-// Broadcast broadcasts WSMessage `m` to all sockets other than `conn` Connection
-func (h *hub) Broadcast(conn *Connection, transmitData TransmitData) {
+// Broadcast broadcasts TransmitMessage `m` to all sockets other than `conn` Connection
+func (h *hub) Broadcast(conn *Connection, transmitMessage TransmitMessageDTO) {
 	for c := range h.Connections {
 		if c != conn {
-			c.Send <- transmitData
+			c.Send <- transmitMessage
 		}
 	}
 }
 
-// BroadcastTo broadcasts WSMessage `m` to all sockets in room `room` other than `conn` Connection
-func (h *hub) BroadcastTo(conn *Connection, transmitData TransmitData, room string) {
+// BroadcastTo broadcasts TransmitMessage `m` to all sockets in room `room` other than `conn` Connection
+func (h *hub) BroadcastTo(conn *Connection, transmitMessage TransmitMessageDTO, room string) {
 	for c := range h.Rooms[room] {
 		if c != conn {
-			c.Send <- transmitData
+			c.Send <- transmitMessage
 		}
 	}
 }
 
 // BroadcastSelective broadcasts to specific connections collection
-func (h *hub) BroadcastSelective(conn *Connection, trasmitData TransmitData, connections []*Connection) {
+func (h *hub) BroadcastSelective(conn *Connection, transmitMessage TransmitMessageDTO, connections []*Connection) {
 	for _, c := range connections {
 		if c != conn {
-			c.Send <- trasmitData
+			c.Send <- transmitMessage
 		}
 	}
 }
 
 // WSMessageMultiplexer multiplexes message type and its corresponding handler
-func (h *hub) WSMessageMultiplexer(from *Connection, transmitData TransmitData) {
+func (h *hub) WSMessageMultiplexer(c *Connection, transmitData TransmitData) {
 	switch transmitData.Type {
 
 	}

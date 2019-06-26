@@ -13,5 +13,6 @@ func UserAPIRouter(router *gin.RouterGroup) {
 		log.Fatal(err.Error())
 	}
 
-	router.GET("/:username", userController.GetUsersInfo)
+	router.GET("/:userID", userController.GetUsersInfo)
+	router.GET("/:userID/storyboard", userController.GetUserStoryBoard)
 }

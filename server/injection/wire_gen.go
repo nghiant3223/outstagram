@@ -50,7 +50,9 @@ func InitializeUserController() (*usercontroller.Controller, error) {
 	}
 	userRepo := userrepo.New(gormDB)
 	userService := userservice.New(userRepo)
-	controller := usercontroller.New(userService)
+	storyBoardRepo := storybrepo.New(gormDB)
+	storyBoardService := storybservice.New(storyBoardRepo, userService)
+	controller := usercontroller.New(userService, storyBoardService)
 	return controller, nil
 }
 
