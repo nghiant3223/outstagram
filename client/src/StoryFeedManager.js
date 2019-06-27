@@ -88,7 +88,7 @@ class StoryFeedManager {
     }
 
     // Push storyboard node to the inactive linkedlist, in which all storyboard's `hasNewStory` = false
-    inactivate(sbNode) {
+    inactivateNode(sbNode) {
         if (sbNode === this.ll.getHead()) {
             return;
         }
