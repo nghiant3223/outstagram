@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
-	"github.com/spf13/viper"
 	"net/http"
+	"os"
 	"outstagram/server/utils"
 	"strings"
 )
@@ -33,7 +33,7 @@ func VerifyToken(c *gin.Context) {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
 
-		return []byte(viper.GetString("jwt.secret")), nil
+		return []byte(os.Getenv("JWT_SECRET")), nil
 	})
 	if err != nil {
 		utils.AbortRequestWithError(c, http.StatusBadRequest, "Invalid token", err.Error())

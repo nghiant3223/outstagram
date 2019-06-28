@@ -4,25 +4,22 @@ import (
 	"flag"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
-	"github.com/spf13/viper"
 	"log"
+	"os"
 	"outstagram/server/models"
-	"outstagram/server/pkg/configutils"
 )
 
 var dbConn *gorm.DB
 
 func New() (*gorm.DB, error) {
 	if dbConn == nil {
-		configutils.LoadConfiguration("outstagram", "main", "configs")
-
 		var err error
 
-		// If on TEST mode
+		// If in TEST mode
 		if flag.Lookup("test.v") != nil {
 			dbConn, err = gorm.Open("mysql", "root:root@tcp(172.24.21.56:33060)/outstagram?charset=utf8mb4&parseTime=True&loc=Local")
 		} else {
-			dbConn, err = gorm.Open(viper.GetString("db.dialect"), viper.GetString("db.url"))
+			dbConn, err = gorm.Open(os.Getenv("DB_DIALECT"), os.Getenv("DB_URL"))
 		}
 
 		if err != nil {
@@ -31,7 +28,7 @@ func New() (*gorm.DB, error) {
 
 		dbConn.SingularTable(true)
 
-		if viper.GetString("env") != "production" {
+		if os.Getenv("ENV") != "production" {
 			dbConn.LogMode(true)
 			dbConn.Debug()
 

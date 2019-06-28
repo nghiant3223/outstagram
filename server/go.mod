@@ -11,7 +11,10 @@ require (
 	github.com/gorilla/websocket v1.4.0
 	github.com/jinzhu/copier v0.0.0-20180308034124-7e38e58719c3
 	github.com/jinzhu/gorm v1.9.8
+	github.com/joho/godotenv v1.3.0
+	github.com/kr/fs v0.1.0 // indirect
 	github.com/spf13/viper v1.4.0
+	github.com/tools/godep v0.0.0-20180126220526-ce0bfadeb516 // indirect
 	golang.org/x/image v0.0.0-20190523035834-f03afa92d3ff // indirect
 	golang.org/x/sys v0.0.0-20190509141414-a5b02f93d862 // indirect
 )

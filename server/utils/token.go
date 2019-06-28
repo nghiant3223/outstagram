@@ -3,7 +3,7 @@ package utils
 import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
-	"github.com/spf13/viper"
+	"os"
 	"outstagram/server/dtos/jwtdtos"
 	"outstagram/server/models"
 	"time"
@@ -14,14 +14,14 @@ func SignToken(user *models.User) (string, error) {
 	claims := jwtdtos.Token{
 		UserID: user.ID,
 		StandardClaims: jwt.StandardClaims{
-			Issuer:  viper.GetString("jwt.issuer"),
+			Issuer:  os.Getenv("JWT_ISSUER"),
 			Subject: user.Email, IssuedAt: time.Now().Unix(),
 			ExpiresAt: int64(time.Now().Add(time.Duration(7 * 24 * time.Hour)).Unix()),
 		},
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	tokenString, err := token.SignedString([]byte(viper.GetString("jwt.secret")))
+	tokenString, err := token.SignedString([]byte(os.Getenv("JWT_SECRET")))
 
 	if err != nil {
 		return "", err

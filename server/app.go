@@ -5,19 +5,24 @@ import (
 	"github.com/gin-gonic/contrib/static"
 	"github.com/gin-gonic/gin"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
-	"github.com/spf13/viper"
+	"github.com/joho/godotenv"
 	"log"
+	"os"
 	"outstagram/server/managers"
 	"outstagram/server/routers"
 )
 
 func main() {
+	if err := godotenv.Load(); err != nil {
+		log.Fatal("Cannot load .env file")
+	}
+	
 	router := gin.Default()
 
 	go managers.Hub.Run(managers.StoryManager.WSMux)
 	router.GET("/ws", managers.ServeWs)
 
-	if viper.GetString("env") == "production" {
+	if os.Getenv("ENV") == "production" {
 		router.Use(static.Serve("/", static.LocalFile("./client-build", true)))
 
 		router.NoMethod(func(c *gin.Context) {
@@ -43,14 +48,17 @@ func main() {
 		routers.CommentableAPIRouter(apiRouter.Group("/commentable"))
 	}
 
-	PORT := viper.GetString("port")
+	PORT := os.Getenv("PORT")
 	if PORT == "" {
+		fmt.Println("=>",PORT)
+
 		err := router.Run(":3000")
 		if err != nil {
 			log.Fatal(err.Error())
 		}
 		return
 	}
+	fmt.Println("=>>",PORT)
 
 	if err := router.Run(fmt.Sprintf(":%v", PORT)); err != nil {
 		log.Fatal(err.Error())
