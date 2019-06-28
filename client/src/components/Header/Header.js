@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Dropdown, Grid } from 'semantic-ui-react';
+import { Dropdown } from 'semantic-ui-react';
 
 import * as authActions from '../../actions/auth.action';
 
@@ -10,40 +10,27 @@ import defaultAvatar from '../../images/x.png';
 const Header = (props) => {
     const { user } = props;
     return (
-        <header >
+        <header>
+            <div className="Header">
+                <div className="Header__Left">
+                    Outstagram
+                </div>
 
-            <Grid divided='vertically'>
-                <Grid.Row>
-                    <Grid.Column width={3} />
+                <div className="Header__Right">
 
-                    <Grid.Column width={10}>
-                        <div className="Header">
-                            <div className="Header__Left">
-                                Outstagram
-                            </div>
-
-                            <div className="Header__Right">
-
-                                <div className="Header__Right__Info">
-                                    <div className="Header__Right__Info__Avatar" >
-                                        <img src={defaultAvatar} alt="avatar"/>
-                                    </div>
-                                    <div>{user.fullname}</div>
-                                </div>
-                                <Dropdown direction='left'>
-                                    <Dropdown.Menu>
-                                        <Dropdown.Item onClick={props.logoutUser} text="Logout" />
-                                    </Dropdown.Menu>
-
-                                </Dropdown>
-                            </div>
+                    <div className="Header__Right__Info">
+                        <div className="Header__Right__Info__Avatar" >
+                            <img src={defaultAvatar} alt="avatar" />
                         </div>
-                    </Grid.Column>
-
-                    <Grid.Column width={3} />
-                </Grid.Row>
-            </Grid>
-
+                        <div>{user.fullname}</div>
+                    </div>
+                    <Dropdown direction='left'>
+                        <Dropdown.Menu>
+                            <Dropdown.Item onClick={props.logoutUser} text="Logout" />
+                        </Dropdown.Menu>
+                    </Dropdown>
+                </div>
+            </div>
         </header>
     );
 }

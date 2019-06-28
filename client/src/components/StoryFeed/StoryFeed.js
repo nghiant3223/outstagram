@@ -14,7 +14,7 @@ class StoryFeed extends Component {
         shouldUpdate: false
     }
 
-    updateStoryFeed() {
+    update() {
         this.setState((prevState) => ({ shouldUpdate: !prevState.shouldUpdate }));
     }
 

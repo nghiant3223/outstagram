@@ -1,9 +1,11 @@
 .Header {
     height: 75px;
+    width: 1012px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     border-bottom: 1px solid gray;
+    margin: 0 auto 2em auto;
 }
 
 .Header__Right {

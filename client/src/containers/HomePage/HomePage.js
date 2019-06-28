@@ -27,12 +27,12 @@ class HomePage extends Component {
     }
 
     updateStoryFeed = () => {
-        this.storyFeed.updateStoryFeed();
+        this.storyFeed.update();
     }
 
     render() {
         return (
-            <div>
+            <div className="HomePage">
                 <StoryFeed ref={(cmp) => { if (cmp) { this.storyFeed = cmp } }} />
                 <StoryModal updateStoryFeed={this.updateStoryFeed} />
                 <CreatorModal updateStoryFeed={this.updateStoryFeed} />

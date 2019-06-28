@@ -22,6 +22,10 @@ export default function storyReducer(state = initialState, action) {
             return board.stories === null ? { ...state, onDisplaySBNode: null, isModalOpen: false } : { ...state, onDisplaySBNode: action.payload, isModalOpen: true }
         }
 
+        case actionTypes.LOGOUT: {
+            return initialState;
+        }
+
         case actionTypes.CLOSE_STORY_MODAL:
             return { ...state, isModalOpen: false, onDisplaySBNode: null }
 

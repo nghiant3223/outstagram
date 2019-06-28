@@ -3,6 +3,7 @@ import { setToken } from '../sessionStorage';
 import * as authServices from '../services/auth.service';
 
 import Socket from '../Socket';
+import StoryFeedManager from '../StoryFeedManager';
 
 export const loginUser = (username, password) =>
     async (dispatch) => {
@@ -18,8 +19,9 @@ export const loginUser = (username, password) =>
     }
 
 export const logoutUser = () => {
-    localStorage.clear();
+    sessionStorage.clear();
     Socket.close();
+    StoryFeedManager.removeInstance();
     return { type: actionTypes.LOGOUT };
 }
 
