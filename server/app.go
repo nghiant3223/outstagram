@@ -8,13 +8,10 @@ import (
 	"github.com/spf13/viper"
 	"log"
 	"outstagram/server/managers"
-	"outstagram/server/pkg/configutils"
 	"outstagram/server/routers"
 )
 
 func main() {
-	configutils.LoadConfiguration("outstagram", "main", "configs")
-
 	router := gin.Default()
 
 	go managers.Hub.Run(managers.StoryManager.WSMux)

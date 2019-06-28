@@ -7,20 +7,20 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-// TransmitData is data transmitted between peers
-type TransmitData struct {
+// ClientMessage is data transmitted between peers
+type ClientMessage struct {
 	Data interface{} `json:"data"`
 	Type string      `json:"type"`
 }
 
-// TransmitMessage is wrapper for data transmitted from client to server
-type TransmitMessage struct {
-	TransmitData TransmitData
+// ClientMessageWrapper is wrapper for data transmitted from client to server
+type ClientMessageWrapper struct {
+	TransmitData ClientMessage
 	Connection   *Connection
 }
 
 // TransmitDataDTO is transmitted from server to client
-type TransmitMessageDTO struct {
+type ServerMessage struct {
 	Data    interface{} `json:"data"`
 	Type    string      `json:"type"`
 	ActorID *uint       `json:"actorID"`

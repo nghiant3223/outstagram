@@ -8,28 +8,31 @@ type hub struct {
 	Connections map[*Connection]bool
 
 	// Inbound WSMessages from the Connections.
-	BroadcastChannel chan TransmitMessage
+	BroadcastChannel chan ClientMessageWrapper
 
 	// Register requests from the Connections.
 	Register chan Subscription
 
 	// Unregister requests from Connections.
 	Unregister chan Subscription
+
+	UserID2Connection map[uint]*Connection
 }
 
 // NewHub returns new hub instance
 func NewHub() *hub {
 	return &hub{
-		BroadcastChannel: make(chan TransmitMessage),
-		Register:         make(chan Subscription),
-		Unregister:       make(chan Subscription),
-		Rooms:            make(map[string]map[*Connection]bool),
-		Connections:      make(map[*Connection]bool),
+		BroadcastChannel:  make(chan ClientMessageWrapper),
+		Register:          make(chan Subscription),
+		Unregister:        make(chan Subscription),
+		Rooms:             make(map[string]map[*Connection]bool),
+		Connections:       make(map[*Connection]bool),
+		UserID2Connection: make(map[uint]*Connection),
 	}
 }
 
 // Run starts a hub session
-func (h *hub) Run(wsMuxes ...func(from *Connection, transmitData TransmitData)) {
+func (h *hub) Run(wsMuxes ...func(from *Connection, transmitData ClientMessage)) {
 	for {
 		select {
 		case s := <-h.Register:
@@ -37,6 +40,7 @@ func (h *hub) Run(wsMuxes ...func(from *Connection, transmitData TransmitData)) 
 		case s := <-h.Unregister:
 			if _, ok := h.Connections[s.Conn]; ok {
 				delete(h.Connections, s.Conn)
+				delete(h.UserID2Connection, s.Conn.UserID)
 				// TODO: remove s.Conn from rooms in which it joins
 			}
 		case m := <-h.BroadcastChannel:
@@ -47,8 +51,8 @@ func (h *hub) Run(wsMuxes ...func(from *Connection, transmitData TransmitData)) 
 	}
 }
 
-// Emit emits TransmitData `m` to all sockets
-func (h *hub) Emit(transmitMessage TransmitMessageDTO) {
+// Emit emits ClientMessage `m` to all sockets
+func (h *hub) Emit(transmitMessage ServerMessage) {
 	connections := h.Connections
 
 	for c := range connections {
@@ -56,16 +60,16 @@ func (h *hub) Emit(transmitMessage TransmitMessageDTO) {
 	}
 }
 
-// EmitTo emits TransmitData `m` to all sockets in room `room`
-func (h *hub) EmitTo(transmitMessage TransmitMessageDTO, room string) {
+// EmitTo emits ClientMessage `m` to all sockets in room `room`
+func (h *hub) EmitTo(transmitMessage ServerMessage, room string) {
 	connections := h.Rooms[room]
 	for c := range connections {
 		c.Send <- transmitMessage
 	}
 }
 
-// Broadcast broadcasts TransmitMessage `m` to all sockets other than `conn` Connection
-func (h *hub) Broadcast(conn *Connection, transmitMessage TransmitMessageDTO) {
+// Broadcast broadcasts ClientMessageWrapper `m` to all sockets other than `conn` Connection
+func (h *hub) Broadcast(conn *Connection, transmitMessage ServerMessage) {
 	for c := range h.Connections {
 		if c != conn {
 			c.Send <- transmitMessage
@@ -73,8 +77,8 @@ func (h *hub) Broadcast(conn *Connection, transmitMessage TransmitMessageDTO) {
 	}
 }
 
-// BroadcastTo broadcasts TransmitMessage `m` to all sockets in room `room` other than `conn` Connection
-func (h *hub) BroadcastTo(conn *Connection, transmitMessage TransmitMessageDTO, room string) {
+// BroadcastTo broadcasts ClientMessageWrapper `m` to all sockets in room `room` other than `conn` Connection
+func (h *hub) BroadcastTo(conn *Connection, transmitMessage ServerMessage, room string) {
 	for c := range h.Rooms[room] {
 		if c != conn {
 			c.Send <- transmitMessage
@@ -83,7 +87,7 @@ func (h *hub) BroadcastTo(conn *Connection, transmitMessage TransmitMessageDTO, 
 }
 
 // BroadcastSelective broadcasts to specific connections collection
-func (h *hub) BroadcastSelective(conn *Connection, transmitMessage TransmitMessageDTO, connections []*Connection) {
+func (h *hub) BroadcastSelective(conn *Connection, transmitMessage ServerMessage, connections []*Connection) {
 	for _, c := range connections {
 		if c != conn {
 			c.Send <- transmitMessage
@@ -92,7 +96,7 @@ func (h *hub) BroadcastSelective(conn *Connection, transmitMessage TransmitMessa
 }
 
 // WSMessageMultiplexer multiplexes message type and its corresponding handler
-func (h *hub) WSMessageMultiplexer(c *Connection, transmitData TransmitData) {
+func (h *hub) WSMessageMultiplexer(c *Connection, transmitData ClientMessage) {
 	switch transmitData.Type {
 
 	}

@@ -7,12 +7,15 @@ import (
 	"github.com/spf13/viper"
 	"log"
 	"outstagram/server/models"
+	"outstagram/server/pkg/configutils"
 )
 
 var dbConn *gorm.DB
 
 func New() (*gorm.DB, error) {
 	if dbConn == nil {
+		configutils.LoadConfiguration("outstagram", "main", "configs")
+
 		var err error
 
 		// If on TEST mode

@@ -99,6 +99,6 @@ func (s *UserService) GetPostFeed(userID uint) []uint {
 	return s.userRepo.GetPostFeed(userID)
 }
 
-func (s *UserService) GetFollowingsWithAffinity(userID uint) []*	models.User {
+func (s *UserService) GetFollowingsWithAffinity(userID uint) []*models.User {
 	return s.userRepo.GetFollowingsWithAffinity(userID)
 }

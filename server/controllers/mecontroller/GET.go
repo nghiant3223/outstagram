@@ -1,7 +1,6 @@
 package mecontroller
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	"log"
@@ -59,7 +58,6 @@ func (mc *Controller) GetNewsFeed(c *gin.Context) {
 		}
 
 		getNewsfeedResponse.Posts = append(getNewsfeedResponse.Posts, *dtoPost)
-		fmt.Println((dtoPost).ImageCount)
 	}
 
 	utils.ResponseWithSuccess(c, http.StatusOK, "Get post successfully", getNewsfeedResponse)

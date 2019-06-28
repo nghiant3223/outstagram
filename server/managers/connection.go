@@ -12,10 +12,10 @@ type Connection struct {
 	WS *websocket.Conn
 
 	// Buffered channel of outbound WSMessages.
-	Send chan TransmitMessageDTO
+	Send chan ServerMessage
 
 	// UserID of who trigger the event
-	UserID *uint
+	UserID uint
 }
 
 // Write writes a message with the given message type and payload.

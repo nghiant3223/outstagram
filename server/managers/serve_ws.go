@@ -17,9 +17,10 @@ func ServeWs(c *gin.Context) {
 
 	var connection *Connection
 	if userID, err := utils.StringToUint(c.Query("userID")); err != nil {
-		connection = &Connection{Send: make(chan TransmitMessageDTO), WS: ws}
+		connection = &Connection{Send: make(chan ServerMessage), WS: ws, UserID: 0}
 	} else {
-		connection = &Connection{Send: make(chan TransmitMessageDTO), WS: ws, UserID: utils.NewUintPointer(userID)}
+		connection = &Connection{Send: make(chan ServerMessage), WS: ws, UserID: userID}
+		Hub.UserID2Connection[userID] = connection
 	}
 
 	subscription := Subscription{connection}

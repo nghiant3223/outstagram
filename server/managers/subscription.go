@@ -26,7 +26,7 @@ func (s Subscription) ReadPump() {
 	c.WS.SetPongHandler(func(string) error { c.WS.SetReadDeadline(time.Now().Add(pongWait)); return nil })
 
 	for {
-		var transmitData TransmitData
+		var transmitData ClientMessage
 
 		err := c.WS.ReadJSON(&transmitData)
 		if err != nil {
@@ -36,7 +36,7 @@ func (s Subscription) ReadPump() {
 			break
 		}
 
-		m := TransmitMessage{TransmitData: transmitData, Connection: c}
+		m := ClientMessageWrapper{TransmitData: transmitData, Connection: c}
 		Hub.BroadcastChannel <- m
 	}
 }
