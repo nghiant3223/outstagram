@@ -20,6 +20,10 @@ func (s *UserService) FindByID(id uint) (*models.User, error) {
 	return s.userRepo.FindByID(id)
 }
 
+func (s *UserService) FindByUsername(username string) (*models.User, error) {
+	return s.userRepo.FindByUsername(username)
+}
+
 func (s *UserService) VerifyLogin(username, password string) (*models.User, error) {
 	user, err := s.userRepo.FindByUsername(username)
 	if gorm.IsRecordNotFoundError(err) {

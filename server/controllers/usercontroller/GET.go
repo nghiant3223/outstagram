@@ -1,27 +1,53 @@
 package usercontroller
 
 import (
+	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
+	"log"
 	"net/http"
 	"outstagram/server/dtos/userdtos"
 	"outstagram/server/utils"
-	"strconv"
-
-	"github.com/gin-gonic/gin"
 )
 
 func (uc *Controller) GetAllUser(c *gin.Context) {
 }
 
 func (uc *Controller) GetUsersInfo(c *gin.Context) {
-	userID, err := strconv.ParseUint(c.Param("userID"), 10, 32)
+	userID, err := utils.StringToUint(c.Param("userID"))
 	if err != nil {
 		utils.ResponseWithError(c, http.StatusBadRequest, "Invalid userID", err.Error())
 		return
 	}
 
-	user, _ := uc.userService.FindByID(uint(userID))
-	utils.ResponseWithSuccess(c, http.StatusOK, "Retrieve user's info successfully", user)
+	authUserID, ok := utils.RetrieveUserID(c)
+	if !ok {
+		log.Fatal("This route needs verifyToken middleware")
+	}
+
+	var resBody userdtos.GetUserResponse
+
+	user, _ := uc.userService.FindByID(userID)
+
+	resBody.ID = user.ID
+	resBody.AvatarURL = user.AvatarURL
+	resBody.Fullname = user.Fullname
+	resBody.Username = user.Username
+	resBody.FollowerCount = len(uc.userService.GetFollowers(userID))
+	resBody.FollowingCount = len(uc.userService.GetFollowings(userID))
+
+	isMe := authUserID == userID
+	if !isMe {
+		ok, err := uc.userService.CheckFollow(authUserID, userID)
+		if err != nil {
+			utils.ResponseWithError(c, http.StatusOK, "Error while retrieving user", err.Error())
+			return
+		}
+
+		resBody.Followed = utils.NewBoolPointer(ok)
+	}
+
+	resBody.IsMe = isMe
+	utils.ResponseWithSuccess(c, http.StatusOK, "Retrieve user's info successfully", resBody)
 }
 
 func (uc *Controller) GetUserStoryBoard(c *gin.Context) {

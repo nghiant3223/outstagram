@@ -5,7 +5,6 @@ import (
 	"github.com/gin-gonic/contrib/static"
 	"github.com/gin-gonic/gin"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
-	"github.com/joho/godotenv"
 	"log"
 	"os"
 	"outstagram/server/managers"
@@ -13,10 +12,6 @@ import (
 )
 
 func main() {
-	if err := godotenv.Load(); err != nil {
-		log.Fatal("Cannot load .env file")
-	}
-	
 	router := gin.Default()
 
 	go managers.Hub.Run(managers.StoryManager.WSMux)
@@ -50,15 +45,12 @@ func main() {
 
 	PORT := os.Getenv("PORT")
 	if PORT == "" {
-		fmt.Println("=>",PORT)
-
 		err := router.Run(":3000")
 		if err != nil {
 			log.Fatal(err.Error())
 		}
 		return
 	}
-	fmt.Println("=>>",PORT)
 
 	if err := router.Run(fmt.Sprintf(":%v", PORT)); err != nil {
 		log.Fatal(err.Error())

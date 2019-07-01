@@ -4,6 +4,7 @@ import (
 	"flag"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
+	"github.com/joho/godotenv"
 	"log"
 	"os"
 	"outstagram/server/models"
@@ -13,6 +14,10 @@ var dbConn *gorm.DB
 
 func New() (*gorm.DB, error) {
 	if dbConn == nil {
+		if err := godotenv.Load(); err != nil {
+			log.Fatal("Cannot load .env file")
+		}
+
 		var err error
 
 		// If in TEST mode
@@ -31,7 +36,6 @@ func New() (*gorm.DB, error) {
 		if os.Getenv("ENV") != "production" {
 			dbConn.LogMode(true)
 			dbConn.Debug()
-
 			dbConn.AutoMigrate(
 				&models.Comment{},
 				&models.Commentable{},
