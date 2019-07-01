@@ -41,7 +41,11 @@ class UserInfo extends Component {
             <div className="InfoContainer">
                 <div className="InfoHeader">
                     <div className="InfoHeader__Fullname">{user.fullname}</div>
-                    {!user.isMe && <Button className="InfoHeader__Follow" compact size='tiny' toggle active={followed} onClick={this.onFollowClick}>{followed ? "Following" : "Follow"}</Button>}
+                    {!user.isMe &&
+                        (<div className="InfoHeader__Button">
+                            <Button compact size='tiny' toggle active={followed} onClick={this.onFollowClick}>{followed ? "Following" : "Follow"}</Button>
+                        </div>)
+                    }
                 </div>
 
                 <div className="InfoItemContainer">

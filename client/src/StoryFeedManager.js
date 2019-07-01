@@ -5,74 +5,61 @@ import { FormInput } from 'semantic-ui-react';
 
 class StoryFeedManager {
     constructor(storyBoards) {
-        this.ll = new DoublyLinkedList();
+        // Storyboards of people who logged in user follows
+        this._ll = new DoublyLinkedList();
 
-        this.ll.append(storyBoards[0]);
-        let i = 1;
-        while (i < storyBoards.length) {
-            this.ll.append(storyBoards[i++]);
+        // Storyboard of logged in user
+        this._head = new DoublyLinkedListNode(storyBoards[0]);
+
+        for (let i = 1; i < storyBoards.length; i++) {
+            this._ll.append(storyBoards[i]);
         }
+
+        this._makeLink();
     }
 
-    getFirstNode() {
-        const head = this.ll.getHead();
-
-        if (head.getValue().stories === null) {
-            return head.getNext();
+    get1stSBNode() {
+        // If current user has no stories, return the next story board
+        if (this._head.getValue().stories === null) {
+            return this._ll.getHead();
         }
 
-        return head;
+        // If current user has story
+        return this._head;
     }
 
     // Prepend story to current logged in user
     prependStory(...stories) {
-        const headValue = this.ll.getHead().getValue();
+        const userBoard = this._head.getValue();
 
-        if (headValue.stories === null) {
-            headValue.stories = [];
+        if (userBoard.stories === null) {
+            userBoard.stories = [];
         }
 
-        stories.forEach((story) => headValue.stories.unshift(story));
+        stories.forEach((story) => userBoard.stories.unshift(story));
     }
 
     // Prepend story to specific storyboard
     async prependUserStory(userID, ...stories) {
-        const node = this.ll.find({ callback: (nodeValue) => nodeValue.userID === userID });
+        const sbNode = this._ll.find({ callback: (nodeValue) => nodeValue.userID === userID });
 
         // In case user's storyboard does not appear in current logged in user's story feed (the former user is the user who has id equals `userID`)
-        if (node === null) {
-            const { data: { data: { storyBoard: userStoryBoard } } } = await getUserStoryBoard(userID);
-            const storyBoard = userStoryBoard;
+        if (sbNode === null) {
+            const { data: { data: { storyBoard: userBoard } } } = await getUserStoryBoard(userID);
+            this._ll.prepend(userBoard);
+        } else {
+            const storyBoard = sbNode.getValue();
+            this._ll.delete(storyBoard);
+            this._ll.prepend(storyBoard);
             storyBoard.hasNewStory = true;
-            const head = this.ll.getHead();
-            const afterHead = head.getNext();
-            const newNode = new DoublyLinkedListNode(storyBoard);
-            // If there is no storyboard other than current logged in user's
-            if (afterHead === null) {
-                this.ll.setTail(newNode);
-                head.setNext(newNode);
-                newNode.setPrevious(head);
-                return;
-            }
-            head.setNext(newNode);
-            newNode.setPrevious(head);
-            newNode.setNext(afterHead);
-            afterHead.setPrevious(newNode);
+            stories.forEach((story) => storyBoard.stories.unshift(story));
         }
 
-        const storyBoard = node.getValue();
-
-        // In case user's storyboard has already appeared in current user's story feed (the former user is the user who has id equals `userID`)
-        if (storyBoard.stories === null) {
-            storyBoard.stories = [];
-        }
-
-        storyBoard.hasNewStory = true;
-        stories.forEach((story) => storyBoard.stories.unshift(story));
+        this._makeLink();
     }
 
     map(hof) {
-        let sbNode = this.ll.getHead();
+        let sbNode = this._head;
         let results = [];
 
         while (sbNode !== null) {
@@ -84,16 +71,32 @@ class StoryFeedManager {
     }
 
     // Push storyboard node to the inactive linkedlist, in which all storyboard's `hasNewStory` = false
-    inactivateNode(sbNode) {
-        if (sbNode === this.ll.getHead()) {
+    inactiveSB(sbNode) {
+        const storyBoard = sbNode.getValue();
+
+        if (sbNode === this._head) {
+            storyBoard.hasNewStory = false;
             return;
         }
 
-        const storyBoard = sbNode.getValue();
         if (storyBoard.stories.every((story) => story.seen)) {
             storyBoard.hasNewStory = false;
-            this.ll.delete(storyBoard);
-            this.ll.append(storyBoard);
+
+            this._ll.delete(storyBoard);
+            this._ll.append(storyBoard);
+            this._makeLink();
+
+            return;
+        }
+    }
+
+    // Connect first node and the linkedlist
+    _makeLink() {
+        const llHead = this._ll.getHead();
+        this._head.setNext(llHead);
+
+        if (llHead !== null) {
+            llHead.setPrevious(this._head);
         }
     }
 }
@@ -101,7 +104,7 @@ class StoryFeedManager {
 export default (function () {
     let storyFeedManager;
 
-    function initStoryFeedManager(boards) {
+    function initialize(boards) {
         if (storyFeedManager === undefined) {
             storyFeedManager = new StoryFeedManager(boards);
         } else {
@@ -128,6 +131,6 @@ export default (function () {
     return {
         getInstance,
         removeInstance,
-        initStoryFeedManager
+        initialize
     }
 })();

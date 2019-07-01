@@ -20,7 +20,7 @@ class StoryModal extends Component {
             const storyFeedManager = StoryFeedManager.getInstance();
 
             // Make SBNode inactive in storyFeedManager
-            this.visitedSBNodes.forEach((sbNode) => storyFeedManager.inactivateNode(sbNode));
+            this.visitedSBNodes.forEach((sbNode) => storyFeedManager.inactiveSB(sbNode));
             // Update StoryFeed in UI
             updateStoryFeed();
             // Clear visited SBNode

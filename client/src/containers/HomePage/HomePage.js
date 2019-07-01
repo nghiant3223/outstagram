@@ -23,7 +23,7 @@ class HomePage extends Component {
     async componentDidMount() {
         try {
             const { data: { data: { storyBoards } } } = await storyServices.getStoryFeed();
-            StoryFeedManager.initStoryFeedManager(storyBoards);
+            StoryFeedManager.initialize(storyBoards);
 
             socket.on("STORY.SERVER.POST_STORY", (message) => {
                 const storyFeedManager = StoryFeedManager.getInstance();
@@ -41,7 +41,7 @@ class HomePage extends Component {
     componentWillUnmount() {
         StoryFeedManager.removeInstance();
         this.props.closeModal();
-        
+
     }
 
     updateStoryFeed = () => {
@@ -66,7 +66,6 @@ class HomePage extends Component {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-    getStories: () => dispatch(storyActions.getStories()),
     closeModal: () => dispatch(uiActions.closeStoryModal())
 });
 

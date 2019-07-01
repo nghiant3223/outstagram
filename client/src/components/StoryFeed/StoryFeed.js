@@ -8,6 +8,7 @@ import StoryCard from './StoryCard/StoryCard';
 import StoryCardPlaceholder from './StoryCardPlaceholder/StoryCardPlaceholder';
 
 import "./StoryFeed.css";
+import Container from '../Container/Container';
 
 class StoryFeed extends Component {
     state = {
@@ -23,7 +24,7 @@ class StoryFeed extends Component {
         const { fetchingStoryFeed, displayFirstSB } = this.props;
 
         return (
-            <div className="StoryFeed">
+            <Container className="StoryFeed">
                 <div className="StoryFeed__Header">
                     <b>Story</b>
                     <i className="StoryFeed__Header__SeeAll" onClick={displayFirstSB}>See all</i>
@@ -43,7 +44,7 @@ class StoryFeed extends Component {
                         StoryFeedManager.getInstance().map((sbNode) => <StoryCard key={sbNode.getValue().storyBoardID} sbNode={sbNode} shouldUpdate={shouldUpdate} />)
                     }
                 </div>
-            </div>
+            </Container>
         );
     }
 }

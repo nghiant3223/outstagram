@@ -4,7 +4,7 @@ import "./Container.css";
 
 function Container({ children, className = "" }) {
     return (
-        <div className={"Container" + " " + className}>
+        <div className={["Container", className].join(" ")}>
             {children}
         </div>
     )
