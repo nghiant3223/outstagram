@@ -3,27 +3,46 @@ import { connect } from 'react-redux';
 
 import socket from '../../Socket';
 import * as storyActions from '../../actions/story.action';
+import * as storyServices from '../../services/story.service';
 
 import StoryFeed from '../../components/StoryFeed/StoryFeed';
 import StoryModal from '../../components/StoryModal/StoryModal';
 import CreatorModal from '../../components/CreatorModal/CreatorModal';
+import Container from "../../components/Container/Container";
 
 import './HomePage.css';
+
+import * as uiActions from '../../actions/ui.action';
 import StoryFeedManager from '../../StoryFeedManager';
 
 class HomePage extends Component {
-    componentDidMount() {
-        const { getStories, user } = this.props;
+    state = {
+        isLoading: true
+    }
 
-        getStories();
-        socket.open({ userID: user.id });
+    async componentDidMount() {
+        try {
+            const { data: { data: { storyBoards } } } = await storyServices.getStoryFeed();
+            console.log(storyBoards);
+            StoryFeedManager.initStoryFeedManager(storyBoards);
 
-        socket.on("STORY.SERVER.POST_STORY", (message) => {
-            const storyFeedManager = StoryFeedManager.getInstance();
-            storyFeedManager.prependUserStory(message.actorID, ...message.data)
-                .then(this.updateStoryFeed)
-                .catch((e) => console.log(e));
-        });
+            socket.on("STORY.SERVER.POST_STORY", (message) => {
+                const storyFeedManager = StoryFeedManager.getInstance();
+                storyFeedManager.prependUserStory(message.actorID, ...message.data)
+                    .then(this.updateStoryFeed)
+                    .catch((e) => console.log(e));
+            });
+        } catch (e) {
+            console.log("Error while fetching story: ", e);
+        } finally {
+            this.setState({ isLoading: false });
+        }
+    }
+
+    componentWillUnmount() {
+        StoryFeedManager.removeInstance();
+        this.props.closeModal();
+        
     }
 
     updateStoryFeed = () => {
@@ -31,20 +50,25 @@ class HomePage extends Component {
     }
 
     render() {
+        const { isLoading } = this.state;
+
+        if (isLoading) {
+            return null;
+        }
+
         return (
-            <div className="HomePage">
-                <StoryFeed ref={(cmp) => { if (cmp) { this.storyFeed = cmp } }} />
+            <Container>
+                <StoryFeed ref={(cmp) => { if (cmp) { this.storyFeed = cmp } }} fetchingStoryFeed={this.state.isLoading} />
                 <StoryModal updateStoryFeed={this.updateStoryFeed} />
                 <CreatorModal updateStoryFeed={this.updateStoryFeed} />
-            </div>
+            </Container>
         );
     }
 }
 
-const mapStateToProps = ({ authReducer: { user } }) => ({ user });
-
 const mapDispatchToProps = (dispatch) => ({
-    getStories: () => dispatch(storyActions.getStories())
+    getStories: () => dispatch(storyActions.getStories()),
+    closeModal: () => dispatch(uiActions.closeStoryModal())
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(HomePage);
+export default connect(null, mapDispatchToProps)(HomePage);

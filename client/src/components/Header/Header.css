@@ -1,11 +1,20 @@
 .Header {
-    height: 75px;
-    width: 1012px;
+    height: 60px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid gray;
-    margin: 0 auto 2em auto;
+    margin-bottom: 2em !important;
+    background-color: white;
+    padding: 1.5em;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+.Header__Left {
+    font-family: 'Leckerli One', cursive;
+    cursor: pointer;
+    font-size: 2em;
+    color: #3f3f3f;
 }
 
 .Header__Right {
@@ -16,6 +25,8 @@
 .Header__Right__Info {
     display: flex;
     align-items: center;
+    font-weight: bold;
+    cursor: pointer;
 }
 
 .Header__Right__Info>div {

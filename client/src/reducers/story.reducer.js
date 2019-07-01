@@ -1,17 +1,12 @@
 import * as actionTypes from '../constants/actionTypes';
 
 const initialState = {
-    isLoading: true,
     isModalOpen: false,
     onDisplaySBNode: null
 };
 
 export default function storyReducer(state = initialState, action) {
     switch (action.type) {
-        case actionTypes.GET_STORY_FEED: {
-            return { ...state, isLoading: false }
-        }
-
         case actionTypes.OPEN_STORY_MODAL: {
             const board = action.payload.getValue()
             return board.stories === null ? state : { ...state, isModalOpen: true, onDisplaySBNode: action.payload }

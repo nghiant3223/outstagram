@@ -1,3 +1,8 @@
+.StoryFeed {
+    background-color: white;
+    padding: 1.5em;
+}
+
 .StoryFeed__Header {
     display: flex;
     justify-content: space-between;

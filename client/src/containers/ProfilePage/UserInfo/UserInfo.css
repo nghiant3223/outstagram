@@ -1,0 +1,38 @@
+.InfoContainer {
+    margin-top: calc(75px + 1em);
+}
+
+.InfoHeader {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+
+.InfoHeader__Fullname {
+    font-size: 1.5em;
+    line-height: 1.5em;
+}
+
+.InfoHeader__Follow {
+    margin-left: 1em !important;
+}
+
+.InfoItemContainer {
+    display: flex;
+    justify-content: center;
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+
+.InfoItemContainer>div {
+    margin-left: 1em;
+    margin-right: 1em;
+}
+
+.InfoItem__Title {
+    font-size: 1.5em;
+    font-weight: bold;
+    text-align: center;
+}

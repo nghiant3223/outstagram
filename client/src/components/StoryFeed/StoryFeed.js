@@ -20,7 +20,7 @@ class StoryFeed extends Component {
 
     render() {
         const { shouldUpdate } = this.state;
-        const { isLoading, displayFirstSB } = this.props;
+        const { fetchingStoryFeed, displayFirstSB } = this.props;
 
         return (
             <div className="StoryFeed">
@@ -30,7 +30,7 @@ class StoryFeed extends Component {
                 </div>
 
                 <div className="StoryFeed__Main">
-                    {isLoading ?
+                    {fetchingStoryFeed ?
                         (
                             <Fragment>
                                 <StoryCardPlaceholder />

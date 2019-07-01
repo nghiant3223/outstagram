@@ -1,13 +1,14 @@
 import DoublyLinkedList from './ds/DoubleLinkedList';
 import { getUserStoryBoard } from './services/story.service';
 import DoublyLinkedListNode from './ds/DoubleLinkedListNode';
+import { FormInput } from 'semantic-ui-react';
 
 class StoryFeedManager {
     constructor(storyBoards) {
         this.ll = new DoublyLinkedList();
 
-        let i = 1;
         this.ll.append(storyBoards[0]);
+        let i = 1;
         while (i < storyBoards.length) {
             this.ll.append(storyBoards[i++]);
         }
@@ -84,6 +85,7 @@ class StoryFeedManager {
             sbNode = sbNode.getNext();
         }
 
+        console.log(results.length);
         return results;
     }
 
@@ -125,6 +127,7 @@ export default (function () {
         if (storyFeedManager === undefined) {
             throw new Error("StoryFeedManager hasn't been created yet");
         } else {
+            console.log("remove");
             storyFeedManager = undefined;
         }
     }
