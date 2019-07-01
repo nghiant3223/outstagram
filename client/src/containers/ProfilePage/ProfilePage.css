@@ -1,20 +1,3 @@
 .ImagesContainer {
     position: relative;
 }
-
-.ImagesContainer__Cover {
-    height: 250px;
-    background-color: bisque;
-    border-radius: 5px;
-}
-
-.ImagesContainer__Avatar {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    background: red;
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translate(-50%,50%)
-}

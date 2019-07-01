@@ -41,27 +41,23 @@ class StoryFeedManager {
 
         // In case user's storyboard does not appear in current logged in user's story feed (the former user is the user who has id equals `userID`)
         if (node === null) {
-            return getUserStoryBoard(userID).then(({ data: { data: { storyBoard: userStoryBoard } } }) => {
-                const storyBoard = userStoryBoard;
-                storyBoard.hasNewStory = true;
-
-                const head = this.ll.getHead();
-                const afterHead = head.getNext();
-                const newNode = new DoublyLinkedListNode(storyBoard);
-
-                // If there is no storyboard other than current logged in user's
-                if (afterHead === null) {
-                    this.ll.setTail(newNode);
-                    head.setNext(newNode);
-                    newNode.setPrevious(head);
-                    return;
-                }
-
+            const { data: { data: { storyBoard: userStoryBoard } } } = await getUserStoryBoard(userID);
+            const storyBoard = userStoryBoard;
+            storyBoard.hasNewStory = true;
+            const head = this.ll.getHead();
+            const afterHead = head.getNext();
+            const newNode = new DoublyLinkedListNode(storyBoard);
+            // If there is no storyboard other than current logged in user's
+            if (afterHead === null) {
+                this.ll.setTail(newNode);
                 head.setNext(newNode);
                 newNode.setPrevious(head);
-                newNode.setNext(afterHead);
-                afterHead.setPrevious(newNode);
-            });
+                return;
+            }
+            head.setNext(newNode);
+            newNode.setPrevious(head);
+            newNode.setNext(afterHead);
+            afterHead.setPrevious(newNode);
         }
 
         const storyBoard = node.getValue();
@@ -73,7 +69,6 @@ class StoryFeedManager {
 
         storyBoard.hasNewStory = true;
         stories.forEach((story) => storyBoard.stories.unshift(story));
-        return Promise.resolve();
     }
 
     map(hof) {
@@ -85,7 +80,6 @@ class StoryFeedManager {
             sbNode = sbNode.getNext();
         }
 
-        console.log(results.length);
         return results;
     }
 
@@ -127,7 +121,6 @@ export default (function () {
         if (storyFeedManager === undefined) {
             throw new Error("StoryFeedManager hasn't been created yet");
         } else {
-            console.log("remove");
             storyFeedManager = undefined;
         }
     }

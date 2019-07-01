@@ -20,7 +20,7 @@ const Header = (props) => {
             </Link>
 
             <div className="Header__Right">
-                <Link to="/profile">
+                <Link to={`/${user.id}`}>
                     <div className="Header__Right__Info">
                         <div className="Header__Right__Info__Avatar" >
                             <img src={defaultAvatar} alt="avatar" />

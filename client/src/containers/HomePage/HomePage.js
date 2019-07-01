@@ -23,7 +23,6 @@ class HomePage extends Component {
     async componentDidMount() {
         try {
             const { data: { data: { storyBoards } } } = await storyServices.getStoryFeed();
-            console.log(storyBoards);
             StoryFeedManager.initStoryFeedManager(storyBoards);
 
             socket.on("STORY.SERVER.POST_STORY", (message) => {

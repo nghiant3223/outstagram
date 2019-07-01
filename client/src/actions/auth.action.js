@@ -11,6 +11,7 @@ export const loginUser = (username, password) =>
             const { data: { data: token } } = await authServices.loginUser(username, password)
             setToken(token)
             const { data: { data: user } } = await authServices.getMe();
+            socket.open({ userID: user.id });
             dispatch({ type: actionTypes.AUTH_SUCCESS, payload: user });
         } catch (e) {
             alert(e);
@@ -21,7 +22,6 @@ export const loginUser = (username, password) =>
 export const logoutUser = () => {
     sessionStorage.clear();
     socket.close();
-    StoryFeedManager.removeInstance();
     return { type: actionTypes.LOGOUT };
 }
 

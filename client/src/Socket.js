@@ -6,7 +6,7 @@ export default (function () {
         if (instance !== undefined) {
             throw new Error("Attempt to open WebSocket connection fails");
         }
-
+        
         instance = new WebSocket(`${window.location.protocol === "https:" ? "wss" : "ws"}://${window.location.host}/ws${params !== undefined ? `?${[Object.keys(params).map(param => `${param}=${params[param]}`)].join("&")}` : ""}`);
 
         instance.onopen = function () {
