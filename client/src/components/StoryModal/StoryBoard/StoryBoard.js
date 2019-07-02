@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import { Dropdown, Button, Icon } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 
@@ -9,7 +10,6 @@ import { getDiffFromPast } from '../../../utils/time';
 
 import * as storyActions from '../../../actions/story.action';
 import * as uiActions from '../../../actions/ui.action';
-
 import * as storyServices from '../../../services/story.service';
 
 class StoryBoard extends Component {
@@ -30,6 +30,7 @@ class StoryBoard extends Component {
             addToVisitedSBNodes(sbNode);
         }
 
+        this.setStoryReactStatus();
         this.storyTimeout = setTimeout(this.nextStory, stories[activeStoryIndex].duration)
         window.addEventListener("keydown", this.onArrowKeyDown);
     }
@@ -72,6 +73,7 @@ class StoryBoard extends Component {
         // If story in a storyboard changes or storyboard changes
         if (activeStoryIndex !== prevState.activeStoryIndex
             || sbNode !== prevProps.sbNode) {
+            this.setStoryReactStatus();
             clearTimeout(this.storyTimeout);
             this.storyTimeout = setTimeout(this.nextStory, stories[activeStoryIndex].duration)
         }
@@ -118,56 +120,85 @@ class StoryBoard extends Component {
     }
 
     onHeartClick = () => {
+        const { reacted, activeStoryIndex } = this.state;
+        const { stories } = this.props.storyBoard;
+        const activeStory = stories[activeStoryIndex];
+
+        if (reacted) {
+            activeStory.reacted = false;
+            storyServices.unreactStory(activeStory.reactableID);
+        } else {
+            activeStory.reacted = true;
+            storyServices.reactStory(activeStory.reactableID);
+        }
+
         this.setState((prevState) => ({ reacted: !prevState.reacted }));
+    }
+
+    setStoryReactStatus() {
+        const { stories } = this.props.storyBoard;
+        this.setState((prevState) => ({ reacted: stories[prevState.activeStoryIndex].reacted }));
     }
 
     render() {
         const { sbNode } = this.props;
         const { activeStoryIndex, reacted } = this.state;
-        const { stories, fullname } = this.props.storyBoard;
+        const { stories, fullname, isMy } = this.props.storyBoard;
+        const activeStory = stories[activeStoryIndex];
 
         return (
-            <div className="StoryBoard" style={activeStoryIndex >= 0 ? { backgroundImage: `url(/images/${stories[activeStoryIndex].huge})` } : null} >
-                <div className="StoryBoard__Progress">
-                    {stories.map((story, index) =>
-                        <TimeSlicer
-                            key={story.id}
-                            index={index}
-                            duration={story.duration}
-                            sbNode={sbNode}
-                            activeStoryIndex={activeStoryIndex} />)}
-                </div>
-                <div className="StoryBoard__Header" >
-                    <div className="StoryBoard__Header__Left">
-                        <div>
-                            <Avatar />
-                        </div>
-                        <div className="StoryBoard__Header__Left__Info">
-                            <div><b>{fullname}</b></div>
-                            <div>{getDiffFromPast(stories[activeStoryIndex].createdAt)}</div>
-                        </div>
-
+            <div className="StoryBoardContainer">
+                <div className="StoryBoard" style={activeStoryIndex >= 0 ? { backgroundImage: `url(/images/${activeStory.huge})` } : null} >
+                    <div className="StoryBoard__Progress">
+                        {stories.map((story, index) =>
+                            <TimeSlicer
+                                key={story.id}
+                                index={index}
+                                duration={story.duration}
+                                sbNode={sbNode}
+                                activeStoryIndex={activeStoryIndex} />)}
                     </div>
-                    <div className="StoryBoard__Header__Right">
-                        <Dropdown icon="ellipsis vertical" className="StoryBoard__Header__Right__Icon" direction="left">
-                            <Dropdown.Menu>
-                                <Dropdown.Item text='Report' />
-                            </Dropdown.Menu>
-                        </Dropdown>
+                    <div className="StoryBoard__Header" >
+                        <div className="StoryBoard__Header__Left">
+                            <div>
+                                <Avatar />
+                            </div>
+                            <div className="StoryBoard__Header__Left__Info">
+                                <div><b>{fullname}</b></div>
+                                <div>{getDiffFromPast(activeStory.createdAt)}</div>
+                            </div>
+
+                        </div>
+                        <div className="StoryBoard__Header__Right">
+                            <Dropdown icon="ellipsis vertical" className="StoryBoard__Header__Right__Icon" direction="left">
+                                <Dropdown.Menu>
+                                    <Dropdown.Item text='Report' />
+                                </Dropdown.Menu>
+                            </Dropdown>
+                        </div>
+                    </div>
+
+                    {!isMy && (
+                        <div className="StoryBoard__HeartContainer" onClick={this.onHeartClick}>
+                            <Icon name="heart" color={reacted ? "red" : "grey"} inverted size="big" />
+                        </div>
+                    )}
+
+                    <div className="StoryBoard__Prev">
+                        <Button icon='chevron left' circular onClick={this.prevStory} />
+                    </div>
+
+                    <div className="StoryBoard__Next">
+                        <Button icon='chevron right' circular onClick={this.nextStory} />
                     </div>
                 </div>
 
-                <div className="StoryBoard__HeartContainer" onClick={this.onHeartClick}>
-                    <Icon name={reacted ? "heart" : "heart outline"} color="red" size="large" />
-                </div>
+                {isMy && activeStory.reactors !== undefined && (
+                    <div className="StoryReactorContainer">
+                        {activeStory.reactors.map((reactor) => <Link to={`/${reactor.username}`} key={reactor.id} ><div className="StoryReactor" title={reactor.fullname}> <Avatar /> </div></Link>)}
+                    </div>
+                )}
 
-                <div className="StoryBoard__Prev">
-                    <Button icon='chevron left' circular onClick={this.prevStory} />
-                </div>
-
-                <div className="StoryBoard__Next">
-                    <Button icon='chevron right' circular onClick={this.nextStory} />
-                </div>
             </div>
         )
     }

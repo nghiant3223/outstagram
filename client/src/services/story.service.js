@@ -18,3 +18,11 @@ export function createStory(files) {
     Object.keys(files).forEach((key) => formData.append("images", files[key]));
     return requireAuthApi.post("/stories", formData, { headers: { 'Content-Type': 'multipart/form-data' } });
 }
+
+export function reactStory(reactableID) {
+    return requireAuthApi.post(`/reactions/${reactableID}`);
+}
+
+export function unreactStory(reactableID) {
+    return requireAuthApi.delete(`/reactions/${reactableID}`);
+}

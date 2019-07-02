@@ -4,6 +4,7 @@
     height: 550px;
     padding: 1em;
     position: relative;
+    box-shadow: 0 14px 28px rgba(0,0,0,0.2), 0 10px 10px rgba(0,0,0,0.15);
 }
 
 .StoryBoard__Progress {
@@ -56,4 +57,17 @@
     right: 1em;
     bottom: 1em;
     cursor: pointer;
+}
+
+.StoryReactorContainer {
+    display: flex;
+    flex-flow: row wrap;
+    padding: 8px;
+}
+
+.StoryReactor {
+    display: flex;
+    align-items: center;
+    margin-left: 8px;
+    margin-right: 8px;
 }
