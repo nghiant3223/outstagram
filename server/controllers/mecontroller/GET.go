@@ -73,6 +73,7 @@ func (mc *Controller) GetStoryFeed(c *gin.Context) {
 	var activeStoryBoard []*dtomodels.StoryBoard
 	var inactiveStoryBoard []*dtomodels.StoryBoard
 
+	// Get user's own storyboard
 	userStoryBoardDTO, err := mc.storyBoardService.GetUserStoryBoardDTO(userID)
 	if err != nil {
 		if gorm.IsRecordNotFoundError(err) {
@@ -86,6 +87,8 @@ func (mc *Controller) GetStoryFeed(c *gin.Context) {
 
 	userStoryBoardDTO.IsMy = true
 	storyBoardResponse.StoryBoards = append(storyBoardResponse.StoryBoards, userStoryBoardDTO)
+
+	// Get storyboard of people whom user follows
 	followings := mc.userService.GetFollowingsWithAffinity(userID)
 	for _, following := range followings {
 		storyBoardDTO, err := mc.storyBoardService.GetFollowingStoryBoardDTO(userID, following)

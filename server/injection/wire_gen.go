@@ -51,7 +51,10 @@ func InitializeUserController() (*usercontroller.Controller, error) {
 	userRepo := userrepo.New(gormDB)
 	userService := userservice.New(userRepo)
 	storyBoardRepo := storybrepo.New(gormDB)
-	storyBoardService := storybservice.New(storyBoardRepo, userService)
+	commentableRepo := cmtablerepo.New(gormDB)
+	reactableRepo := rctablerepo.New(gormDB, commentableRepo)
+	reactableService := rctableservice.New(reactableRepo)
+	storyBoardService := storybservice.New(storyBoardRepo, userService, reactableService)
 	controller := usercontroller.New(userService, storyBoardService)
 	return controller, nil
 }
@@ -66,7 +69,10 @@ func InitializeAuthController() (*authcontroller.Controller, error) {
 	notifBoardRepo := notifbrepo.New(gormDB)
 	notifBoardService := notifbservice.New(notifBoardRepo)
 	storyBoardRepo := storybrepo.New(gormDB)
-	storyBoardService := storybservice.New(storyBoardRepo, userService)
+	commentableRepo := cmtablerepo.New(gormDB)
+	reactableRepo := rctablerepo.New(gormDB, commentableRepo)
+	reactableService := rctableservice.New(reactableRepo)
+	storyBoardService := storybservice.New(storyBoardRepo, userService, reactableService)
 	controller := authcontroller.New(userService, notifBoardService, storyBoardService)
 	return controller, nil
 }
@@ -143,7 +149,7 @@ func InitializeMeController() (*mecontroller.Controller, error) {
 	commentableService := cmtableservice.New(commentableRepo, reactableService)
 	postService := postservice.New(postRepo, userService, reactableService, commentableService)
 	storyBoardRepo := storybrepo.New(gormDB)
-	storyBoardService := storybservice.New(storyBoardRepo, userService)
+	storyBoardService := storybservice.New(storyBoardRepo, userService, reactableService)
 	imageRepo := imgrepo.New(gormDB)
 	imageService := imgservice.New(imageRepo)
 	controller := mecontroller.New(userService, postService, storyBoardService, imageService)
@@ -173,7 +179,10 @@ func InitializeStoryController() (*storycontroller.Controller, error) {
 	storyBoardRepo := storybrepo.New(gormDB)
 	userRepo := userrepo.New(gormDB)
 	userService := userservice.New(userRepo)
-	storyBoardService := storybservice.New(storyBoardRepo, userService)
+	commentableRepo := cmtablerepo.New(gormDB)
+	reactableRepo := rctablerepo.New(gormDB, commentableRepo)
+	reactableService := rctableservice.New(reactableRepo)
+	storyBoardService := storybservice.New(storyBoardRepo, userService, reactableService)
 	controller := storycontroller.New(imageService, viewableService, storyBoardService, userService)
 	return controller, nil
 }

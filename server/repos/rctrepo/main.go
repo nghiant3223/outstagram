@@ -19,10 +19,10 @@ func (r *ReactRepo) Save(react *models.React) error {
 	return r.db.Save(&react).Error
 }
 
-func (r *ReactRepo) Find(projector map[string]interface{}) ([]models.React, error) {
+func (r *ReactRepo) Find(projector map[string]interface{}) ([]*models.React, error) {
 	var fields []string
 	var values []interface{}
-	var reacts []models.React
+	var reacts []*models.React
 
 	for key, v := range projector {
 		fields = append(fields, fmt.Sprintf("%v = ?", key))
@@ -48,5 +48,5 @@ func (r *ReactRepo) FindByID(id uint) (*models.React, error) {
 }
 
 func (r *ReactRepo) Delete(react *models.React) error {
-	return r.db.Delete(react).Error
+	return r.db.Unscoped().Delete(react).Error
 }

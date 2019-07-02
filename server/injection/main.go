@@ -50,6 +50,11 @@ func InitializeUserController() (*usercontroller.Controller, error) {
 		storybservice.New,
 		storybrepo.New,
 
+		rctableservice.New,
+		rctablerepo.New,
+
+		cmtablerepo.New,
+
 		db.New)
 	return &usercontroller.Controller{}, nil
 }
@@ -66,6 +71,11 @@ func InitializeAuthController() (*authcontroller.Controller, error) {
 
 		storybservice.New,
 		storybrepo.New,
+
+		rctableservice.New,
+		rctablerepo.New,
+
+		cmtablerepo.New,
 
 		db.New)
 	return &authcontroller.Controller{}, nil
@@ -198,6 +208,11 @@ func InitializeStoryController() (*storycontroller.Controller, error) {
 
 		userservice.New,
 		userrepo.New,
+
+		rctableservice.New,
+		rctablerepo.New,
+
+		cmtablerepo.New,
 
 		db.New)
 

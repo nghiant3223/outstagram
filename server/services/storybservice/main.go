@@ -1,21 +1,23 @@
 package storybservice
 
 import (
-	"fmt"
+	"outstagram/server/constants"
 	"outstagram/server/dtos/dtomodels"
 	"outstagram/server/models"
 	"outstagram/server/repos/storybrepo"
+	"outstagram/server/services/rctableservice"
 	"outstagram/server/services/userservice"
 	"outstagram/server/utils"
 )
 
 type StoryBoardService struct {
-	storyBoardRepo *storybrepo.StoryBoardRepo
-	userService    *userservice.UserService
+	storyBoardRepo   *storybrepo.StoryBoardRepo
+	userService      *userservice.UserService
+	reactableService *rctableservice.ReactableService
 }
 
-func New(storyBoardRepo *storybrepo.StoryBoardRepo, userService *userservice.UserService) *StoryBoardService {
-	return &StoryBoardService{storyBoardRepo: storyBoardRepo, userService: userService}
+func New(storyBoardRepo *storybrepo.StoryBoardRepo, userService *userservice.UserService, reactableService *rctableservice.ReactableService) *StoryBoardService {
+	return &StoryBoardService{storyBoardRepo: storyBoardRepo, userService: userService, reactableService: reactableService}
 }
 
 func (s *StoryBoardService) Save(storyBoard *models.StoryBoard) error {
@@ -59,16 +61,22 @@ func (s *StoryBoardService) GetFollowingStoryBoardDTO(userAID uint, userB *model
 	hasNewStoryFlag := false
 	for _, story := range stories {
 		dtoStory := story.ToDTO()
+
+		// Check story has been seen by userA
 		seen, err := s.CheckUserViewedStory(userAID, story.ID)
 		if err != nil {
 			return nil, err
 		}
-
 		dtoStory.Seen = utils.NewBoolPointer(seen)
 		if !hasNewStoryFlag && !seen {
 			dtoStoryBoard.HasNewStory = true
 			hasNewStoryFlag = true
 		}
+
+		// Check story has been reacted by userA
+		reacted := s.reactableService.CheckUserReaction(userAID, story.ReactableID)
+		dtoStory.Reacted = utils.NewBoolPointer(reacted)
+
 		dtoStoryBoard.Stories = append(dtoStoryBoard.Stories, dtoStory)
 	}
 
@@ -79,15 +87,11 @@ func (s *StoryBoardService) GetFollowingStoryBoardDTO(userAID uint, userB *model
 func (s *StoryBoardService) GetUserStoryBoardDTO(userID uint) (*dtomodels.StoryBoard, error) {
 	user, err := s.userService.FindByID(userID)
 	if err != nil {
-		fmt.Println("error")
-		
 		return nil, err
 	}
 
 	stories, err := s.GetStories(user.StoryBoard.ID)
 	if err != nil {
-		fmt.Println("here")
-		
 		return nil, err
 	}
 
@@ -101,6 +105,10 @@ func (s *StoryBoardService) GetUserStoryBoardDTO(userID uint) (*dtomodels.StoryB
 
 	for _, story := range stories {
 		dtoStory := story.ToDTO()
+		storyReactors := s.reactableService.GetReactorsOrderByQuality(story.ReactableID, userID, constants.StoryReactorCount)
+		for _, reactor := range storyReactors {
+			dtoStory.Reactors = append(dtoStory.Reactors, reactor.ToBasicUserDTO())
+		}
 		dtoStoryBoard.Stories = append(dtoStoryBoard.Stories, dtoStory)
 	}
 

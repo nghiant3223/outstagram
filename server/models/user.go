@@ -30,7 +30,8 @@ func (u *User) ToUserDTO() dtomodels.User {
 		Gender:    u.Gender,
 		Phone:     u.Phone,
 		Email:     u.Email,
-		AvatarURL: u.AvatarURL}
+		AvatarURL: u.AvatarURL,
+	}
 }
 
 func (u *User) ToMeDTO() dtomodels.Me {
@@ -41,5 +42,14 @@ func (u *User) ToMeDTO() dtomodels.Me {
 		Gender:    u.Gender,
 		Phone:     u.Phone,
 		Email:     u.Email,
-		AvatarURL: u.AvatarURL}
+		AvatarURL: u.AvatarURL,
+	}
+}
+
+func (u *User) ToBasicUserDTO() dtomodels.BasicUser {
+	return dtomodels.BasicUser{
+		ID:       u.ID,
+		Fullname: u.Fullname,
+		Username: u.Username,
+	}
 }

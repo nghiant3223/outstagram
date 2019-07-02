@@ -4,9 +4,10 @@ import (
 	"errors"
 	"fmt"
 	"github.com/jinzhu/gorm"
-	postVisibility "outstagram/server/enums/postprivacy"
+	privacyLevel "outstagram/server/enums/postprivacy"
 	"outstagram/server/models"
 	"outstagram/server/repos/cmtablerepo"
+	"strings"
 )
 
 type ReactableRepo struct {
@@ -34,7 +35,7 @@ func (r *ReactableRepo) GetReacts(id uint) ([]models.React, error) {
 	return reacts, nil
 }
 
-func (r *ReactableRepo) GetReactsWithLimit(id uint, limit uint, offset uint) (*models.Reactable, error) {
+func (r *ReactableRepo) GetReactsWithLimit(id uint, limit uint, offset uint) ([]models.React, error) {
 	var reactable models.Reactable
 
 	if err := r.db.First(&reactable, id).Error; err != nil {
@@ -54,7 +55,7 @@ func (r *ReactableRepo) GetReactsWithLimit(id uint, limit uint, offset uint) (*m
 		r.db.Model(&reacts[i]).Related(&reacts[i].User)
 	}
 
-	return &reactable, nil
+	return reactable.Reacts, nil
 }
 
 func (r *ReactableRepo) GetReactCount(reactableID uint) int {
@@ -64,12 +65,13 @@ func (r *ReactableRepo) GetReactCount(reactableID uint) int {
 	return count
 }
 
-func (r *ReactableRepo) GetVisibility(reactableID uint) (postVisibility.Privacy, uint, error) {
+func (r *ReactableRepo) GetVisibility(reactableID uint) (privacyLevel.Privacy, uint, error) {
 	var reactable models.Reactable
 	var post models.Post
 	var postImage models.PostImage
 	var comment models.Comment
 	var reply models.Reply
+	var story models.Story
 
 	if err := r.db.First(&reactable, reactableID).Error; err != nil {
 		return 0, 0, nil
@@ -96,10 +98,17 @@ func (r *ReactableRepo) GetVisibility(reactableID uint) (postVisibility.Privacy,
 		return r.commentableRepo.GetVisibility(reply.Comment.CommentableID)
 	}
 
+	r.db.Model(&reactable).Related(&story)
+	if story.ID != 0 {
+		// TODO: Change story visibility here
+		r.db.Model(&story).Related(&story.User)
+		return privacyLevel.Public, story.User.ID, nil
+	}
+
 	return 0, 0, errors.New(fmt.Sprintf("Database error, invalid use of reactable_id = %v", reactableID))
 }
 
-func (r *ReactableRepo) GetReactors(reactableID, userID uint, limit int) []models.User {
+func (r *ReactableRepo) GetReactorsOrderByQuality(reactableID, userID uint, limit int) []models.User {
 	var users []models.User
 	query := `
 SELECT reactors.*
@@ -114,4 +123,28 @@ LIMIT ?
 	r.db.Raw(query, reactableID, userID, limit).Scan(&users)
 
 	return users
+}
+
+func (r *ReactableRepo) Find(projector map[string]interface{}) ([]*models.Reactable, error) {
+	var fields []string
+	var values []interface{}
+	var reactables []*models.Reactable
+
+	for key, v := range projector {
+		fields = append(fields, fmt.Sprintf("%v = ?", key))
+		values = append(values, v)
+	}
+
+	projections := strings.Join(fields, " AND ")
+	if err := r.db.Where(projections, values...).Find(&reactables).Error; err != nil {
+		return nil, err
+	}
+
+	return reactables, nil
+}
+
+func (r *ReactableRepo) CheckUserReaction(userID, reactableID uint) bool {
+	var count int
+	r.db.Model(&models.React{}).Where("user_id = ? AND reactable_id = ?", userID, reactableID).Count(&count)
+	return count > 0
 }

@@ -9,8 +9,9 @@ type Reactable struct {
 	Reactors   []string `gorm:"-"`
 
 	// These 4 fields are used for GetVisibility in ReactableRepo.GetVisibility
-	Post       Post
-	PostImage  PostImage
-	Comment    Comment
-	Reply      Reply
+	Post      Post
+	PostImage PostImage
+	Comment   Comment
+	Reply     Reply
+	Story     Story
 }

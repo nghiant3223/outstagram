@@ -9,3 +9,9 @@ type User struct {
 	Email     string  `json:"email"`
 	Gender    bool    `json:"gender"`
 }
+
+type BasicUser struct {
+	ID       uint   `json:"id"`
+	Username string `json:"username"`
+	Fullname string `json:"fullname"`
+}

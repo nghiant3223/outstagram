@@ -14,6 +14,7 @@ type Story struct {
 	ReactableID  uint
 	ViewableID   uint
 	Duration     uint
+	User         User
 }
 
 func (s *Story) ToDTO() dtomodels.Story {

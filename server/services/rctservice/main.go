@@ -28,7 +28,7 @@ func (s *ReactService) Remove(userID, reactableID uint) error {
 		return gorm.ErrRecordNotFound
 	}
 
-	if err := s.reactRepo.Delete(&reacts[0]); err != nil {
+	if err := s.reactRepo.Delete(reacts[0]); err != nil {
 		return err
 	}
 

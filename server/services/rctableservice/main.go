@@ -15,12 +15,8 @@ func New(reactableRepo *rctablerepo.ReactableRepo) *ReactableService {
 	return &ReactableService{reactableRepo: reactableRepo}
 }
 
-func (s *ReactableService) GetReactsWithLimit(id , limit , offset uint) (*models.Reactable, error) {
-	return s.reactableRepo.GetReactsWithLimit(id, limit, offset)
-}
-
-func (s *ReactableService) GetReactors(reactableID, userID uint, limit int) []models.User {
-	return s.reactableRepo.GetReactors(reactableID, userID, limit)
+func (s *ReactableService) GetReactorsOrderByQuality(reactableID, userID uint, limit int) []models.User {
+	return s.reactableRepo.GetReactorsOrderByQuality(reactableID, userID, limit)
 }
 
 func (s *ReactableService) GetReactCount(reactableID uint) int {
@@ -31,12 +27,20 @@ func (s *ReactableService) GetVisibilityByID(reactableID uint) (postVisibility.P
 	return s.reactableRepo.GetVisibility(reactableID)
 }
 
+func (s *ReactableService) GetReactors(reactableID, userID uint, limit int) []models.User {
+	return s.reactableRepo.GetReactorsOrderByQuality(reactableID, userID, limit)
+}
+
 func (s *ReactableService) GetReactorsFullname(reactableID, userID uint) []string {
 	var users []string
 
-	for _, user := range s.GetReactors(reactableID, userID, constants.ReactorCount) {
+	for _, user := range s.GetReactorsOrderByQuality(reactableID, userID, constants.ReactorCount) {
 		users = append(users, user.Fullname)
 	}
 
 	return users
+}
+
+func (s *ReactableService) CheckUserReaction(userID, reactableID uint) bool {
+	return s.reactableRepo.CheckUserReaction(userID, reactableID)
 }

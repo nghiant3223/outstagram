@@ -66,7 +66,7 @@ func (r *CommentableRepo) GetCommentCount(id uint) int {
 }
 
 // GetVisibility returns visibility for an commentable
-func (r *CommentableRepo) 	GetVisibility(commentableID uint) (postVisibility.Privacy, uint, error) {
+func (r *CommentableRepo) GetVisibility(commentableID uint) (postVisibility.Privacy, uint, error) {
 	var commentable models.Commentable
 	var post models.Post
 	var postImage models.PostImage
