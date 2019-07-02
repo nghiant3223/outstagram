@@ -13,9 +13,20 @@ func (uc *Controller) GetAllUser(c *gin.Context) {
 }
 
 func (uc *Controller) GetUsersInfo(c *gin.Context) {
-	userID, err := utils.StringToUint(c.Param("userID"))
+	username := c.Param("userID")
+	if username == "" {
+		utils.ResponseWithError(c, http.StatusBadRequest, "Username must be provided", nil)
+		return
+	}
+
+	user, err := uc.userService.FindByUsername(username)
 	if err != nil {
-		utils.ResponseWithError(c, http.StatusBadRequest, "Invalid userID", err.Error())
+		if gorm.IsRecordNotFoundError(err) {
+			utils.ResponseWithError(c, http.StatusNotFound, "Not found", err.Error())
+			return
+		}
+
+		utils.ResponseWithError(c, http.StatusInternalServerError, "Error while retrieving story board", err.Error())
 		return
 	}
 
@@ -26,18 +37,16 @@ func (uc *Controller) GetUsersInfo(c *gin.Context) {
 
 	var resBody userdtos.GetUserResponse
 
-	user, _ := uc.userService.FindByID(userID)
-
 	resBody.ID = user.ID
 	resBody.AvatarURL = user.AvatarURL
 	resBody.Fullname = user.Fullname
 	resBody.Username = user.Username
-	resBody.FollowerCount = len(uc.userService.GetFollowers(userID))
-	resBody.FollowingCount = len(uc.userService.GetFollowings(userID))
+	resBody.FollowerCount = len(uc.userService.GetFollowers(user.ID))
+	resBody.FollowingCount = len(uc.userService.GetFollowings(user.ID))
 
-	isMe := authUserID == userID
+	isMe := authUserID == user.ID
 	if !isMe {
-		ok, err := uc.userService.CheckFollow(authUserID, userID)
+		ok, err := uc.userService.CheckFollow(authUserID, user.ID)
 		if err != nil {
 			utils.ResponseWithError(c, http.StatusOK, "Error while retrieving user", err.Error())
 			return

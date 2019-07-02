@@ -1,6 +1,7 @@
 package storybservice
 
 import (
+	"fmt"
 	"outstagram/server/dtos/dtomodels"
 	"outstagram/server/models"
 	"outstagram/server/repos/storybrepo"
@@ -78,11 +79,15 @@ func (s *StoryBoardService) GetFollowingStoryBoardDTO(userAID uint, userB *model
 func (s *StoryBoardService) GetUserStoryBoardDTO(userID uint) (*dtomodels.StoryBoard, error) {
 	user, err := s.userService.FindByID(userID)
 	if err != nil {
+		fmt.Println("error")
+		
 		return nil, err
 	}
 
-	stories, err := s.GetStories(userID)
+	stories, err := s.GetStories(user.StoryBoard.ID)
 	if err != nil {
+		fmt.Println("here")
+		
 		return nil, err
 	}
 
