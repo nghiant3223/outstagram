@@ -23,8 +23,8 @@ func NewStoryManager(hub *hub) *storyManager {
 }
 
 // WSMux multiplexes WebSocket event to corresponding handler
-func (sm *storyManager) WSMux(c *Connection, transmitData ClientMessage) {
-	switch transmitData.Type {
+func (sm *storyManager) WSMux(c *Connection, clientMessage ClientMessage) {
+	switch clientMessage.Type {
 	case "STORY.CLIENT.POST_STORY":
 		var followerConnections []*Connection
 		for _, user := range sm.userService.GetFollowers(c.UserID) {
@@ -33,8 +33,19 @@ func (sm *storyManager) WSMux(c *Connection, transmitData ClientMessage) {
 			}
 		}
 
-		x := ServerMessage{Data: transmitData.Data, Type: "STORY.SERVER.POST_STORY", ActorID: &c.UserID}
-		sm.Hub.BroadcastSelective(c, x, followerConnections)
+		message := ServerMessage{Data: clientMessage.Data, Type: "STORY.SERVER.POST_STORY", ActorID: &c.UserID}
+		sm.Hub.BroadcastSelective(c, message, followerConnections)
+
+	case "STORY.CLIENT.REACT_STORY":
+		targetUserID := uint(clientMessage.Data.(map[string]interface{})["targetUserID"].(float64))
+		message := ServerMessage{Data: clientMessage.Data, Type: "STORY.SERVER.REACT_STORY", ActorID: &c.UserID}
+		sm.Hub.BroadcastSelective(c, message, []*Connection{sm.Hub.UserID2Connection[targetUserID]})
+
+	case "STORY.CLIENT.UNREACT_STORY":
+		targetUserID := uint(clientMessage.Data.(map[string]interface{})["targetUserID"].(float64))
+		message := ServerMessage{Data: clientMessage.Data, Type: "STORY.SERVER.UNREACT_STORY", ActorID: &c.UserID}
+		sm.Hub.BroadcastSelective(c, message, []*Connection{sm.Hub.UserID2Connection[targetUserID]})
+
 	default:
 		log.Fatal("Event not supported")
 	}

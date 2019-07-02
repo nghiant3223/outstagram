@@ -32,7 +32,7 @@ func NewHub() *hub {
 }
 
 // Run starts a hub session
-func (h *hub) Run(wsMuxes ...func(from *Connection, transmitData ClientMessage)) {
+func (h *hub) Run(wsMuxes ...func(from *Connection, clientMessage ClientMessage)) {
 	for {
 		select {
 		case s := <-h.Register:

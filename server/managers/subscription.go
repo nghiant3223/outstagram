@@ -26,9 +26,9 @@ func (s Subscription) ReadPump() {
 	c.WS.SetPongHandler(func(string) error { c.WS.SetReadDeadline(time.Now().Add(pongWait)); return nil })
 
 	for {
-		var transmitData ClientMessage
+		var clientMessage ClientMessage
 
-		err := c.WS.ReadJSON(&transmitData)
+		err := c.WS.ReadJSON(&clientMessage)
 		if err != nil {
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway) {
 				log.Printf("Error: %v", err)
@@ -36,7 +36,7 @@ func (s Subscription) ReadPump() {
 			break
 		}
 
-		m := ClientMessageWrapper{TransmitData: transmitData, Connection: c}
+		m := ClientMessageWrapper{TransmitData: clientMessage, Connection: c}
 		Hub.BroadcastChannel <- m
 	}
 }
