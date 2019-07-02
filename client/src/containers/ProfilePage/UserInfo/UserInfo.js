@@ -10,13 +10,15 @@ class UserInfo extends Component {
         super(props);
 
         this.state = {
-            followed: props.user.followed
+            followed: props.user.followed,
+            followerCount: props.user.followerCount
         }
     }
 
     componentDidUpdate(prevProps) {
         if (prevProps.user.id !== this.props.user.id) {
-            this.setState({ followed: this.props.user.followed });
+            const { followed, followerCount } = this.props.user;
+            this.setState({ followed, followerCount });
         }
     }
 
@@ -26,15 +28,17 @@ class UserInfo extends Component {
 
         if (!followed) {
             userServices.followUser(user.id);
+            this.setState((prevState) => ({ followerCount: prevState.followerCount + 1 }));
         } else {
             userServices.unfollowUser(user.id);
+            this.setState((prevState) => ({ followerCount: prevState.followerCount - 1 }));
         }
 
         this.setState((prevState) => ({ followed: !prevState.followed }));
     }
 
     render() {
-        const { followed } = this.state;
+        const { followed, followerCount } = this.state;
         const { user } = this.props;
 
         return (
@@ -50,7 +54,7 @@ class UserInfo extends Component {
 
                 <div className="InfoItemContainer">
                     <div className="InfoItem">
-                        <div className="InfoItem__Title">{user.followerCount} </div>
+                        <div className="InfoItem__Title">{followerCount}</div>
                         <div className="InfoItem__More">Followers</div>
                     </div>
                     <div className="InfoItem">
