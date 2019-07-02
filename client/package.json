@@ -19,7 +19,7 @@
   "devDependencies": {},
   "scripts": {
     "start": "PORT=8080 react-scripts start",
-    "build": "react-scripts build",
+    "build": "react-scripts build && rm -rf ../server/client-build && mv build ../server/client-build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   }

@@ -16,21 +16,21 @@ class ProfilePage extends Component {
     }
 
     componentDidMount() {
-        const { userID } = this.props.match.params;
-        this.getUser(userID);
+        const { username } = this.props.match.params;
+        this.getUser(username);
     }
 
     componentDidUpdate(prevProps) {
-        const { userID } = this.props.match.params;
+        const { username } = this.props.match.params;
 
-        if (userID !== prevProps.match.params.userID) {
-            this.getUser(userID);
+        if (username !== prevProps.match.params.username) {
+            this.getUser(username);
         }
     }
 
-    async getUser(userID) {
+    async getUser(username) {
         try {
-            const { data: { data: user } } = await userServices.getUser(userID);
+            const { data: { data: user } } = await userServices.getUser(username);
             this.setState({ user })
         } catch (e) {
             this.setState({ user: null });

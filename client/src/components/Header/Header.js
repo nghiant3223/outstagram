@@ -20,7 +20,7 @@ const Header = (props) => {
             </Link>
 
             <div className="Header__Right">
-                <Link to={`/${user.id}`}>
+                <Link to={`/${user.username}`}>
                     <div className="Header__Right__Info">
                         <div className="Header__Right__Info__Avatar" >
                             <img src={defaultAvatar} alt="avatar" />

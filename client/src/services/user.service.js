@@ -1,7 +1,7 @@
 import { noAuthApi, requireAuthApi } from '../axios';
 
-export function getUser(userID) {
-    return requireAuthApi.get(`/users/${userID}`);
+export function getUser(username) {
+    return requireAuthApi.get(`/users/${username}`);
 }
 
 export function followUser(userID) {
