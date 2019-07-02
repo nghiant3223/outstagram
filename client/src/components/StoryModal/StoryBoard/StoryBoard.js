@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import _ from "lodash";
 import { Link } from 'react-router-dom';
 import { Dropdown, Button, Icon } from 'semantic-ui-react';
 import { connect } from 'react-redux';
@@ -7,6 +8,7 @@ import './StoryBoard.css';
 import Avatar from '../../Avatar/Avatar';
 import TimeSlicer from './TimeSlicer/TimeSlicer';
 import { getDiffFromPast } from '../../../utils/time';
+import socket from '../../../Socket';
 
 import * as storyActions from '../../../actions/story.action';
 import * as uiActions from '../../../actions/ui.action';
@@ -120,16 +122,36 @@ class StoryBoard extends Component {
     }
 
     onHeartClick = () => {
-        const { reacted, activeStoryIndex } = this.state;
+        const { user, storyBoard } = this.props;
         const { stories } = this.props.storyBoard;
+        const { reacted, activeStoryIndex } = this.state;
         const activeStory = stories[activeStoryIndex];
 
+        console.log(reacted);
         if (reacted) {
             activeStory.reacted = false;
-            storyServices.unreactStory(activeStory.reactableID);
+            storyServices.unreactStory(activeStory.reactableID)
+                .then(() => socket.emit(
+                    "STORY.CLIENT.UNREACT_STORY",
+                    {
+                        reactor: { ..._.pick(user, ["id", "username", "fullname"]) },
+                        targetUserID: storyBoard.userID,
+                        storyID: activeStory.id
+                    }
+                ))
+                .catch((e) => console.log(e));
         } else {
             activeStory.reacted = true;
-            storyServices.reactStory(activeStory.reactableID);
+            storyServices.reactStory(activeStory.reactableID)
+                .then(() => socket.emit(
+                    "STORY.CLIENT.REACT_STORY",
+                    {
+                        reactor: { ..._.pick(user, ["id", "username", "fullname"]) },
+                        targetUserID: storyBoard.userID,
+                        storyID: activeStory.id
+                    }
+                ))
+                .catch((e) => console.log(e));
         }
 
         this.setState((prevState) => ({ reacted: !prevState.reacted }));
@@ -193,7 +215,7 @@ class StoryBoard extends Component {
                     </div>
                 </div>
 
-                {isMy && activeStory.reactors !== undefined && (
+                {isMy && (activeStory.reactors != undefined && activeStory.reactors.length > 0) && (
                     <div className="StoryReactorContainer">
                         {activeStory.reactors.map((reactor) => <Link to={`/${reactor.username}`} key={reactor.id} ><div className="StoryReactor" title={reactor.fullname}> <Avatar /> </div></Link>)}
                     </div>
@@ -204,7 +226,7 @@ class StoryBoard extends Component {
     }
 }
 
-const mapStateToProps = ({ storyReducer: { onDisplaySBNode: sbNode } }) => ({ sbNode, storyBoard: sbNode.getValue() });
+const mapStateToProps = ({ storyReducer: { onDisplaySBNode: sbNode }, authReducer: { user } }) => ({ sbNode, storyBoard: sbNode.getValue(), user });
 
 const mapDispatchToProps = (dispatch) => ({
     displayStoryBoardNode: (sbNode) => dispatch(storyActions.displayStoryBoardNode(sbNode)),

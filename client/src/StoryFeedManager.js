@@ -99,6 +99,30 @@ class StoryFeedManager {
             llHead.setPrevious(this._head);
         }
     }
+
+    getUserSB(userID) {
+        return this._ll.find({ callback: (node) => node.getValue().userID === userID })
+    }
+
+    getUserStory(userID, storyID) {
+        const node = this.getStoryBoard(userID)
+
+        if (node === null || node.stories === null) {
+            return null;
+        }
+
+        return node.stories.find((story) => story.id === storyID);
+    }
+
+    getStory(storyID) {
+        const stories = this._head.getValue().stories
+
+        if (stories === null) {
+            return null;
+        }
+
+        return stories.find((story) => story.id === storyID);
+    }
 }
 
 export default (function () {

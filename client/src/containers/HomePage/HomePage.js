@@ -26,10 +26,35 @@ class HomePage extends Component {
             StoryFeedManager.initialize(storyBoards);
 
             socket.on("STORY.SERVER.POST_STORY", (message) => {
-                const storyFeedManager = StoryFeedManager.getInstance();
-                storyFeedManager.prependUserStory(message.actorID, ...message.data)
+                const manager = StoryFeedManager.getInstance();
+                manager.prependUserStory(message.actorID, ...message.data)
                     .then(this.updateStoryFeed)
                     .catch((e) => console.log(e));
+            });
+
+            socket.on("STORY.SERVER.REACT_STORY", (message) => {
+                const manager = StoryFeedManager.getInstance();
+                const { storyID, reactor } = message.data;
+                const story = manager.getStory(storyID)
+
+                // IMPORTANT: This should be !=, not !== because built-in `find` function return undefined when item not found in array
+                if (story != null) {
+                    if (story.reactors == null) {
+                        story.reactors = [];
+                    }
+                    story.reactors.unshift(reactor);
+                }
+            });
+
+            socket.on("STORY.SERVER.UNREACT_STORY", (message) => {
+                const manager = StoryFeedManager.getInstance();
+                const { storyID, reactor } = message.data;
+                const story = manager.getStory(storyID);
+
+                // IMPORTANT: This should be !=, not !== because built-in `find` function return undefined when item not found in array
+                if (story != null) {
+                    story.reactors = story.reactors.filter((_reactor) => _reactor.id !== reactor.id);
+                }
             });
         } catch (e) {
             console.log("Error while fetching story: ", e);
@@ -41,7 +66,6 @@ class HomePage extends Component {
     componentWillUnmount() {
         StoryFeedManager.removeInstance();
         this.props.closeModal();
-
     }
 
     updateStoryFeed = () => {
