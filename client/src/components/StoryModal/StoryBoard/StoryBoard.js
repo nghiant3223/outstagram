@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Dropdown, Button } from 'semantic-ui-react';
+import { Dropdown, Button, Icon } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 
 import './StoryBoard.css';
@@ -14,7 +14,8 @@ import * as storyServices from '../../../services/story.service';
 
 class StoryBoard extends Component {
     state = {
-        activeStoryIndex: 0
+        activeStoryIndex: 0,
+        reacted: false
     }
 
     componentDidMount() {
@@ -116,9 +117,13 @@ class StoryBoard extends Component {
         this.setState((prevState) => ({ activeStoryIndex: prevState.activeStoryIndex - 1 }));
     }
 
+    onHeartClick = () => {
+        this.setState((prevState) => ({ reacted: !prevState.reacted }));
+    }
+
     render() {
         const { sbNode } = this.props;
-        const { activeStoryIndex } = this.state;
+        const { activeStoryIndex, reacted } = this.state;
         const { stories, fullname } = this.props.storyBoard;
 
         return (
@@ -150,6 +155,10 @@ class StoryBoard extends Component {
                             </Dropdown.Menu>
                         </Dropdown>
                     </div>
+                </div>
+
+                <div className="StoryBoard__HeartContainer" onClick={this.onHeartClick}>
+                    <Icon name={reacted ? "heart" : "heart outline"} color="red" size="large" />
                 </div>
 
                 <div className="StoryBoard__Prev">
