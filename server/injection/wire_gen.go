@@ -74,7 +74,9 @@ func InitializeAuthController() (*authcontroller.Controller, error) {
 	reactableRepo := rctablerepo.New(gormDB, commentableRepo)
 	reactableService := rctableservice.New(reactableRepo)
 	storyBoardService := storybservice.New(storyBoardRepo, userService, reactableService)
-	controller := authcontroller.New(userService, notifBoardService, storyBoardService)
+	imageRepo := imgrepo.New(gormDB)
+	imageService := imgservice.New(imageRepo)
+	controller := authcontroller.New(userService, notifBoardService, storyBoardService, imageService)
 	return controller, nil
 }
 

@@ -78,6 +78,9 @@ func InitializeAuthController() (*authcontroller.Controller, error) {
 		rctableservice.New,
 		rctablerepo.New,
 
+		imgservice.New,
+		imgrepo.New,
+
 		cmtablerepo.New,
 
 		db.New,

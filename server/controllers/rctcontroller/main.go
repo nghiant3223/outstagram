@@ -1,7 +1,6 @@
 package rctcontroller
 
 import (
-	"fmt"
 	"github.com/jinzhu/gorm"
 	"net/http"
 	postVisibility "outstagram/server/enums/postprivacy"
@@ -28,8 +27,6 @@ func (rc *Controller) checkUserAuthorizationForReactable(reactableID, userID uin
 		if gorm.IsRecordNotFoundError(err) {
 			return utils.NewHttpError(http.StatusNotFound, "Commentable not found", err.Error())
 		}
-
-		fmt.Println(">>")
 		
 		return utils.NewHttpError(http.StatusInternalServerError, "Error while retrieving reactable", err.Error())
 	}

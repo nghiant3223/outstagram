@@ -42,7 +42,7 @@ func (ac *Controller) Login(c *gin.Context) {
 func (ac *Controller) Register(c *gin.Context) {
 	var reqBody authdtos.RegisterRequest
 
-	if err := c.ShouldBindJSON(&reqBody); err != nil {
+	if err := c.ShouldBind(&reqBody); err != nil {
 		utils.ResponseWithError(c, http.StatusBadRequest, "Some required fields missing", err.Error())
 		return
 	}
@@ -66,6 +66,30 @@ func (ac *Controller) Register(c *gin.Context) {
 	if err := ac.userService.Save(&newUser); err != nil {
 		utils.ResponseWithError(c, http.StatusInternalServerError, "Creating user failed", err.Error())
 		return
+	}
+
+	form, err := c.MultipartForm()
+	if err != nil {
+		utils.ResponseWithError(c, http.StatusBadRequest, "Invalid form data", err.Error())
+		return
+	}
+
+	files := form.File["avatar"]
+	if len(files) > 1 {
+		utils.ResponseWithError(c, http.StatusBadRequest, "Too many avatars", nil)
+		return
+	}
+	if len(files) == 1 {
+		image, err := ac.imageService.Save(files[0], newUser.ID, false)
+		if err != nil {
+			utils.ResponseWithError(c, http.StatusInternalServerError, "Error while saving user's avatar", err.Error())
+			return
+		}
+		newUser.AvatarImageID = image.ID
+		if err := ac.userService.Save(&newUser); err != nil {
+			utils.ResponseWithError(c, http.StatusBadRequest, "Invalid form data", err.Error())
+			return
+		}
 	}
 
 	utils.ResponseWithSuccess(c, http.StatusCreated, "Create user successfully", nil)

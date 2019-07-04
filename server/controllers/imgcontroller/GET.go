@@ -2,7 +2,6 @@ package imgcontroller
 
 import (
 	"errors"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	"net/http"
@@ -72,13 +71,32 @@ func (ic *Controller) GetUserAvatar(c *gin.Context) {
 		return
 	}
 
-	fmt.Println(image)
+	size := c.Query("size")
+	file, err := readFileBySize(image, size)
+	if err != nil {
+		utils.ResponseWithError(c, http.StatusInternalServerError, "Error while retrieving user", err.Error())
+		return
+	}
+
+	defer func() {
+		file.Close()
+	}()
+
+	fileStat, err := file.Stat()
+	if err != nil {
+		utils.ResponseWithError(c, http.StatusInternalServerError, "Error while reading file", err.Error())
+		return
+	}
+
+	c.DataFromReader(200, fileStat.Size(), "image/png", file, map[string]string{"Content-Disposition": `inline`})
 }
 
 func readFileBySize(image *models.Image, size string) (*os.File, error) {
 	fileURL := "./images/"
 
 	switch size {
+	case "":
+		fileURL += utils.GetImageSize(image, constants.STDImageSizes[len(constants.STDImageSizes)-1])
 	case "mini", "tiny", "small", "medium", "big", "huge", "origin":
 		fileURL += utils.GetImageSize(image, strings.Title(size))
 	default:

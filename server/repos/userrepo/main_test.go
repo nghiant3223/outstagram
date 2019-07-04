@@ -1,7 +1,6 @@
 package userrepo
 
 import (
-	"fmt"
 	"github.com/jinzhu/gorm"
 	"outstagram/server/db"
 	"outstagram/server/models"
@@ -150,7 +149,5 @@ func TestUserRepo_GetFollowingsWithAffinity(t *testing.T) {
 		if user.StoryBoard.ID == 0 {
 			t.Error("No storyboard id")
 		}
-		fmt.Println(user.StoryBoard.ID)
 	}
-	fmt.Println(users)
 }
