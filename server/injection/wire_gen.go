@@ -189,6 +189,14 @@ func InitializeStoryController() (*storycontroller.Controller, error) {
 }
 
 func InitializeImageController() (*imgcontroller.Controller, error) {
-	controller := imgcontroller.New()
+	gormDB, err := db.New()
+	if err != nil {
+		return nil, err
+	}
+	imageRepo := imgrepo.New(gormDB)
+	imageService := imgservice.New(imageRepo)
+	userRepo := userrepo.New(gormDB)
+	userService := userservice.New(userRepo)
+	controller := imgcontroller.New(imageService, userService)
 	return controller, nil
 }

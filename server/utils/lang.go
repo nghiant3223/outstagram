@@ -1,6 +1,9 @@
 package utils
 
 import (
+	"fmt"
+	"outstagram/server/models"
+	"reflect"
 	"strconv"
 	"time"
 )
@@ -28,4 +31,12 @@ func StringToUint(s string) (uint, error) {
 	}
 
 	return uint(num), nil
+}
+
+func GetImageSize(image *models.Image, field string) string {
+	r := reflect.ValueOf(image)
+	f := reflect.Indirect(r).FieldByName(field)
+	fmt.Println("=>", field)
+	
+	return string(f.String())
 }

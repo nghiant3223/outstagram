@@ -56,7 +56,9 @@ func InitializeUserController() (*usercontroller.Controller, error) {
 
 		cmtablerepo.New,
 
-		db.New)
+		db.New,
+	)
+
 	return &usercontroller.Controller{}, nil
 }
 
@@ -78,7 +80,9 @@ func InitializeAuthController() (*authcontroller.Controller, error) {
 
 		cmtablerepo.New,
 
-		db.New)
+		db.New,
+	)
+
 	return &authcontroller.Controller{}, nil
 }
 
@@ -107,7 +111,9 @@ func InitializePostController() (*postcontroller.Controller, error) {
 		rctableservice.New,
 		rctablerepo.New,
 
-		db.New)
+		db.New,
+	)
+
 	return &postcontroller.Controller{}, nil
 }
 
@@ -126,7 +132,8 @@ func InitializeReactController() (*rctcontroller.Controller, error) {
 		userservice.New,
 		userrepo.New,
 
-		db.New)
+		db.New,
+	)
 
 	return &rctcontroller.Controller{}, nil
 }
@@ -150,7 +157,8 @@ func InitializeCommentableController() (*cmtablecontroller.Controller, error) {
 		replyservice.New,
 		replyrepo.New,
 
-		db.New)
+		db.New,
+	)
 
 	return &cmtablecontroller.Controller{}, nil
 }
@@ -177,7 +185,8 @@ func InitializeMeController() (*mecontroller.Controller, error) {
 		imgservice.New,
 		imgrepo.New,
 
-		db.New)
+		db.New,
+	)
 
 	return &mecontroller.Controller{}, nil
 }
@@ -189,7 +198,8 @@ func InitializeFollowController() (*flcontroller.Controller, error) {
 		userservice.New,
 		userrepo.New,
 
-		db.New)
+		db.New,
+	)
 
 	return &flcontroller.Controller{}, nil
 }
@@ -215,14 +225,24 @@ func InitializeStoryController() (*storycontroller.Controller, error) {
 
 		cmtablerepo.New,
 
-		db.New)
+		db.New,
+	)
 
 	return &storycontroller.Controller{}, nil
 }
 
 func InitializeImageController() (*imgcontroller.Controller, error) {
 	wire.Build(
-		imgcontroller.New)
+		imgcontroller.New,
+
+		imgservice.New,
+		imgrepo.New,
+
+		userservice.New,
+		userrepo.New,
+
+		db.New,
+	)
 
 	return &imgcontroller.Controller{}, nil
 }

@@ -29,8 +29,6 @@ func main() {
 		})
 	}
 
-	router.Use(static.Serve("/images", static.LocalFile("./images", true)))
-
 	apiRouter := router.Group("/api")
 	{
 		routers.MeAPIRouter(apiRouter.Group("/me"))
@@ -41,6 +39,11 @@ func main() {
 		routers.FollowAPIRouter(apiRouter.Group("/follows"))
 		routers.ReactAPIRouter(apiRouter.Group("/reactions"))
 		routers.CommentableAPIRouter(apiRouter.Group("/commentable"))
+	}
+
+	staticRouter := router.Group("/static")
+	{
+		routers.ImageStaticRouter(staticRouter.Group("/images"))
 	}
 
 	PORT := os.Getenv("PORT")

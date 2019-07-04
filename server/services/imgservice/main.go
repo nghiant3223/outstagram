@@ -8,12 +8,11 @@ import (
 	"io"
 	"mime/multipart"
 	"os"
+	"outstagram/server/constants"
 	"outstagram/server/models"
 	"outstagram/server/repos/imgrepo"
 	"time"
 )
-
-var StdImageWidths = []int{32, 100, 200, 300, 500, 700}
 
 type ImageService struct {
 	imageRepo *imgrepo.ImageRepo
@@ -37,11 +36,15 @@ func (s *ImageService) Save(file *multipart.FileHeader, userID uint, isThumbnail
 	return &img, nil
 }
 
+func (s *ImageService) FindByID(id uint) (*models.Image, error) {
+	return s.imageRepo.FindByID(id)
+}
+
 func (s *ImageService) processImage(fileHeader *multipart.FileHeader, userID uint, isThumbnail bool) ([]string, error) {
 	var names []string
 
 	// Get filename for original image
-	originalFilename := s.getRandomName(userID, len(StdImageWidths))
+	originalFilename := s.getRandomName(userID, len(constants.STDImageWidths))
 
 	// Save uploaded image to /images/<originalSizeFile>
 	if err := s.saveFile(fileHeader, originalFilename); err != nil {
@@ -56,7 +59,7 @@ func (s *ImageService) processImage(fileHeader *multipart.FileHeader, userID uin
 	// Get image's width
 	originalWidth := originalFile.Bounds().Max.X - 1
 
-	for i, stdWidth := range StdImageWidths {
+	for i, stdWidth := range constants.STDImageWidths {
 		var image *image.NRGBA
 
 		// If image's width <= original image width
