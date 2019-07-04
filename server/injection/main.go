@@ -6,6 +6,7 @@ import (
 	"outstagram/server/controllers/authcontroller"
 	"outstagram/server/controllers/cmtablecontroller"
 	"outstagram/server/controllers/flcontroller"
+	"outstagram/server/controllers/imgcontroller"
 	"outstagram/server/controllers/mecontroller"
 	"outstagram/server/controllers/postcontroller"
 	"outstagram/server/controllers/rctcontroller"
@@ -217,4 +218,11 @@ func InitializeStoryController() (*storycontroller.Controller, error) {
 		db.New)
 
 	return &storycontroller.Controller{}, nil
+}
+
+func InitializeImageController() (*imgcontroller.Controller, error) {
+	wire.Build(
+		imgcontroller.New)
+
+	return &imgcontroller.Controller{}, nil
 }

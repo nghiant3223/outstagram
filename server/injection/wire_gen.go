@@ -9,6 +9,7 @@ import (
 	"outstagram/server/controllers/authcontroller"
 	"outstagram/server/controllers/cmtablecontroller"
 	"outstagram/server/controllers/flcontroller"
+	"outstagram/server/controllers/imgcontroller"
 	"outstagram/server/controllers/mecontroller"
 	"outstagram/server/controllers/postcontroller"
 	"outstagram/server/controllers/rctcontroller"
@@ -184,5 +185,10 @@ func InitializeStoryController() (*storycontroller.Controller, error) {
 	reactableService := rctableservice.New(reactableRepo)
 	storyBoardService := storybservice.New(storyBoardRepo, userService, reactableService)
 	controller := storycontroller.New(imageService, viewableService, storyBoardService, userService)
+	return controller, nil
+}
+
+func InitializeImageController() (*imgcontroller.Controller, error) {
+	controller := imgcontroller.New()
 	return controller, nil
 }

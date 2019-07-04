@@ -55,7 +55,6 @@ func (s *StoryBoardService) GetFollowingStoryBoardDTO(userAID uint, userB *model
 		StoryBoardID: userB.StoryBoard.ID,
 		UserID:       userB.ID,
 		Fullname:     userB.Fullname,
-		AvatarURL:    userB.AvatarURL,
 		StoryCount:   len(stories)}
 
 	hasNewStoryFlag := false
@@ -99,7 +98,6 @@ func (s *StoryBoardService) GetUserStoryBoardDTO(userID uint) (*dtomodels.StoryB
 		StoryBoardID: user.StoryBoard.ID,
 		UserID:       user.ID,
 		Fullname:     user.Fullname,
-		AvatarURL:    user.AvatarURL,
 		StoryCount:   len(stories),
 		HasNewStory:  len(stories) > 0}
 

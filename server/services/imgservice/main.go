@@ -13,7 +13,7 @@ import (
 	"time"
 )
 
-var ThumbnailSizes = []int{32, 150, 300, 400, 500}
+var StdImageWidths = []int{32, 100, 200, 300, 500, 700}
 
 type ImageService struct {
 	imageRepo *imgrepo.ImageRepo
@@ -23,13 +23,13 @@ func New(imageRepo *imgrepo.ImageRepo) *ImageService {
 	return &ImageService{imageRepo: imageRepo}
 }
 
-func (s *ImageService) Save(file *multipart.FileHeader, userID uint) (*models.Image, error) {
-	names, err := s.createThumbnail(file, userID)
+func (s *ImageService) Save(file *multipart.FileHeader, userID uint, isThumbnail bool) (*models.Image, error) {
+	names, err := s.processImage(file, userID, isThumbnail)
 	if err != nil {
 		return nil, err
 	}
 
-	img := models.Image{Tiny: names[0], Small: names[1], Medium: names[2], Big: names[3], Huge: names[4], Origin: names[5]}
+	img := models.Image{Mini: names[0], Tiny: names[1], Small: names[2], Medium: names[3], Big: names[4], Huge: names[5], Origin: names[6]}
 	if err := s.imageRepo.Save(&img); err != nil {
 		return nil, err
 	}
@@ -37,11 +37,11 @@ func (s *ImageService) Save(file *multipart.FileHeader, userID uint) (*models.Im
 	return &img, nil
 }
 
-func (s *ImageService) createThumbnail(fileHeader *multipart.FileHeader, userID uint) ([]string, error) {
+func (s *ImageService) processImage(fileHeader *multipart.FileHeader, userID uint, isThumbnail bool) ([]string, error) {
 	var names []string
 
 	// Get filename for original image
-	originalFilename := s.getRandomName(userID, len(ThumbnailSizes))
+	originalFilename := s.getRandomName(userID, len(StdImageWidths))
 
 	// Save uploaded image to /images/<originalSizeFile>
 	if err := s.saveFile(fileHeader, originalFilename); err != nil {
@@ -56,20 +56,29 @@ func (s *ImageService) createThumbnail(fileHeader *multipart.FileHeader, userID 
 	// Get image's width
 	originalWidth := originalFile.Bounds().Max.X - 1
 
-	for i, v := range ThumbnailSizes {
-		var thumbnail *image.NRGBA
-		// If thumbnail's width <= original image width
-		if v <= originalWidth {
-			thumbnail = imaging.Thumbnail(originalFile, v, v, imaging.Lanczos)
+	for i, stdWidth := range StdImageWidths {
+		var image *image.NRGBA
+
+		// If image's width <= original image width
+		if stdWidth <= originalWidth {
+			if isThumbnail {
+				image = imaging.Thumbnail(originalFile, stdWidth, stdWidth, imaging.Lanczos)
+			} else {
+				image = imaging.Resize(originalFile, stdWidth, 0, imaging.Lanczos)
+			}
 		} else {
-			thumbnail = imaging.Thumbnail(originalFile, originalWidth, originalWidth, imaging.Lanczos)
+			if isThumbnail {
+				image = imaging.Thumbnail(originalFile, originalWidth, originalWidth, imaging.Lanczos)
+			} else {
+				image = imaging.Resize(originalFile, originalWidth, 0, imaging.Lanczos)
+			}
 		}
 
-		// Get random filename for thumbnail
+		// Get random filename for image
 		randomName := s.getRandomName(userID, i)
 
-		// Save thumbnail to images/<filename>.png
-		if err = imaging.Save(thumbnail, fmt.Sprintf("images/%v.png", randomName)); err != nil {
+		// Save image to images/<filename>.png
+		if err = imaging.Save(image, fmt.Sprintf("images/%v.png", randomName)); err != nil {
 			return nil, err
 		}
 		names = append(names, randomName+".png")

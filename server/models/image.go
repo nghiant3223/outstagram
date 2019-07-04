@@ -7,6 +7,7 @@ import (
 // Image entity
 type Image struct {
 	gorm.Model
+	Mini   string
 	Tiny   string
 	Small  string
 	Medium string

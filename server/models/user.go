@@ -15,7 +15,6 @@ type User struct {
 	Fullname   string  `gorm:"not null"`
 	Phone      *string `gorm:"unique"`
 	Email      string  `gorm:"unique; not null"`
-	AvatarURL  *string
 	LastLogin  *time.Time
 	Gender     bool
 	NotifBoard NotifBoard `gorm:"association_autoupdate:false"`
@@ -24,13 +23,12 @@ type User struct {
 
 func (u *User) ToUserDTO() dtomodels.User {
 	return dtomodels.User{
-		ID:        u.ID,
-		Fullname:  u.Fullname,
-		Username:  u.Username,
-		Gender:    u.Gender,
-		Phone:     u.Phone,
-		Email:     u.Email,
-		AvatarURL: u.AvatarURL,
+		ID:       u.ID,
+		Fullname: u.Fullname,
+		Username: u.Username,
+		Gender:   u.Gender,
+		Phone:    u.Phone,
+		Email:    u.Email,
 	}
 }
 
@@ -42,7 +40,6 @@ func (u *User) ToMeDTO() dtomodels.Me {
 		Gender:    u.Gender,
 		Phone:     u.Phone,
 		Email:     u.Email,
-		AvatarURL: u.AvatarURL,
 	}
 }
 

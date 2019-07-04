@@ -43,7 +43,7 @@ func (pc *Controller) CreatePost(c *gin.Context) {
 	}
 
 	for _, file := range files {
-		image, err := pc.imageService.Save(file, userID)
+		image, err := pc.imageService.Save(file, userID, false)
 		if err != nil {
 			utils.ResponseWithError(c, http.StatusInternalServerError, "Error while saving post's image", err.Error())
 			return

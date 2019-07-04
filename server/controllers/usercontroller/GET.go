@@ -38,7 +38,6 @@ func (uc *Controller) GetUsersInfo(c *gin.Context) {
 	var resBody userdtos.GetUserResponse
 
 	resBody.ID = user.ID
-	resBody.AvatarURL = user.AvatarURL
 	resBody.Fullname = user.Fullname
 	resBody.Username = user.Username
 	resBody.FollowerCount = len(uc.userService.GetFollowers(user.ID))

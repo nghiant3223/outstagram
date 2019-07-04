@@ -8,5 +8,4 @@ type GetUserResponse struct {
 	FollowerCount  int     `json:"followerCount"`
 	FollowingCount int     `json:"followingCount"`
 	Followed       *bool   `json:"followed,omitempty"`
-	AvatarURL      *string `json:"avatarURL,omitempty"`
 }
