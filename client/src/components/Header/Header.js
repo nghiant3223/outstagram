@@ -9,6 +9,7 @@ import * as authActions from '../../actions/auth.action';
 
 import './Header.css';
 import defaultAvatar from '../../images/x.png';
+import Avatar from '../Avatar/Avatar';
 
 const Header = (props) => {
     const { user } = props;
@@ -23,7 +24,7 @@ const Header = (props) => {
                 <Link to={`/${user.username}`}>
                     <div className="Header__Right__Info">
                         <div className="Header__Right__Info__Avatar" >
-                            <img src={defaultAvatar} alt="avatar" />
+                            <Avatar userID={user.id} />
                         </div>
                         <div>{user.fullname}</div>
                     </div>

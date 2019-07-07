@@ -8,6 +8,14 @@ export function getMe() {
     return requireAuthApi.get("/me")
 }
 
-export function registerUser(fullname, email, username, password) {
-    return noAuthApi.post('/auth/register', { fullname, email, username, password })
+export function registerUser(fullname, email, username, password, avatar) {
+    const formData = new FormData();
+
+    formData.append("avatar", avatar);
+    formData.append("fullname", fullname);
+    formData.append("email", email);
+    formData.append("username", username);
+    formData.append("password", password);
+
+    return noAuthApi.post('/auth/register', formData)
 }

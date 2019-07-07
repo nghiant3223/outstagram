@@ -3,11 +3,12 @@ import { Link, Redirect } from 'react-router-dom';
 
 import { registerUser } from '../../services/auth.service';
 
-function registerForm(props) {
+function registerForm() {
     const [email, setEmail] = useState('');
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [fullname, setFullname] = useState('');
+    const [avatar, setAvatar] = useState();
     const [shouldRedirect, setShouldRedirect] = useState(false);
 
     const onFullnameChange = (e) => {
@@ -30,10 +31,15 @@ function registerForm(props) {
         setEmail(value);
     }
 
+    const onAvatarChange = (e) => {
+        e.persist();
+        setAvatar(e.target.files[0]);
+    }
+
     const onFormSubmit = (e) => {
         e.preventDefault();
-        registerUser(fullname, email, username, password)
-            .then((res) => {
+        registerUser(fullname, email, username, password, avatar)
+            .then(() => {
                 setShouldRedirect(true);
             })
             .catch((err) => {
@@ -60,6 +66,9 @@ function registerForm(props) {
 
                 Password: <br />
                 <input name="password" value={password} onChange={onPasswordChange} /> <br />
+
+                Avatar: <br />
+                <input type="file" multiple onClick={e => e.target.value = null} onChange={onAvatarChange} /> <br />
 
                 <button type="submit">Register</button> <br />
 

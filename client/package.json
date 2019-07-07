@@ -17,7 +17,6 @@
     "redux-thunk": "^2.3.0",
     "semantic-ui-react": "^0.87.2"
   },
-  "devDependencies": {},
   "scripts": {
     "start": "PORT=8080 react-scripts start",
     "build": "react-scripts build && rm -rf ../server/client-build && mv build ../server/client-build",

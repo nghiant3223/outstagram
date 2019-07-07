@@ -2,9 +2,10 @@ import React from 'react';
 
 import './Avatar.css';
 import defaultAvatar from '../../images/avatar.png';
+import { noAuthStatic } from '../../axios';
 
 export default function Avatar(props) {
-    const { isActive, avatar, style } = props;
+    const { isActive, userID, size = "small" } = props;
 
     let className = "Avatar";
     if (isActive === true) {
@@ -13,9 +14,8 @@ export default function Avatar(props) {
         className += " Avatar--Inactive"
     }
 
+    const avatarURL = userID ? noAuthStatic('/images/avatars/' + userID, { size }) : defaultAvatar
     return (
-        <div className={className} style={style}>
-            <img src={avatar || defaultAvatar} alt="User's avatar" />
-        </div>
+        <div className={className} style={{ background: `url(${avatarURL})` }} />
     )
 }

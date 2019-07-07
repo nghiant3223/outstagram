@@ -3,7 +3,6 @@ import { setToken } from '../sessionStorage';
 import * as authServices from '../services/auth.service';
 
 import socket from '../Socket';
-import StoryFeedManager from '../StoryFeedManager';
 
 export const loginUser = (username, password) =>
     async (dispatch) => {

@@ -217,7 +217,7 @@ class StoryBoard extends Component {
 
                 {isMy && (activeStory.reactors != undefined && activeStory.reactors.length > 0) && (
                     <div className="StoryReactorContainer">
-                        {activeStory.reactors.map((reactor) => <Link to={`/${reactor.username}`} key={reactor.id} ><div className="StoryReactor" title={reactor.fullname}> <Avatar /> </div></Link>)}
+                        {activeStory.reactors.map((reactor) => <Link to={`/${reactor.username}`} key={reactor.id} ><div className="StoryReactor" title={reactor.fullname}> <Avatar userID={reactor.id} /> </div></Link>)}
                     </div>
                 )}
 

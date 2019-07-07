@@ -1,48 +1,50 @@
 .StoryCard {
-    height: 180px;
-    width: 130px;
-    background-size: cover;
-    background-position: 50% 50%;
-    border-radius: 5px;
-    position: relative;
+  height: 180px;
+  width: 130px;
+  background-size: cover;
+  border-radius: 5px;
+  position: relative;
+  cursor: pointer;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
 }
 
 .StoryCard__Text {
-    position: absolute;
-    bottom: 0.5em;
-    left: 0.5em;
-    color: #111111;
-    font-weight: bold;
-    text-shadow: 1px 0 0 #fff, -1px 0 0 #fff, 0 1px 0 #fff, 0 -1px 0 #fff, 1px 1px #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff;
+  position: absolute;
+  bottom: 0.5em;
+  left: 0.5em;
+  color: #111111;
+  font-weight: bold;
+  text-shadow: 1px 0 0 #fff, -1px 0 0 #fff, 0 1px 0 #fff, 0 -1px 0 #fff,
+    1px 1px #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff;
 }
 
 .StoryCard__Circle {
-    position: absolute;
-    top: 0.5em;
-    left: 0.5em;
+  position: absolute;
+  top: 0.5em;
+  left: 0.5em;
 }
 
-.StoryCard__Add>img {
-    width: 50%;
-    height: 50%;
+.StoryCard__Add > img {
+  width: 50%;
+  height: 50%;
 }
 
 .StoryCard__Add {
-    height: 2.5em;
-    width: 2.5em;
-    background: white;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    box-shadow: 5px 5px 34px 0px rgba(168,168,168,1);
-    z-index: 10;
+  height: 2.5em;
+  width: 2.5em;
+  background: white;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 5px 5px 34px 0px rgba(168, 168, 168, 1);
+  z-index: 10;
 }
 
 .StoryCard__Background {
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
 }

@@ -8,12 +8,16 @@ import * as uiActions from '../../../actions/ui.action';
 import "./StoryCard.css";
 import addIcon from '../../../images/add.png';
 import Avatar from '../../Avatar/Avatar';
+import { noAuthStatic } from '../../../axios';
 
 function storyCard(props) {
     const { sbNode, openStoryFeedModal, openCreatorModal } = props;
 
+    noAuthStatic("/images/others")
+
     const sb = sbNode.getValue(),
         isMy = sb.isMy,
+        userID = sb.userID,
         text = sb.fullname,
         stories = sb.stories,
         isActive = sb.hasNewStory,
@@ -23,12 +27,12 @@ function storyCard(props) {
 
     const circleIcon = isMy ?
         (<div className="StoryCard__Circle StoryCard__Add" onClick={openCreatorModal}> <img src={addIcon} alt="plus icon" /> </div>) :
-        (<div className="StoryCard__Circle"><Avatar isActive={isActive} /></div>)
+        (<div className="StoryCard__Circle"><Avatar isActive={isActive} userID={userID} /></div>)
 
     return (
         <div
             className="StoryCard"
-            style={{ ...backgroundStyle, cursor: "pointer" }}>
+            style={{ ...backgroundStyle }}>
             {circleIcon}
             <div className="StoryCard__Background" onClick={() => openStoryFeedModal(sbNode)} ></div>
             <b className="StoryCard__Text">{isMy ? "Add your story" : text}</b>

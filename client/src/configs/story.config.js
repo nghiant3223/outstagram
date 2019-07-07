@@ -1,1 +1,1 @@
-export const STORY_CARD_SIZE = "huge";
+export const STORY_CARD_SIZE = "big";

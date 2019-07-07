@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import socket from '../../Socket';
-import * as storyActions from '../../actions/story.action';
 import * as storyServices from '../../services/story.service';
 
 import StoryFeed from '../../components/StoryFeed/StoryFeed';
