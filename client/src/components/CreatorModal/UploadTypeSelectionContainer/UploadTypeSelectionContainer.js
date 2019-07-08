@@ -17,11 +17,11 @@ function UploadTypeSelectionContainer({ closeModal, onImagesUpload }) {
             <div className="CreatorModal__UploadTypeContainer__Radio" onChange={onUploadMethodChange}>
                 <RadioButton name="upload-type" value="post" >
                     <Icon name="newspaper outline" size="large" color="blue" />Newsfeed
-            </RadioButton>
+                </RadioButton>
 
                 <RadioButton name="upload-type" value="story" defaultChecked>
-                    <Icon name="image" size="large" color="blue" />Story
-            </RadioButton>
+                    <Icon className="" name="image" size="large" color="blue" />Story
+                </RadioButton>
             </div>
 
             <div>

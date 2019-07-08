@@ -58,10 +58,10 @@ class ProfilePage extends Component {
             <Container>
                 <div className="ImagesContainer">
                     <CoverImage />
-                    <ProfileImage />
+                    <ProfileImage userID={user.id} />
                 </div>
 
-                <UserInfo user={this.state.user} />
+                <UserInfo user={user} />
             </Container>
         )
     }

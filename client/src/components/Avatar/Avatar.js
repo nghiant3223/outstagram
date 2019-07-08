@@ -4,9 +4,7 @@ import './Avatar.css';
 import defaultAvatar from '../../images/avatar.png';
 import { noAuthStatic } from '../../axios';
 
-export default function Avatar(props) {
-    const { isActive, userID, size = "small" } = props;
-
+export default function Avatar({ isActive, userID, size = "small", width = "2.5em", height }) {
     let className = "Avatar";
     if (isActive === true) {
         className += " Avatar--Active";
@@ -16,6 +14,6 @@ export default function Avatar(props) {
 
     const avatarURL = userID ? noAuthStatic('/images/avatars/' + userID, { size }) : defaultAvatar
     return (
-        <div className={className} style={{ background: `url(${avatarURL})`, backgroundPosition: "50% 50%", backgroundSize: "cover" }} />
+        <div className={className} style={{ background: `url(${avatarURL})`, backgroundPosition: "50% 50%", backgroundSize: "cover", width: width, height: height || width }} />
     )
 }

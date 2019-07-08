@@ -1,74 +1,75 @@
 .StoryBoard {
-    background-size: cover;
-    background-position: 50% 50%;
-    width: 100%;
-    height: 550px;
-    padding: 1em;
-    position: relative;
-    box-shadow: 0 14px 28px rgba(0,0,0,0.2), 0 10px 10px rgba(0,0,0,0.15);
+  background-size: cover;
+  background-position: 50% 50%;
+  width: 100%;
+  height: 550px;
+  padding: 1em;
+  position: relative;
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.2), 0 10px 10px rgba(0, 0, 0, 0.15);
 }
 
 .StoryBoard__Progress {
-    margin-bottom: 1em;
-    display: flex;
+  margin-bottom: 1em;
+  display: flex;
 }
 
-.StoryBoard__Progress>div {
-    flex-grow: 1;
-    margin-left: 2px;
-    margin-right: 2px;
+.StoryBoard__Progress > div {
+  flex-grow: 1;
+  margin-left: 2px;
+  margin-right: 2px;
 }
 
 .StoryBoard__Header {
-    display: flex;
-    justify-content: space-between;
+  display: flex;
+  justify-content: space-between;
 }
 
-.StoryBoard__Header__Left, .StoryBoard__Header__Right {
-    display: flex;
-    align-items: center;
+.StoryBoard__Header__Left,
+.StoryBoard__Header__Right {
+  display: flex;
+  align-items: center;
 }
 
-.StoryBoard__Header__Left__Info>div:first-child {
-    margin-bottom: 0.25em;
+.StoryBoard__Header__Left__Info > div:first-child {
+  margin-bottom: 0.25em;
 }
 
-.StoryBoard__Header__Left>div {
-    margin: 0 0.25em;
+.StoryBoard__Header__Left > div {
+  margin: 0 0.25em;
 }
 
 .StoryBoard__Prev {
-    position: absolute;
-    left: -50px;
-    top: 45%;
+  position: absolute;
+  left: -50px;
+  top: 45%;
 }
 
 .StoryBoard__Next {
-    position: absolute;
-    right: -50px;
-    top: 45%;
+  position: absolute;
+  right: -50px;
+  top: 45%;
 }
 
 .StoryBoard__Header__Right__Icon {
-    color: #5f5f5f;
+  color: #5f5f5f;
 }
 
 .StoryBoard__HeartContainer {
-    position: absolute;
-    right: 1em;
-    bottom: 1em;
-    cursor: pointer;
+  position: absolute;
+  right: 1em;
+  bottom: 1em;
+  cursor: pointer;
 }
 
 .StoryReactorContainer {
-    display: flex;
-    flex-flow: row wrap;
-    padding: 8px;
+  display: flex;
+  flex-flow: row wrap;
+  padding: 8px;
 }
 
 .StoryReactor {
-    display: flex;
-    align-items: center;
-    margin-left: 8px;
-    margin-right: 8px;
+  display: flex;
+  align-items: center;
+  margin-left: 8px;
+  margin-right: 8px;
 }

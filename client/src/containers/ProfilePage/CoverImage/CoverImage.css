@@ -1,14 +1,5 @@
-.ImagesContainer__Avatar {
-    width: 125px;
-    height: 125px;
-    border-radius: 50%;
-    background: red;
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translate(-50%,50%);
-    border: 3px solid white;
-    overflow: hidden;
-    background-size: auto;
-    background-position: 50% 50%;
+.ImagesContainer__Cover {
+    height: 250px;
+    background-color: bisque;
+    border-radius: 5px;
 }

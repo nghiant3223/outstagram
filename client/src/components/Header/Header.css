@@ -1,35 +1,35 @@
 .Header {
-    height: 60px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 2em !important;
-    background-color: white;
-    padding: 1.5em;
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
+  height: 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2em !important;
+  background-color: white;
+  padding: 1.5em;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
 }
 
 .Header__Left {
-    font-family: 'Satisfy', cursive;
-    cursor: pointer;
-    font-size: 2em;
-    color: #3f3f3f;
+  font-family: "Satisfy", cursive;
+  cursor: pointer;
+  font-size: 2em;
+  color: #3f3f3f;
 }
 
 .Header__Right {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .Header__Right__Info {
-    display: flex;
-    align-items: center;
-    font-weight: bold;
-    cursor: pointer;
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+  cursor: pointer;
 }
 
-.Header__Right__Info>div {
-    margin-left: 0.25em;
-    margin-right: 0.25em;
+.Header__Right__Info > div {
+  margin-left: 0.25em;
+  margin-right: 0.25em;
 }

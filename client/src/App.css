@@ -3,5 +3,5 @@ body {
 }
 
 a {
-  color: unset;
+  color: unset !important;
 }

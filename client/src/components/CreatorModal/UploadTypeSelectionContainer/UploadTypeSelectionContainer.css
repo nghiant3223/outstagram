@@ -6,6 +6,20 @@
   color: rgba(0, 0, 0, 0.75);
 }
 
+.CreatorModal__UploadTypeContainer__Radio > label {
+  margin-left: 16px;
+  margin-right: 16px;
+}
+
+.CreatorModal__UploadTypeContainer__Radio > *:first-child {
+  margin-top: 0 !important;
+  margin-left: 0 !important;
+}
+
 .CreatorModal__UploadTypeContainer__Radio {
   display: flex;
+}
+
+.CreatorModal__UploadTypeContainer__Radio i {
+  margin-top: -2px;
 }

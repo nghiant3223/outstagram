@@ -1,32 +1,31 @@
 .StoryFeed {
-    background-color: white;
-    padding: 1.5em;
+  background-color: white;
+  padding: 1.5em;
 }
 
 .StoryFeed__Header {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 1em;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1em;
 }
 
 .StoryFeed__Main {
-    display: flex;
+  display: flex;
 }
 
 .StoryFeed__Header__SeeAll {
-    cursor: pointer;
+  cursor: pointer;
 }
 
-.StoryFeed__Main>div {
-    margin-left: 10px;
-    margin-right: 10px;
+.StoryFeed__Main > div {
+  margin-left: 10px;
+  margin-right: 10px;
 }
 
-.StoryFeed__Main>div:first-child {
-    margin-left: 0;
+.StoryFeed__Main > div:first-child {
+  margin-left: 0;
 }
 
-
-.StoryFeed__Main>div:last-child {
-    margin-right: 0;
+.StoryFeed__Main > div:last-child {
+  margin-right: 0;
 }

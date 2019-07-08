@@ -40,6 +40,7 @@ export default (function () {
     }
 
     function emit(eventType, data) {
+        console.log("emit", data);
         instance.send(JSON.stringify({ type: eventType, data: data }));
     }
 

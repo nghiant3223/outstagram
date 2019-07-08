@@ -1,12 +1,12 @@
 import React from 'react';
 
 import "./ProfileImage.css";
-import defaultAvatar from "../../../images/x.png";
+import Avatar from '../../../components/Avatar/Avatar';
 
-function ProfileImage() {
+function ProfileImage({ userID }) {
     return (
-        <div className="ImagesContainer__Avatar" style={{ backgroundImage: `url(${defaultAvatar})` }}>
-
+        <div className="ImagesContainer__Avatar">
+            <Avatar userID={userID} size="big" width="125px"/>
         </div>
     )
 }
