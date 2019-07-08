@@ -13,5 +13,5 @@ func ImageStaticRouter(router *gin.RouterGroup) {
 	}
 
 	router.GET("/avatars/:userID", imageController.GetUserAvatar)
-	router.GET("/posts/:imageID", imageController.GetImage)
+	router.GET("/others/:imageID", imageController.GetImage)
 }

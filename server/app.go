@@ -29,6 +29,8 @@ func main() {
 		})
 	}
 
+	router.Use(static.Serve("/images", static.LocalFile("./images", true)))
+
 	apiRouter := router.Group("/api")
 	{
 		routers.MeAPIRouter(apiRouter.Group("/me"))

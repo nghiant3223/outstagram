@@ -74,7 +74,7 @@ func (ic *Controller) GetUserAvatar(c *gin.Context) {
 	size := c.Query("size")
 	file, err := readFileBySize(image, size)
 	if err != nil {
-		utils.ResponseWithError(c, http.StatusInternalServerError, "Error while retrieving user", err.Error())
+		utils.ResponseWithError(c, http.StatusInternalServerError, "Error while retrieving image size", err.Error())
 		return
 	}
 
