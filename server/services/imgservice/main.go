@@ -1,9 +1,9 @@
 package imgservice
 
 import (
-	"crypto/sha1"
 	"fmt"
 	"github.com/disintegration/imaging"
+	"github.com/segmentio/ksuid"
 	"image"
 	"io"
 	"mime/multipart"
@@ -12,7 +12,6 @@ import (
 	"outstagram/server/constants"
 	"outstagram/server/models"
 	"outstagram/server/repos/imgrepo"
-	"time"
 )
 
 type ImageService struct {
@@ -57,7 +56,7 @@ func (s *ImageService) FindByID(id uint) (*models.Image, error) {
 
 func (s *ImageService) processImage(fileHeader *multipart.FileHeader, userID uint, isThumbnail bool) ([]string, error) {
 	// Get filename for original image
-	originalFilename := s.getRandomName(userID, len(constants.STDImageWidths))
+	originalFilename := s.getRandomName()
 
 	// Save uploaded image to /images/<originalSizeFile>
 	if err := s.saveFileByHeader(fileHeader, originalFilename); err != nil {
@@ -75,7 +74,7 @@ func (s *ImageService) processImage(fileHeader *multipart.FileHeader, userID uin
 
 func (s *ImageService) processImageURL(url string, userID uint, isThumbnail bool) ([]string, error) {
 	// Get filename for original image
-	originalFilename := s.getRandomName(userID, len(constants.STDImageWidths))
+	originalFilename := s.getRandomName()
 
 	response, err := http.Get(url)
 	if err != nil {
@@ -107,7 +106,7 @@ func (s *ImageService) createDifferentSizes(img image.Image, isThumbnail bool, u
 	var names []string
 	originalWidth := img.Bounds().Max.X - 1
 
-	for i, stdWidth := range constants.STDImageWidths {
+	for _, stdWidth := range constants.STDImageWidths {
 		var resizeImage *image.NRGBA
 
 		// If resizeImage's width <= original resizeImage width
@@ -126,7 +125,7 @@ func (s *ImageService) createDifferentSizes(img image.Image, isThumbnail bool, u
 		}
 
 		// Get random filename for resizeImage
-		randomName := s.getRandomName(userID, i)
+		randomName := s.getRandomName()
 
 		// Save resizeImage to images/<filename>.png
 		if err := imaging.Save(resizeImage, fmt.Sprintf("images/%v.png", randomName)); err != nil {
@@ -139,8 +138,8 @@ func (s *ImageService) createDifferentSizes(img image.Image, isThumbnail bool, u
 	return names, nil
 }
 
-func (s *ImageService) getRandomName(userID uint, i int) string {
-	randomName := fmt.Sprintf("%x", sha1.Sum([]byte(fmt.Sprint(time.Now().Unix())+fmt.Sprint(userID)+fmt.Sprint(i))))
+func (s *ImageService) getRandomName() string {
+	randomName := ksuid.New().String()
 	return randomName
 }
 

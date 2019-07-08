@@ -37,12 +37,12 @@ const (
 	pingPeriod = (pongWait * 9) / 10
 
 	// Maximum message size allowed from peer.
-	maxMessageSize = 512
+	maxMessageSize = 512*1024
 )
 
 var upgrader = websocket.Upgrader{
-	ReadBufferSize:  1024,
-	WriteBufferSize: 1024,
+	ReadBufferSize:  1024*1024,
+	WriteBufferSize: 1024*1024,
 	CheckOrigin:     func(r *http.Request) bool { return true },
 }
 

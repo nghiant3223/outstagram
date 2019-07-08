@@ -1,5 +1,7 @@
 package managers
 
+import "fmt"
+
 // hub maintains the set of active Connections and broadcasts WSMessages to the Connections.
 type hub struct {
 	// Registered Connections.
@@ -36,9 +38,11 @@ func (h *hub) Run(wsMuxes ...func(from *Connection, clientMessage ClientMessage)
 	for {
 		select {
 		case s := <-h.Register:
+			fmt.Println("A client connected to server")
 			h.Connections[s.Conn] = true
 		case s := <-h.Unregister:
 			if _, ok := h.Connections[s.Conn]; ok {
+				fmt.Println("A client disconnected from server")
 				delete(h.Connections, s.Conn)
 				delete(h.UserID2Connection, s.Conn.UserID)
 				// TODO: remove s.Conn from rooms in which it joins
