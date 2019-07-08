@@ -8,6 +8,7 @@ import (
 type CreatePostRequest struct {
 	Content    *string             `form:"content"`
 	Visibility postPrivacy.Privacy `form:"visibility"`
+	ImageURLs  []string            `form:"imageURLs"`
 }
 
 type CreatePostResponse struct {

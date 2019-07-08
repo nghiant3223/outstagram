@@ -7,6 +7,7 @@ import (
 	"image"
 	"io"
 	"mime/multipart"
+	"net/http"
 	"os"
 	"outstagram/server/constants"
 	"outstagram/server/models"
@@ -36,18 +37,30 @@ func (s *ImageService) Save(file *multipart.FileHeader, userID uint, isThumbnail
 	return &img, nil
 }
 
+func (s *ImageService) SaveURL(url string, userID uint, isThumbnail bool) (*models.Image, error) {
+	names, err := s.processImageURL(url, userID, isThumbnail)
+	if err != nil {
+		return nil, err
+	}
+
+	img := models.Image{Mini: names[0], Tiny: names[1], Small: names[2], Medium: names[3], Big: names[4], Huge: names[5], Origin: names[6]}
+	if err := s.imageRepo.Save(&img); err != nil {
+		return nil, err
+	}
+
+	return &img, nil
+}
+
 func (s *ImageService) FindByID(id uint) (*models.Image, error) {
 	return s.imageRepo.FindByID(id)
 }
 
 func (s *ImageService) processImage(fileHeader *multipart.FileHeader, userID uint, isThumbnail bool) ([]string, error) {
-	var names []string
-
 	// Get filename for original image
 	originalFilename := s.getRandomName(userID, len(constants.STDImageWidths))
 
 	// Save uploaded image to /images/<originalSizeFile>
-	if err := s.saveFile(fileHeader, originalFilename); err != nil {
+	if err := s.saveFileByHeader(fileHeader, originalFilename); err != nil {
 		return nil, err
 	}
 
@@ -56,32 +69,67 @@ func (s *ImageService) processImage(fileHeader *multipart.FileHeader, userID uin
 	if err != nil {
 		return nil, err
 	}
-	// Get image's width
-	originalWidth := originalFile.Bounds().Max.X - 1
+
+	return s.createDifferentSizes(originalFile, isThumbnail, userID, originalFilename)
+}
+
+func (s *ImageService) processImageURL(url string, userID uint, isThumbnail bool) ([]string, error) {
+	// Get filename for original image
+	originalFilename := s.getRandomName(userID, len(constants.STDImageWidths))
+
+	response, err := http.Get(url)
+	if err != nil {
+		return nil, err
+	}
+	defer response.Body.Close()
+
+	file, err := os.Create(fmt.Sprintf("images/%v.png", originalFilename))
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
+
+	_, err = io.Copy(file, response.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	// Open uploaded image for creating thumbnail
+	originalFile, err := imaging.Open(fmt.Sprintf("images/%v.png", originalFilename))
+	if err != nil {
+		return nil, err
+	}
+
+	return s.createDifferentSizes(originalFile, isThumbnail, userID, originalFilename)
+}
+
+func (s *ImageService) createDifferentSizes(img image.Image, isThumbnail bool, userID uint, originalFilename string) ([]string, error) {
+	var names []string
+	originalWidth := img.Bounds().Max.X - 1
 
 	for i, stdWidth := range constants.STDImageWidths {
-		var image *image.NRGBA
+		var resizeImage *image.NRGBA
 
-		// If image's width <= original image width
+		// If resizeImage's width <= original resizeImage width
 		if stdWidth <= originalWidth {
 			if isThumbnail {
-				image = imaging.Thumbnail(originalFile, stdWidth, stdWidth, imaging.Lanczos)
+				resizeImage = imaging.Thumbnail(img, stdWidth, stdWidth, imaging.Lanczos)
 			} else {
-				image = imaging.Resize(originalFile, stdWidth, 0, imaging.Lanczos)
+				resizeImage = imaging.Resize(img, stdWidth, 0, imaging.Lanczos)
 			}
 		} else {
 			if isThumbnail {
-				image = imaging.Thumbnail(originalFile, originalWidth, originalWidth, imaging.Lanczos)
+				resizeImage = imaging.Thumbnail(img, originalWidth, originalWidth, imaging.Lanczos)
 			} else {
-				image = imaging.Resize(originalFile, originalWidth, 0, imaging.Lanczos)
+				resizeImage = imaging.Resize(img, originalWidth, 0, imaging.Lanczos)
 			}
 		}
 
-		// Get random filename for image
+		// Get random filename for resizeImage
 		randomName := s.getRandomName(userID, i)
 
-		// Save image to images/<filename>.png
-		if err = imaging.Save(image, fmt.Sprintf("images/%v.png", randomName)); err != nil {
+		// Save resizeImage to images/<filename>.png
+		if err := imaging.Save(resizeImage, fmt.Sprintf("images/%v.png", randomName)); err != nil {
 			return nil, err
 		}
 		names = append(names, randomName+".png")
@@ -96,7 +144,7 @@ func (s *ImageService) getRandomName(userID uint, i int) string {
 	return randomName
 }
 
-func (s *ImageService) saveFile(fileHeader *multipart.FileHeader, filename string) error {
+func (s *ImageService) saveFileByHeader(fileHeader *multipart.FileHeader, filename string) error {
 	file, err := fileHeader.Open()
 	if err != nil {
 		return err

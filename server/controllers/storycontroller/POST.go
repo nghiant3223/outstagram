@@ -37,13 +37,32 @@ func (sc *Controller) CreateStory(c *gin.Context) {
 	}
 
 	files := form.File["images"]
-	if len(files) < 1 {
+	imageURLs := reqBody.ImageURLs
+	
+	if len(files) < 1 && len(imageURLs) < 1 {
 		utils.ResponseWithError(c, http.StatusBadRequest, "Missing story's images", nil)
 		return
 	}
 
 	for _, file := range files {
 		image, err := sc.imageService.Save(file, userID, false)
+		if err != nil {
+			utils.ResponseWithError(c, http.StatusInternalServerError, "Error while saving story's image", err.Error())
+			return
+		}
+
+		story := models.Story{ImageID: image.ID, StoryBoardID: user.StoryBoard.ID, Duration: 3000}
+		if err := sc.storyBoardService.SaveStory(&story); err != nil {
+			utils.ResponseWithError(c, http.StatusInternalServerError, "Error while saving story's image", err.Error())
+			return
+		}
+
+		savedStory, _ := sc.storyBoardService.GetStoryByID(story.ID)
+		resBody.Stories = append(resBody.Stories, savedStory.ToDTO())
+	}
+
+	for _, url := range imageURLs {
+		image, err := sc.imageService.SaveURL(url, userID, false)
 		if err != nil {
 			utils.ResponseWithError(c, http.StatusInternalServerError, "Error while saving story's image", err.Error())
 			return

@@ -96,7 +96,7 @@ func readFileBySize(image *models.Image, size string) (*os.File, error) {
 
 	switch size {
 	case "":
-		fileURL += utils.GetImageSize(image, constants.STDImageSizes[len(constants.STDImageSizes)-1])
+		fileURL += utils.GetImageSize(image, strings.Title(constants.STDImageSizes[len(constants.STDImageSizes)-1]))
 	case "mini", "tiny", "small", "medium", "big", "huge", "origin":
 		fileURL += utils.GetImageSize(image, strings.Title(size))
 	default:

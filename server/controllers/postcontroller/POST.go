@@ -31,7 +31,8 @@ func (pc *Controller) CreatePost(c *gin.Context) {
 	}
 
 	files := form.File["images"]
-	if len(files) < 1 {
+	imageURLs := reqBody.ImageURLs
+	if len(files) < 1 && len(imageURLs) < 1 {
 		utils.ResponseWithError(c, http.StatusBadRequest, "Missing post's images", nil)
 		return
 	}
@@ -44,6 +45,20 @@ func (pc *Controller) CreatePost(c *gin.Context) {
 
 	for _, file := range files {
 		image, err := pc.imageService.Save(file, userID, false)
+		if err != nil {
+			utils.ResponseWithError(c, http.StatusInternalServerError, "Error while saving post's image", err.Error())
+			return
+		}
+
+		postImage := models.PostImage{ImageID: image.ID, PostID: post.ID}
+		if err := pc.postImageService.Save(&postImage); err != nil {
+			utils.ResponseWithError(c, http.StatusInternalServerError, "Error while saving post's image", err.Error())
+			return
+		}
+	}
+
+	for _, url := range imageURLs {
+		image, err := pc.imageService.SaveURL(url, userID, false)
 		if err != nil {
 			utils.ResponseWithError(c, http.StatusInternalServerError, "Error while saving post's image", err.Error())
 			return
