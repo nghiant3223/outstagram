@@ -12,10 +12,11 @@ export function createStoryView(storyID) {
     return requireAuthApi.post(`/stories/${storyID}/views`);
 }
 
-export function createStory(files) {
+export function createStory(files, urls) {
     const formData = new FormData();
 
-    Object.keys(files).forEach((key) => formData.append("images", files[key]));
+    urls.forEach(url => formData.append("imageURLs", url));
+    Array.from(files).forEach(file => formData.append("images", file));
     return requireAuthApi.post("/stories", formData, { headers: { 'Content-Type': 'multipart/form-data' } });
 }
 
