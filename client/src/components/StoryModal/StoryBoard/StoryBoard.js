@@ -165,7 +165,7 @@ class StoryBoard extends Component {
     render() {
         const { sbNode } = this.props;
         const { activeStoryIndex, reacted } = this.state;
-        const { stories, fullname, isMy } = this.props.storyBoard;
+        const { stories, fullname, isMy, username } = this.props.storyBoard;
         const activeStory = stories[activeStoryIndex];
 
         return (
@@ -189,7 +189,6 @@ class StoryBoard extends Component {
                                 <div><b>{fullname}</b></div>
                                 <div>{getDiffFromPast(activeStory.createdAt)}</div>
                             </div>
-
                         </div>
                         <div className="StoryBoard__Header__Right">
                             <Dropdown icon="ellipsis vertical" className="StoryBoard__Header__Right__Icon" direction="left">

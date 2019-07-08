@@ -5,12 +5,12 @@ import { objectToQuery } from './utils/http';
 
 export const noAuthApi = axios.create({
     baseURL: "/api",
-    timeout: 3000
+    timeout: 7500
 });
 
 export const requireAuthApi = axios.create({
     baseURL: "/api",
-    timeout: 3000
+    timeout: 7500
 });
 
 export const noAuthStatic = function (url, query) {

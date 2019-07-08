@@ -1,35 +1,40 @@
-import React, { useState } from 'react';
-import { Icon, Button } from 'semantic-ui-react';
+import React from 'react';
+import { Icon, Segment, Grid, Divider, Header } from 'semantic-ui-react';
 
-import RadioButton from "../../RadioButton/RadioButton";
+import Input from "../../Input/Input";
 
-import "./UploadTypeContainer.css";
-
-export default function UploadTypeContainer({closeModal, onImagesUpload}) {
-    const [uploadMethod, setUploadMethod] = useState("story");
-
-    const onUploadMethodChange = (e) => {
-        setUploadMethod(e.target.value);
-    }
-
+function UploadTypeContainer({ expand = true, triggerFileInput, onUrlInputChange, imageURL }) {
     return (
-        <div className="CreatorModal__UploadTypeContainer">
-            <div className="CreatorModal__UploadTypeContainer__Radio" onChange={onUploadMethodChange}>
-                <RadioButton name="upload-type" value="post" >
-                    <Icon name="newspaper outline" size="large" color="blue" />Newsfeed
-            </RadioButton>
+        <Segment placeholder={expand}>
+            <Grid columns={2} stackable textAlign='center'>
+                <Divider vertical>Or</Divider>
+                <Grid.Row verticalAlign='middle'>
+                    <Grid.Column>
+                        {expand && (
+                            <Header icon>
+                                <Icon name='grid layout' />
+                                Add new photo
+                            </Header>
+                        )}
+                        <button className="ui button primary" type="button" onClick={triggerFileInput}>Choose your photos</button>
+                    </Grid.Column>
 
-                <RadioButton name="upload-type" value="story" defaultChecked>
-                    <Icon name="image" size="large" color="blue" />Story
-            </RadioButton>
-            </div>
+                    <Grid.Column>
+                        {expand && (
+                            <Header icon>
+                                <Icon name='world' />
+                                Add photo from web
+                            </Header>
+                        )}
 
-            <div>
-                <button className="ui button" type="button" onClick={closeModal}>Cancel</button>
-                <Button onClick={() => onImagesUpload(uploadMethod)} primary>Upload</Button>
-            </div>
-        </div>
+                        <div>
+                            <Input width="90%" onChange={onUrlInputChange} placeHolder="Paste a URL" value={imageURL} />
+                        </div>
+                    </Grid.Column>
+                </Grid.Row>
+            </Grid>
+        </Segment>
     )
 }
 
-
+export default UploadTypeContainer;

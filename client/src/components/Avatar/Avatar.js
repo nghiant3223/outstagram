@@ -16,6 +16,6 @@ export default function Avatar(props) {
 
     const avatarURL = userID ? noAuthStatic('/images/avatars/' + userID, { size }) : defaultAvatar
     return (
-        <div className={className} style={{ background: `url(${avatarURL})` }} />
+        <div className={className} style={{ background: `url(${avatarURL})`, backgroundPosition: "50% 50%", backgroundSize: "cover" }} />
     )
 }
