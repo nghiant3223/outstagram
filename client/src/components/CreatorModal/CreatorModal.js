@@ -142,7 +142,7 @@ class CreatorModal extends Component {
 const mapStateToProps = ({ creatorReducer: { isModalOpen } }) => ({ isModalOpen });
 
 const mapDispatchToProps = (dispatch) => ({
-    closeModal: () => dispatch(creatorActions.closeCreatorModal())
+    closeModal: () => dispatch(creatorActions.closeModal())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreatorModal);

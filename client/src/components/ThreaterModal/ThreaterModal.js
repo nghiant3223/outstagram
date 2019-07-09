@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from "react-redux";
 import { Modal, Icon } from 'semantic-ui-react';
 
 import "./ThreaterModal.css";
@@ -9,14 +10,19 @@ import FeedbackSummary from '../FeedbackSummary/FeedbackSummary';
 import PostAction from '../PostAction/PostAction';
 import CommentInput from '../CommentInput/CommentInput';
 
+import * as threaterAction from "../../actions/threater.modal";
+
 class ThreaterModal extends Component {
     render() {
+        const { isModalOpen, closeModal } = this.props;
+
         return (
             <Modal size="fullscreen" basic className="ThreaterModal"
                 closeOnEscape
                 centered
                 closeOnDimmerClick
-                open={true}>
+                open={isModalOpen}
+                onClose={closeModal}>
                 <div className="ThreaterContainer">
                     <div className="ThreaterContainer__ImageContainer">
                         <AmpImage src="https://unsplash.it/1000/400" fitType="contain" container="auto" />
@@ -65,5 +71,11 @@ class ThreaterModal extends Component {
     }
 }
 
+const mapStateToProps = ({ threaterReducer: { isModalOpen } }) => ({ isModalOpen });
 
-export default ThreaterModal;
+const mapDispatchToProps = (dispatch) => ({
+    closeModal: () => dispatch(threaterAction.closeModal())
+});
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(ThreaterModal);

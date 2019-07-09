@@ -11,7 +11,7 @@ import Avatar from '../../Avatar/Avatar';
 import { noAuthStatic } from '../../../axios';
 
 function storyCard(props) {
-    const { sbNode, openStoryFeedModal, openCreatorModal } = props;
+    const { sbNode, openStoryFeedModal, openModal } = props;
 
     noAuthStatic("/images/others")
 
@@ -26,7 +26,7 @@ function storyCard(props) {
             { backgroundImage: `url("/images/${sb.stories[0][storyConfigs.STORY_CARD_SIZE]}")` };
 
     const circleIcon = isMy ?
-        (<div className="StoryCard__Circle StoryCard__Add" onClick={openCreatorModal}> <img src={addIcon} alt="plus icon" /> </div>) :
+        (<div className="StoryCard__Circle StoryCard__Add" onClick={openModal}> <img src={addIcon} alt="plus icon" /> </div>) :
         (<div className="StoryCard__Circle"><Avatar isActive={isActive} userID={userID} /></div>)
 
     return (
@@ -42,7 +42,7 @@ function storyCard(props) {
 
 const mapDispatchToProps = (dispatch) => ({
     openStoryFeedModal: (sbNode) => dispatch(uiActions.openStoryModal(sbNode)),
-    openCreatorModal: () => dispatch(creatorActions.openCreatorModal())
+    openModal: () => dispatch(creatorActions.openModal())
 });
 
 export default connect(null, mapDispatchToProps)(storyCard);
