@@ -13,6 +13,7 @@ import './HomePage.css';
 
 import * as uiActions from '../../actions/ui.action';
 import StoryFeedManager from '../../StoryFeedManager';
+import ThreaterModal from '../../components/ThreaterModal/ThreaterModal';
 
 class HomePage extends Component {
     state = {
@@ -83,6 +84,7 @@ class HomePage extends Component {
                 <StoryFeed ref={(cmp) => { if (cmp) { this.storyFeed = cmp } }} fetchingStoryFeed={this.state.isLoading} />
                 <StoryModal updateStoryFeed={this.updateStoryFeed} />
                 <CreatorModal updateStoryFeed={this.updateStoryFeed} />
+                <ThreaterModal />
             </Container>
         );
     }

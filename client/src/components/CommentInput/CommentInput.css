@@ -1,0 +1,33 @@
+.CommentInput {
+  display: flex;
+  background-color: rgba(0, 0, 0, 0.03);
+  padding: 0.5em;
+  border-top: 1.25px solid rgba(0, 0, 0, 0.1);
+  border-bottom: 1.25px solid rgba(0, 0, 0, 0.1);
+  align-items: center !important;
+  position: relative;
+  margin-top: 1em;
+}
+
+.CommentInput>div:first-child {
+    align-self: flex-start;
+}
+
+.CommentInput__Input {
+  background: white;
+  flex-grow: 1;
+  border-radius: 20px;
+  margin-left: 0.5em;
+  outline: none;
+  padding: 0.65em;
+  overflow: auto;
+  width: calc(100% - 2.5em);
+  font-size: 0.95em;
+}
+
+.CommentInput__Placeholder {
+  color: var(--grey-color);
+  position: absolute;
+  left: calc(2.5em + 1.35em);
+  font-size: 0.95em;
+}

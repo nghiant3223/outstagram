@@ -1,0 +1,13 @@
+.PostAction {
+  border-top: 1.25px solid rgba(0, 0, 0, 0.15);
+  border-bottom: 1.25px solid rgba(0, 0, 0, 0.15);
+  padding-top: 0.75em;
+  padding-bottom: 0.75em;
+  font-size: 0.95em;
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+.PostAction>div {
+    cursor: pointer;
+}

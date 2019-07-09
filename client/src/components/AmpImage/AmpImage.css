@@ -1,0 +1,19 @@
+.Contain img {
+  object-fit: contain;
+}
+
+.Cover img {
+  object-fit: cover;
+}
+
+.FixedContainer {
+  position: relative;
+  width: 200px;
+  height: 200px;
+}
+
+.AutoResizeContainer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}

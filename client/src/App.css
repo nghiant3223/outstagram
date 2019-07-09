@@ -1,7 +1,12 @@
 body {
   background-color: #f5f5f5;
+  color: black;
 }
 
-a {
-  color: unset !important;
+:root {
+  --primary-color: #3085d0;
+  --grey-color: rgba(0, 0, 0, 0.4);
+  --light-grey-color: rgba(0, 0, 0, 0.05);
+  --bold-color: rgba(0, 0, 0, 0.87);
+  --subtitle-font-size: 0.9em;
 }

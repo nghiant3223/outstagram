@@ -1,7 +1,7 @@
 import React from 'react';
 
 import './Avatar.css';
-import defaultAvatar from '../../images/avatar.png';
+import defaultAvatar from '../../images/x.png';
 import { noAuthStatic } from '../../axios';
 
 export default function Avatar({ isActive, userID, size = "small", width = "2.5em", height }) {

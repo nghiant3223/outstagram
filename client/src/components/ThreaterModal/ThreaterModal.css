@@ -1,0 +1,114 @@
+.ThreaterContainer {
+  height: 620px;
+  display: flex;
+  justify-content: center;
+  color: black;
+}
+
+.ThreaterModal {
+  position: relative;
+  align-self: center !important;
+  margin-top: 0 !important;
+}
+
+/******************************************************************/
+
+.ThreaterContainer__ImageContainer {
+  background: black;
+  min-width: 720px;
+  max-width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.ThreaterContainer__InfoContainer {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: white;
+  width: 360px;
+}
+
+.ThreaterContainer__InfoContainer > div {
+  padding-left: 1em;
+  padding-right: 1em;
+}
+
+.ThreaterContainer__InfoContainer > div:last-child {
+  padding: 0;
+}
+
+.ThreaterContainer__InfoContainer > div:first-child {
+  padding-top: 0.75em;
+}
+
+.ThreaterContainer__InfoContainer__CommentContainer {
+  overflow-y: auto;
+}
+
+.ThreaterContainer__InfoContainer__Description {
+  margin-bottom: 1em;
+  margin-top: 1em;
+  color: black;
+}
+
+.ThreaterContainer__InfoContainer__Description__Add {
+  color: var(--primary-color);
+  font-size: 1.05em;
+  cursor: pointer;
+}
+
+.ThreaterContainer__ImageContainer__Navigation {
+  height: 100%;
+  width: 15%;
+  position: absolute;
+  top: 0;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.ThreaterContainer__ImageContainer__Navigation--Prev {
+  left: 0;
+  justify-content: flex-start;
+  padding-left: 8px;
+}
+
+.ThreaterContainer__ImageContainer__Navigation--Next {
+  right: 0;
+  justify-content: flex-end;
+  padding-right: 8px;
+}
+
+/******************************************************************/
+
+.ThreaterContainer__InfoContainer__Header {
+  display: flex;
+}
+
+.ThreaterContainer__InfoContainer__Header__Avatar {
+  flex-basis: 48px;
+  display: flex;
+  justify-content: center;
+  margin-right: 0.5em;
+}
+
+.ThreaterContainer__InfoContainer__Header__Info {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.ThreaterContainer__InfoContainer__Header__Info__Fullname {
+  font-weight: 700;
+  color: var(--primary-color);
+  font-size: 1.1em;
+  margin-bottom: 0.5em;
+}
+
+.ThreaterContainer__InfoContainer__Header__Info__CreatedAt {
+  color: var(--grey-color);
+  font-weight: 500;
+  font-size: var(--subtitle-font-size);
+}
