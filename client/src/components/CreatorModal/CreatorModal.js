@@ -14,6 +14,7 @@ import { isImageUrl } from '../../utils/image';
 import Input from '../Input/Input';
 import UploadTypeSelectionContainer from './UploadTypeSelectionContainer/UploadTypeSelectionContainer';
 import UploadTypeContainer from './UploadTypeContainer/UploadTypeContainer';
+import ChosenImageContainer from './ChosenImageContainer/ChosenImageContainer';
 
 const initialState = {
     isLoading: false,
@@ -94,10 +95,6 @@ class CreatorModal extends Component {
         this.fileInput.click();
     }
 
-    getImageURL(fileOrURL) {
-        const isURL = typeof fileOrURL === "string"
-        return <div className="CreatorModal__ChosendImageContainer__ChosenImage" style={{ backgroundImage: `url(${isURL ? fileOrURL : URL.createObjectURL(fileOrURL)})` }}></div>
-    }
 
     onUploadMethodChange = (e) => {
         this.setState({ uploadMethod: e.target.value });
@@ -123,7 +120,7 @@ class CreatorModal extends Component {
                                 ) :
                                 (
                                     <div>
-                                        <div className="CreatorModal__ChosendImageContainer__Images"> {Array.from(renderImages).map((image) => this.getImageURL(image))} </div>
+                                        <ChosenImageContainer renderImages={renderImages} />
                                         <UploadTypeContainer expand={false} imageURL={imageURL} onUrlInputChange={this.onUrlInputChange} triggerFileInput={this.triggerFileInput} />
                                     </div>
                                 )

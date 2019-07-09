@@ -127,7 +127,6 @@ class StoryBoard extends Component {
         const { reacted, activeStoryIndex } = this.state;
         const activeStory = stories[activeStoryIndex];
 
-        console.log(reacted);
         if (reacted) {
             activeStory.reacted = false;
             storyServices.unreactStory(activeStory.reactableID)

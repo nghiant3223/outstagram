@@ -103,7 +103,7 @@
 .ThreaterContainer__InfoContainer__Header__Info__Fullname {
   font-weight: 700;
   color: var(--primary-color);
-  font-size: 1.1em;
+  font-size: var(--title-font-size);
   margin-bottom: 0.5em;
 }
 

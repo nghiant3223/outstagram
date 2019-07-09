@@ -3,15 +3,3 @@
   background-size: cover;
   background-position: 50% 50%;
 }
-
-.CreatorModal__ChosendImageContainer__More__URL > div {
-  padding: 0 32px;
-}
-
-.CreatorModal__ChosendImageContainer__More {
-  border: 1px dashed #afafaf !important;
-}
-
-.CreatorModal__ChosendImageContainer__ChosenImage {
-  border-radius: 2px;
-}

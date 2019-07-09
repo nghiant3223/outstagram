@@ -9,4 +9,5 @@ body {
   --light-grey-color: rgba(0, 0, 0, 0.05);
   --bold-color: rgba(0, 0, 0, 0.87);
   --subtitle-font-size: 0.9em;
+  --title-font-size: 1.05em;
 }

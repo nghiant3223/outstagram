@@ -18,7 +18,7 @@ function UploadTypeContainer({ expand = true, triggerFileInput, onUrlInputChange
                                 Add new photo
                             </Header>
                         )}
-                        <button className="ui button primary" type="button" onClick={triggerFileInput}>Choose your photos</button>
+                        <button className="ui button primary" type="button" onClick={triggerFileInput}>{expand ? "Choose your photo" : "Choose another photo"}</button>
                     </Grid.Column>
 
                     <Grid.Column>
@@ -30,10 +30,10 @@ function UploadTypeContainer({ expand = true, triggerFileInput, onUrlInputChange
                         )}
 
                         <div>
-                            <Input width="90%" onChange={onUrlInputChange} placeHolder="Paste a URL" value={imageURL} />
-                            <Popup content={`Get photo's URL by right-click on image and choose "Copy image address"`} 
-                            inverted wide="very" offset="0 5px" position="top center"
-                            trigger={<Icon name='question circle outline' size="large" color="blue" className="QuestionMark"/>} />
+                            <Input width={expand ? "90%" : "80%"} onChange={onUrlInputChange} placeHolder={expand ? "Paste a URL" : "Paste another URL"} value={imageURL} />
+                            <Popup content={`Get photo's URL by right-click on image and choose "Copy image address"`}
+                                inverted wide="very" offset="0 5px" position="top center"
+                                trigger={<Icon name='question circle outline' size="large" color="blue" className="QuestionMark" />} />
                         </div>
                     </Grid.Column>
                 </Grid.Row>
