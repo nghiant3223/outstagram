@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import _ from "lodash";
 import { Link } from 'react-router-dom';
-import { Dropdown, Button, Icon } from 'semantic-ui-react';
+import { Dropdown, Button, Icon, Popup } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 
 import './StoryBoard.css';
@@ -217,7 +217,12 @@ class StoryBoard extends Component {
 
                 {isMy && (activeStory.reactors != undefined && activeStory.reactors.length > 0) && (
                     <div className="StoryReactorContainer">
-                        {activeStory.reactors.map((reactor) => <Link to={`/${reactor.username}`} key={reactor.id} ><div className="StoryReactor" title={reactor.fullname}> <Avatar userID={reactor.id} /> </div></Link>)}
+                        {activeStory.reactors.map((reactor) => (
+                            <Link to={`/${reactor.username}`} key={reactor.id} >
+                                <Popup content={reactor.fullname}
+                                    inverted size="mini" offset="0 5px" position="top center"
+                                    trigger={<div className="StoryReactor"> <Avatar userID={reactor.id} /> </div>} />
+                            </Link>))}
                     </div>
                 )}
 

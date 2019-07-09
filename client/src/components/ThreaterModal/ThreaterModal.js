@@ -47,9 +47,13 @@ class ThreaterModal extends Component {
                             <p>This is the description</p>
                         </div>
 
-                        <FeedbackSummary />
+                        <div>
+                            <FeedbackSummary />
+                        </div>
 
-                        <PostAction />
+                        <div>
+                            <PostAction />
+                        </div>
 
                         <div className="ThreaterContainer__InfoContainer__CommentContainer">
                             <Comment />
