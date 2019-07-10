@@ -1,3 +1,10 @@
 .QuestionMark {
     margin-left: 0.5em !important;
 }
+
+.InpandSegment {
+    margin-bottom: 0 !important;
+    border-bottom: 0 !important;
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+}

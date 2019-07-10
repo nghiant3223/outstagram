@@ -7,7 +7,7 @@ import "./UploadTypeContainer.css";
 
 function UploadTypeContainer({ expand = true, triggerFileInput, onUrlInputChange, imageURL }) {
     return (
-        <Segment placeholder={expand}>
+        <Segment placeholder={expand} className={!expand ? "InpandSegment" : ""}>
             <Grid columns={2} stackable textAlign='center'>
                 <Divider vertical>Or</Divider>
                 <Grid.Row verticalAlign='middle'>
@@ -31,7 +31,7 @@ function UploadTypeContainer({ expand = true, triggerFileInput, onUrlInputChange
 
                         <div>
                             <Input width={expand ? "90%" : "80%"} onChange={onUrlInputChange} placeHolder={expand ? "Paste a URL" : "Paste another URL"} value={imageURL} />
-                            <Popup content={`Get photo's URL by right-click on image and choose "Copy image address"`}
+                            <Popup content={`Get image's URL by right-click on it and choose "Copy image address" (for Chrome)`}
                                 inverted wide="very" offset="0 5px" position="top center"
                                 trigger={<Icon name='question circle outline' size="large" color="blue" className="QuestionMark" />} />
                         </div>

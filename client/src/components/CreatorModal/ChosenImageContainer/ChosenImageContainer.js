@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { genUID } from '../../../utils/lang';
 
 class ChosenImageContainer extends Component {
     shouldComponentUpdate(nextProps) {
@@ -7,7 +8,7 @@ class ChosenImageContainer extends Component {
 
     getImageURL(fileOrURL) {
         const isURL = typeof fileOrURL === "string"
-        return <div className="CreatorModal__ChosendImageContainer__ChosenImage" style={{ backgroundImage: `url(${isURL ? fileOrURL : URL.createObjectURL(fileOrURL)})` }}></div>
+        return <div key={genUID()} className="CreatorModal__ChosendImageContainer__ChosenImage" style={{ backgroundImage: `url(${isURL ? fileOrURL : URL.createObjectURL(fileOrURL)})` }}></div>
     }
 
     render() {

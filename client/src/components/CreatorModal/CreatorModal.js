@@ -15,13 +15,16 @@ import Input from '../Input/Input';
 import UploadTypeSelectionContainer from './UploadTypeSelectionContainer/UploadTypeSelectionContainer';
 import UploadTypeContainer from './UploadTypeContainer/UploadTypeContainer';
 import ChosenImageContainer from './ChosenImageContainer/ChosenImageContainer';
+import DescriptionInput from './DescriptionInput/DescriptionInput';
 
 const initialState = {
     isLoading: false,
     uploadImages: [],
     uploadUrls: [],
     renderImages: [],
-    imageURL: ""
+    imageURL: "",
+    caption: "",
+    uploadType: "story"
 }
 
 class CreatorModal extends Component {
@@ -29,14 +32,14 @@ class CreatorModal extends Component {
         ...initialState
     }
 
-    onImagesUpload = async (uploadMethod) => {
-        const { uploadImages, uploadUrls } = this.state;
+    onImagesUpload = async () => {
+        const { uploadImages, uploadUrls, uploadType } = this.state;
         const { updateStoryFeed, closeModal } = this.props;
         const storyFeedManager = StoryFeedManager.getInstance();
 
         try {
             this.setState({ isLoading: true });
-            switch (uploadMethod) {
+            switch (uploadType) {
                 case "story":
                     const { data: { data: { stories } } } = await storyServices.createStory(uploadImages, uploadUrls);
 
@@ -95,13 +98,16 @@ class CreatorModal extends Component {
         this.fileInput.click();
     }
 
+    onCaptionChange = (e) => {
+        this.setState({ caption: e.target.value });
+    }
 
-    onUploadMethodChange = (e) => {
-        this.setState({ uploadMethod: e.target.value });
+    onUploadTypeChange = (e) => {
+        this.setState({ uploadType: e.target.value });
     }
 
     render() {
-        const { renderImages, imageURL } = this.state;
+        const { renderImages, imageURL, caption, uploadType } = this.state;
         const { isModalOpen, closeModal } = this.props;
 
         return (
@@ -122,13 +128,14 @@ class CreatorModal extends Component {
                                     <div>
                                         <ChosenImageContainer renderImages={renderImages} />
                                         <UploadTypeContainer expand={false} imageURL={imageURL} onUrlInputChange={this.onUrlInputChange} triggerFileInput={this.triggerFileInput} />
+                                        {uploadType === "post" && <DescriptionInput value={caption} onChange={this.onCaptionChange} />}
                                     </div>
                                 )
                         }
 
-                        <UploadTypeSelectionContainer onImagesUpload={this.onImagesUpload} closeModal={this.props.closeModal} />
+                        <UploadTypeSelectionContainer onImagesUpload={this.onImagesUpload} closeModal={this.props.closeModal} onUploadTypeChange={this.onUploadTypeChange} />
 
-                        <input type="file" ref={el => this.fileInput = el} multiple onClick={e => e.target.value = null} onChange={this.onFileInputChange} style={{ display: "none" }} />
+                        <input type="file" ref={el => this.fileInput = el} multiple onClick={e => e.target.value = null} onChange={this.onFileInputChange} style={{ display: "none" }} uploaType={uploadType} />
                     </Form>
                 </Modal>
             </div>

@@ -5,16 +5,10 @@ import RadioButton from "../../RadioButton/RadioButton";
 
 import "./UploadTypeSelectionContainer.css";
 
-function UploadTypeSelectionContainer({ closeModal, onImagesUpload }) {
-    const [uploadMethod, setUploadMethod] = useState("story");
-
-    const onUploadMethodChange = (e) => {
-        setUploadMethod(e.target.value);
-    }
-
+function UploadTypeSelectionContainer({ closeModal, onImagesUpload, onUploadTypeChange }) {
     return (
         <div className="CreatorModal__UploadTypeContainer">
-            <div className="CreatorModal__UploadTypeContainer__Radio" onChange={onUploadMethodChange}>
+            <div className="CreatorModal__UploadTypeContainer__Radio" onChange={onUploadTypeChange}>
                 <RadioButton name="upload-type" value="post" >
                     <Icon name="newspaper outline" size="large" color="blue" />Newsfeed
                 </RadioButton>
@@ -26,7 +20,7 @@ function UploadTypeSelectionContainer({ closeModal, onImagesUpload }) {
 
             <div>
                 <button className="ui button" type="button" onClick={closeModal}>Cancel</button>
-                <Button onClick={() => onImagesUpload(uploadMethod)} primary>Upload</Button>
+                <Button onClick={onImagesUpload} primary>Upload</Button>
             </div>
         </div>
     )
