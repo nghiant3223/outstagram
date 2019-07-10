@@ -4,6 +4,7 @@ import { Modal, Form, Icon, Segment, Grid, Divider, Header } from 'semantic-ui-r
 
 import * as storyServices from '../../services/story.service';
 import * as creatorActions from '../../actions/creator.action';
+import * as postServices from '../../services/post.service';
 
 import StoryFeedManager from '../../StoryFeedManager';
 import socket from '../../Socket';
@@ -33,7 +34,7 @@ class CreatorModal extends Component {
     }
 
     onImagesUpload = async () => {
-        const { uploadImages, uploadUrls, uploadType } = this.state;
+        const { uploadImages, uploadUrls, uploadType, caption } = this.state;
         const { updateStoryFeed, closeModal } = this.props;
         const storyFeedManager = StoryFeedManager.getInstance();
 
@@ -46,9 +47,12 @@ class CreatorModal extends Component {
                     stories.forEach((story) => storyFeedManager.prependStory(story));
                     socket.emit("STORY.CLIENT.POST_STORY", stories);
                     updateStoryFeed();
-
                     break;
+
                 case "post":
+                    await postServices.createPost(uploadImages, uploadUrls, caption);
+                    break;
+
                 default:
             }
         } catch (e) {
