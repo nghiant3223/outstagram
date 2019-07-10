@@ -79,36 +79,3 @@
   justify-content: flex-end;
   padding-right: 8px;
 }
-
-/******************************************************************/
-
-.ThreaterContainer__InfoContainer__Header {
-  display: flex;
-}
-
-.ThreaterContainer__InfoContainer__Header__Avatar {
-  flex-basis: 48px;
-  display: flex;
-  justify-content: center;
-  margin-right: 0.5em;
-}
-
-.ThreaterContainer__InfoContainer__Header__Info {
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.ThreaterContainer__InfoContainer__Header__Info__Fullname {
-  font-weight: 700;
-  color: var(--primary-color);
-  font-size: var(--title-font-size);
-  margin-bottom: 0.5em;
-}
-
-.ThreaterContainer__InfoContainer__Header__Info__CreatedAt {
-  color: var(--grey-color);
-  font-weight: 500;
-  font-size: var(--subtitle-font-size);
-}

@@ -32,13 +32,13 @@ class CommentInput extends Component {
 
     render() {
         const { content } = this.state;
-        const { style = {} } = this.props;
+        const { style = {}, inverted = false } = this.props;
 
         return (
-            <div className="CommentInput" style={{ position: "relative", ...style }}>
+            <div className="CommentInput" style={{ position: "relative", ...style, backgroundColor: inverted ? "unset" : "rgba(0, 0, 0, 0.075)" }}>
                 <Avatar width="2em" />
                 {content === "" && <div className="CommentInput__Placeholder" onClick={this.onPlaceholderClick}>Write your comment...</div>}
-                <ContentEditable className="CommentInput__Input" onChange={this.onInputChange} onKeyDown={this.onKeyDown} html={content} />
+                <ContentEditable className="CommentInput__Input" onChange={this.onInputChange} onKeyDown={this.onKeyDown} html={content} style={{ backgroundColor: !inverted ? "white" : "rgba(0, 0, 0, 0.075)" }} />
             </div>
         )
     }

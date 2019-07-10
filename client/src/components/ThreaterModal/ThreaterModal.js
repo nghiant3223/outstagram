@@ -11,6 +11,7 @@ import PostAction from '../PostAction/PostAction';
 import CommentInput from '../CommentInput/CommentInput';
 
 import * as threaterAction from "../../actions/threater.modal";
+import PostHeader from '../PostHeader/PostHeader';
 
 class ThreaterModal extends Component {
     render() {
@@ -31,16 +32,7 @@ class ThreaterModal extends Component {
                     </div>
 
                     <div className="ThreaterContainer__InfoContainer">
-                        <div className="ThreaterContainer__InfoContainer__Header">
-                            <div className="ThreaterContainer__InfoContainer__Header__Avatar">
-                                <Avatar width="3em" />
-                            </div>
-
-                            <div className="ThreaterContainer__InfoContainer__Header__Info">
-                                <div className="ThreaterContainer__InfoContainer__Header__Info__Fullname">Fullname</div>
-                                <div className="ThreaterContainer__InfoContainer__Header__Info__CreatedAt">1 minute ago</div>
-                            </div>
-                        </div>
+                        <PostHeader fullname="Trọng Nghĩa" createdAt={"5 minute ago"} />
 
                         <div className="ThreaterContainer__InfoContainer__Description">
                             {/* <p className="ThreaterContainer__InfoContainer__Description__Add">Add description</p> */}
@@ -66,7 +58,7 @@ class ThreaterModal extends Component {
                         </div>
 
                         <div>
-                            <CommentInput />
+                            <CommentInput inverted={false} />
                         </div>
                     </div>
                 </div>

@@ -1,3 +1,7 @@
 .ImagesContainer {
     position: relative;
 }
+
+.ProfileSummaryContainer {
+    margin-bottom: 2rem;
+}

@@ -9,7 +9,7 @@ import * as userServices from '../../services/user.service';
 import "./ProfilePage.css";
 import ProfileImage from './ProfileImage/ProfileImage';
 import CoverImage from './CoverImage/CoverImage';
-
+import Post from '../../components/Post/Post';
 class ProfilePage extends Component {
     state = {
         user: undefined
@@ -54,15 +54,30 @@ class ProfilePage extends Component {
             );
         }
 
-        return (
-            <Container>
-                <div className="ImagesContainer">
-                    <CoverImage />
-                    <ProfileImage userID={user.id} />
-                </div>
+        const images = ['https://unsplash.it/100/400',
+            'https://www.gettyimages.ie/gi-resources/images/Homepage/Hero/UK/CMS_Creative_164657191_Kingfisher.jpg',
+            // 'https://images.pexels.com/photos/1133957/pexels-photo-1133957.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
+            // 'https://cdn.pixabay.com/photo/2016/10/27/22/53/heart-1776746_960_720.jpg',
+            // 'https://images.pexels.com/photos/257840/pexels-photo-257840.jpeg?auto=compress&cs=tinysrgb&h=350',
+            // "https://images.pexels.com/photos/67636/rose-blue-flower-rose-blooms-67636.jpeg?auto=compress&cs=tinysrgb&h=350",
+            "https://cdn.pixabay.com/photo/2015/04/19/08/32/rose-729509__340.jpg"]
 
-                <UserInfo user={user} />
-            </Container>
+
+        return (
+            <div>
+                <Container className="ProfileSummaryContainer">
+                    <div className="ImagesContainer">
+                        <CoverImage />
+                        <ProfileImage userID={user.id} />
+                    </div>
+
+                    <UserInfo user={user} />
+                </Container>
+
+                <Container className="ProfileBodyContainer" white={false}>
+                    <Post images={images} />
+                </Container>
+            </div>
         )
     }
 }

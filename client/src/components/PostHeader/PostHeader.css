@@ -1,0 +1,33 @@
+.PostHeader {
+  display: flex;
+  height: 50px;
+}
+
+.PostHeader__Avatar {
+  flex-basis: 48px;
+  display: flex;
+  justify-content: center;
+  margin-right: 0.5em;
+}
+
+.PostHeader__Info {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.PostHeader__Info__Fullname {
+  font-weight: 700;
+  color: var(--primary-color);
+  font-size: var(--title-font-size);
+  margin-bottom: 0.5rem;
+  line-height: 15px;
+}
+
+.PostHeader__Info__CreatedAt {
+  color: var(--grey-color);
+  font-weight: 500;
+  font-size: var(--subtitle-font-size);
+  line-height: 15px;
+}

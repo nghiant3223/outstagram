@@ -1,3 +1,11 @@
 .Comment {
   color: var(--grey-color);
 }
+
+.Comment__Container {
+  display: flex;
+}
+
+.Comment__AvatarContainer {
+  margin-right: 0.5em;
+}

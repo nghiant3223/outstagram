@@ -1,0 +1,18 @@
+.Post {
+  width: 614px;
+  border-radius: 5px;
+  background-color: white;
+}
+
+.Post > div {
+  padding-left: 1em;
+  padding-right: 1em;
+}
+
+.Post > div:last-child {
+  padding: 0;
+}
+
+.Post > div:first-child {
+  padding-top: 0.75rem;
+}
