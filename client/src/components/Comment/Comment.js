@@ -143,13 +143,19 @@ class Comment extends Component {
 
                         <div style={{ width: "100%" }}>
                             <SemanticComment.Content>
-                                <SemanticComment.Author><Link to={`/${ownerUsername}`}>{ownerFullname}</Link>  {content}</SemanticComment.Author>
-                                <SemanticComment.Text></SemanticComment.Text>
+                                <div className="Comment__ContentContainer">
+                                    <span className="Comment__AuthorName">
+                                        <Link to={`/${ownerUsername}`}>{ownerFullname}</Link>
+                                    </span>
+                                    {content}
+                                </div>
 
                                 {(!isNew || comment !== undefined) &&
-                                    <SemanticComment.Actions>
+                                    <SemanticComment.Actions className="Comment__ActionContainer">
                                         {this.renderReact()}
-                                        <SemanticComment.Action><div onClick={this.onReplyClick}>Reply</div></SemanticComment.Action>
+                                        <SemanticComment.Action>
+                                            <div onClick={this.onReplyClick}>Reply</div>
+                                        </SemanticComment.Action>
                                         <Dot style={{ marginLeft: 0 }} />
                                         {getDiffFromPast(createdAt)}
                                     </SemanticComment.Actions>}
@@ -157,14 +163,14 @@ class Comment extends Component {
                                 {notFetchedReplyCount > 0 &&
                                     <div onClick={this.onMoreReplyClick} style={{ marginTop: "0.5em" }}>
                                         <Icon name="reply" color="blue" className="MoreCommentIcon" />
-                                        <ClickableText>See {notFetchedReplyCount}  {notFetchedReplyCount > 0 ? "more" : ""} {notFetchedReplyCount > 1 ? "replies" : "reply"}</ClickableText>
+                                        <ClickableText>{notFetchedReplyCount} {notFetchedReplyCount > 1 ? "replies" : "reply"}</ClickableText>
                                         {isLoadingMoreReply && <Loading />}
                                     </div>}
 
                                 {replies.map((reply) => <Reply {...reply} postCmtableID={postCmtableID} cmtID={id} key={reply.id} replaceReply={this.replaceReply} focusReplyInput={this.focusReplyInput} />)}
                             </SemanticComment.Content>
 
-                            {(replyInputShow || replies.length > 0) && <PostInput inverted focusOnMount onSubmit={this.onReplySubmit} placeholder="Write your reply ..." ref={el => this.replyInput = el} />}
+                            {(replyInputShow || replies.length > 0) && <PostInput style={{ paddingTop: 0, paddingBottom: 0, marginTop: "0.25em" }} inverted focusOnMount onSubmit={this.onReplySubmit} placeholder="Write your reply ..." ref={el => this.replyInput = el} />}
                         </div>
                     </div>
                 </SemanticComment>
@@ -174,7 +180,7 @@ class Comment extends Component {
 
     renderReact() {
         const { reacted } = this.state;
-        const style = { color: "var(--primary-color)", fontWeight: "bold", fontSize: "0.95em" }
+        const style = { color: "var(--primary-dark-color)", fontWeight: "bold", fontSize: "0.95em" }
 
         if (reacted) {
             return <SemanticComment.Action>

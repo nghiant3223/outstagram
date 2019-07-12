@@ -73,8 +73,12 @@ class Reply extends Component {
 
                         <div style={{ width: "100%" }}>
                             <SemanticReply.Content>
-                                <SemanticReply.Author><Link to={`/${ownerUsername}`}>{ownerFullname}</Link></SemanticReply.Author>
-                                <SemanticReply.Text>{content}</SemanticReply.Text>
+                                <div className="Comment__ContentContainer">
+                                    <span className="Comment__AuthorName">
+                                        <Link to={`/${ownerUsername}`}>{ownerFullname}</Link>
+                                    </span>
+                                    {content}
+                                </div>
 
                                 {(!isNew || reply !== undefined) &&
                                     <SemanticReply.Actions>

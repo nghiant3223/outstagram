@@ -18,6 +18,5 @@
 }
 
 .PostAction__Action:hover {
-  background: rgba(0, 0, 0, 0.15);
-  font-weight: bold;
+  background: #f2f3f5;
 }

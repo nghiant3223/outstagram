@@ -2,12 +2,14 @@
   display: flex;
   padding: 0.5rem;
   align-items: center !important;
-  position: relative;
+  align-items: center;
+  margin-top: 0.5em !important;
+  margin-bottom: 0.5em !important;
 }
 
-.PostInput > div:first-child {
-  align-self: flex-start;
-  margin-top: 0.25rem;
+.PostInput__InputContainer {
+  width: 100%;
+  position: relative;
 }
 
 .PostInput__Input {
@@ -18,13 +20,14 @@
   outline: none;
   padding: 0.65rem;
   overflow: auto;
-  width: calc(100% - 2.5rem);
+  width: 100%;
   font-size: 0.85rem;
 }
 
 .PostInput__Placeholder {
   color: var(--grey-color);
   position: absolute;
-  left: calc(2.5rem + 1.25rem);
+  left: calc(0.5rem + 0.65rem);
+  top: 0.65rem;
   font-size: 0.85rem;
 }

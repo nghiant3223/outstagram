@@ -1,7 +1,7 @@
 .Comment {
   color: var(--grey-color);
   margin-top: 1em !important;
-  margin-bottom: 1em !important
+  margin-bottom: 1em !important;
 }
 
 .Comment__Container {
@@ -10,4 +10,24 @@
 
 .Comment__AvatarContainer {
   margin-right: 0.5em;
+}
+
+.Comment__ContentContainer {
+  background: #f2f3f5;
+  padding: 0.7em 1em;
+  border-radius: 1.25em;
+  display: inline-block;
+  color: black;
+  display: inline-block;
+  word-break: break-word;
+}
+
+.Comment__AuthorName {
+  font-weight: 700;
+  margin-right: 0.5em;
+}
+
+.Comment__ActionContainer {
+  margin-left: 1.25em;
+  margin-top: 0.25em;
 }

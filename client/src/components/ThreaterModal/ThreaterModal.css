@@ -35,7 +35,7 @@
 }
 
 .ThreaterContainer__InfoContainer > div:last-child {
-  padding: 0;
+  padding: 0px;
 }
 
 .ThreaterContainer__InfoContainer > div:first-child {
@@ -44,6 +44,14 @@
 
 .ThreaterContainer__InfoContainer__CommentContainer {
   overflow-y: auto;
+}
+
+.ThreaterContainer__InfoContainer__CommentContainer > div:last-child {
+  margin-bottom: 0px !important;
+}
+
+.ThreaterContainer__InfoContainer__CommentContainer > div:first-child {
+  margin-bottom: 0px !important;
 }
 
 .ThreaterContainer__InfoContainer__Description {

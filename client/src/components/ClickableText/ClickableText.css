@@ -5,6 +5,6 @@
 }
 
 .ClickableText:hover {
-    color: darkblue;
-    font-weight: bold;
+  color: var(--primary-dark-color);
+  font-weight: bold;
 }

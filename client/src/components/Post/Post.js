@@ -121,7 +121,7 @@ class Post extends Component {
                 </div>
 
                 <div>
-                    <PostInput inverted onSubmit={this.onCommentSubmit} ref={el => this.postInput = el} isCommentInput placeholder="Write your comment ..." />
+                    <PostInput inverted onSubmit={this.onCommentSubmit} ref={el => this.postInput = el} isCommentInput style={{fontSize: "1.25em"}} placeholder="Write your comment ..." />
                 </div>
 
             </div>

@@ -23,7 +23,6 @@ class PostInput extends Component {
 
     onInputChange = (e) => {
         const text = e.target.value;
-        console.log(text);
 
         if (text === "<div><br></div><div><br></div>") {
             this.setState({ content: "" });
@@ -55,11 +54,11 @@ class PostInput extends Component {
 
     render() {
         const { content } = this.state;
-        const { inverted, isCommentInput, placeholder } = this.props;
+        const { inverted, isCommentInput, placeholder, style: propsStyle } = this.props;
 
         const style = {
             position: "relative",
-            backgroundColor: isCommentInput ? "rgba(0, 0, 0, 0.05)" : "unset",
+            backgroundColor: isCommentInput ? "#f2f3f5" : "unset",
             borderTop: isCommentInput ? "1.25px solid rgba(0, 0, 0, 0.1)" : 0,
             borderBottom: isCommentInput ? "1.25px solid rgba(0, 0, 0, 0.1)" : 0,
         }
@@ -68,11 +67,15 @@ class PostInput extends Component {
             <div
                 className="PostInput"
                 ref={el => this.input = el}
-                style={style}>
-                <Avatar width="2em" />
-                {content === "" && <div className="PostInput__Placeholder" onClick={this.onPlaceholderClick}>{placeholder}</div>}
-                <ContentEditable className={`PostInput__Input ${this.id}`} onChange={this.onInputChange} onKeyDown={this.onKeyDown} html={content} style={{ backgroundColor: !inverted ? "white" : "rgba(0, 0, 0, 0.075)" }} />
-            </div>
+                style={propsStyle !== undefined ? { ...style, ...propsStyle } : { ...style }}>
+                <div>
+                    <Avatar width="2em" />
+                </div>
+                <div className="PostInput__InputContainer">
+                    {content === "" && <div className="PostInput__Placeholder" onClick={this.onPlaceholderClick}>{placeholder}</div>}
+                    <ContentEditable className={`PostInput__Input ${this.id}`} onChange={this.onInputChange} onKeyDown={this.onKeyDown} html={content} style={{ backgroundColor: !inverted ? "white" : "rgba(0, 0, 0, 0.075)" }} />
+                </div>
+            </div >
         )
     }
 

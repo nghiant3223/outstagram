@@ -1,10 +1,11 @@
 body {
-  background-color: #f5f5f5;
+  background-color: #e9ebee;
   color: black;
 }
 
 :root {
   --primary-color: #296eac;
+  --primary-dark-color: darkblue;
   --grey-color: rgba(0, 0, 0, 0.4);
   --light-grey-color: rgba(0, 0, 0, 0.05);
   --bold-color: rgba(0, 0, 0, 0.87);
