@@ -1,5 +1,7 @@
 .Comment {
   color: var(--grey-color);
+  margin-top: 1em !important;
+  margin-bottom: 1em !important
 }
 
 .Comment__Container {

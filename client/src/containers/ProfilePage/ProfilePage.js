@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { Redirect } from "react-router-dom";
+import { connect } from "react-redux";
 
 import Container from "../../components/Container/Container";
 import UserInfo from './UserInfo/UserInfo';
 
 import * as userServices from '../../services/user.service';
+import * as postServices from '../../services/post.service';
 
 import "./ProfilePage.css";
 import ProfileImage from './ProfileImage/ProfileImage';
@@ -12,7 +13,8 @@ import CoverImage from './CoverImage/CoverImage';
 import Post from '../../components/Post/Post';
 class ProfilePage extends Component {
     state = {
-        user: undefined
+        user: undefined,
+        posts: []
     }
 
     componentDidMount() {
@@ -31,14 +33,15 @@ class ProfilePage extends Component {
     async getUser(username) {
         try {
             const { data: { data: user } } = await userServices.getUser(username);
-            this.setState({ user })
+            const { data: { data: { posts } } } = await postServices.getPosts(100, 0);
+            this.setState({ user, posts: posts || [] });
         } catch (e) {
             this.setState({ user: null });
         }
     }
 
     render() {
-        const { user } = this.state;
+        const { user, posts } = this.state;
 
         // If component is loading
         if (user === undefined) {
@@ -75,11 +78,13 @@ class ProfilePage extends Component {
                 </Container>
 
                 <Container className="ProfileBodyContainer" white={false}>
-                    <Post images={images} />
+                    {posts.map((post) => <Post images={images} {...post} key={post.id} />)}
                 </Container>
             </div>
         )
     }
 }
 
-export default ProfilePage;
+const mapStateToProps = ({ authReducer: { user } }) => ({ user });
+
+export default connect(mapStateToProps)(ProfilePage);

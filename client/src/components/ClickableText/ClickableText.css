@@ -1,0 +1,10 @@
+.ClickableText {
+  position: relative;
+  color: var(--primary-color);
+  cursor: pointer;
+}
+
+.ClickableText:hover {
+    color: darkblue;
+    font-weight: bold;
+}

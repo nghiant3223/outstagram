@@ -8,7 +8,7 @@ import Avatar from '../Avatar/Avatar';
 import Comment from '../Comment/Comment';
 import FeedbackSummary from '../FeedbackSummary/FeedbackSummary';
 import PostAction from '../PostAction/PostAction';
-import CommentInput from '../CommentInput/CommentInput';
+import PostInput from '../PostInput/PostInput';
 
 import * as threaterAction from "../../actions/threater.modal";
 import PostHeader from '../PostHeader/PostHeader';
@@ -58,7 +58,7 @@ class ThreaterModal extends Component {
                         </div>
 
                         <div>
-                            <CommentInput inverted={false} />
+                            <PostInput inverted={false} />
                         </div>
                     </div>
                 </div>

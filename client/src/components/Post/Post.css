@@ -16,3 +16,8 @@
 .Post > div:first-child {
   padding-top: 0.75rem;
 }
+
+.MoreCommentIcon {
+  transform: rotate(180deg) translateY(-0.15em);
+  color: rgba(0, 0, 0, 0.75);
+}

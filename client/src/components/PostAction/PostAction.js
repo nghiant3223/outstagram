@@ -3,20 +3,13 @@ import React from 'react';
 import "./PostAction.css";
 import { Icon, Grid } from 'semantic-ui-react';
 
-function PostAction({ style = {} }) {
-    return (
-        <div className="PostAction" style={{ ...style }}>
-            <Grid columns={2} stackable textAlign='center'>
-                <Grid.Row verticalAlign='middle'>
-                    <Grid.Column>
-                        <div><Icon name="heart outline" color="black" inverted />Like</div>
-                    </Grid.Column>
+function PostAction(props) {
+    const { onReactClick, reacted, onCommentClick } = props;
 
-                    <Grid.Column>
-                        <div><Icon name="comment outline" color="black" inverted /> Comment</div>
-                    </Grid.Column>
-                </Grid.Row>
-            </Grid>
+    return (
+        <div className="PostAction">
+            <div className="PostAction__Action" onClick={onReactClick}><Icon name={reacted ? "heart" : "heart outline"} color={reacted ? "red" : "black"} inverted />Like</div>
+            <div className="PostAction__Action" onClick={onCommentClick}><Icon name="comment outline" color="black" inverted /> Comment</div>
         </div>
     )
 }
