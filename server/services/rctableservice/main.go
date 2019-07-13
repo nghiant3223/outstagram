@@ -2,6 +2,7 @@ package rctableservice
 
 import (
 	"outstagram/server/constants"
+	"outstagram/server/dtos/dtomodels"
 	postVisibility "outstagram/server/enums/postprivacy"
 	"outstagram/server/models"
 	"outstagram/server/repos/rctablerepo"
@@ -31,6 +32,13 @@ func (s *ReactableService) GetReactors(reactableID, userID uint, limit int) []mo
 	return s.reactableRepo.GetReactorsOrderByQuality(reactableID, userID, limit)
 }
 
+func (s *ReactableService) GetReactorDTOs(reactableID, userID uint, limit int) []dtomodels.BasicUser {
+	var basicUsers []dtomodels.BasicUser
+	for _, user := range s.reactableRepo.GetReactorsOrderByQuality(reactableID, userID, limit) {
+		basicUsers = append(basicUsers, user.ToBasicUserDTO())
+	}
+	return basicUsers
+}
 func (s *ReactableService) GetReactorsFullname(reactableID, userID uint) []string {
 	var users []string
 

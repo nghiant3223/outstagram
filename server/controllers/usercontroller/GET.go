@@ -82,3 +82,21 @@ func (uc *Controller) GetUserStoryBoard(c *gin.Context) {
 	resBody.StoryBoard = userStoryBoardDTO
 	utils.ResponseWithSuccess(c, http.StatusOK, "Get user's storyboard successfully", resBody)
 }
+
+func (uc *Controller) GetUserPosts(c *gin.Context) {
+	//userID := c.Param("userID")
+	//if username == "" {
+	//	utils.ResponseWithError(c, http.StatusBadRequest, "Username must be provided", nil)
+	//	return
+	//}
+	//
+	//authUserID, ok := utils.RetrieveUserID(c)
+	//if !ok {
+	//	// TODO: Handle case authentication is not provided
+	//	return
+	//}
+	//
+	//if authUserID == userID {
+	//
+	//}
+}

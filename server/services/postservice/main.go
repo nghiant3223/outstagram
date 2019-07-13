@@ -2,6 +2,7 @@ package postservice
 
 import (
 	"github.com/jinzhu/gorm"
+	"outstagram/server/constants"
 	"outstagram/server/dtos/dtomodels"
 	"outstagram/server/enums/postprivacy"
 	"outstagram/server/models"
@@ -19,7 +20,7 @@ type PostService struct {
 }
 
 func New(postRepo *postrepo.PostRepo, userService *userservice.UserService, reactableService *rctableservice.ReactableService, commentableService *cmtableservice.CommentableService) *PostService {
-	return &PostService{postRepo: postRepo, userService: userService, reactableService:reactableService, commentableService:commentableService}
+	return &PostService{postRepo: postRepo, userService: userService, reactableService: reactableService, commentableService: commentableService}
 }
 
 func (s *PostService) Save(post *models.Post) error {
@@ -99,7 +100,9 @@ func (s *PostService) GetDTOPost(post *models.Post, userID uint) (*dtomodels.Pos
 		OwnerID:       post.UserID,
 		OwnerFullname: post.User.Fullname,
 		ReactCount:    s.reactableService.GetReactCount(post.ReactableID),
-		Reactors:      s.reactableService.GetReactorsFullname(post.ReactableID, userID)}
+		Reacted:       s.reactableService.CheckUserReaction(userID, post.ReactableID),
+		Reactors:      s.reactableService.GetReactorDTOs(post.ReactableID, userID, 5),
+	}
 
 	// Map post's images to DTO
 	for _, postImage := range post.Images {
@@ -114,12 +117,13 @@ func (s *PostService) GetDTOPost(post *models.Post, userID uint) (*dtomodels.Pos
 			Small:         image.Small,
 			ReactableID:   postImage.ReactableID,
 			CommentableID: postImage.CommentableID,
-			ViewableID:    postImage.ViewableID}
+			ViewableID:    postImage.ViewableID,
+		}
 		dtoPost.Images = append(dtoPost.Images, dtoPostImage)
 	}
 
 	// Get post's comments
-	commentable, err := s.commentableService.GetCommentsWithLimit(post.CommentableID, userID, 5, 0)
+	commentable, err := s.commentableService.GetCommentsWithLimit(post.CommentableID, userID, constants.PostCommentCount, 0)
 	if err != nil {
 		return nil, err
 	}
@@ -127,6 +131,7 @@ func (s *PostService) GetDTOPost(post *models.Post, userID uint) (*dtomodels.Pos
 	dtoPost.CommentCount = commentable.CommentCount
 	for _, comment := range commentable.Comments {
 		dtoComment := comment.ToDTO()
+		dtoComment.Reacted = s.reactableService.CheckUserReaction(userID, comment.ReactableID)
 		dtoPost.Comments = append(dtoPost.Comments, dtoComment)
 	}
 

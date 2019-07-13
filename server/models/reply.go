@@ -25,6 +25,7 @@ func (r *Reply) ToDTO() dtomodels.Reply {
 		CreatedAt:     r.CreatedAt,
 		OwnerID:       r.UserID,
 		OwnerFullname: r.User.Fullname,
+		OwnerUsername: r.User.Username,
 		Reactors:      r.Reactors,
 		ReactCount:    r.ReactCount,
 		ReactableID:   r.ReactableID}

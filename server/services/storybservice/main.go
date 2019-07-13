@@ -100,6 +100,7 @@ func (s *StoryBoardService) GetUserStoryBoardDTO(userID uint) (*dtomodels.StoryB
 		UserID:       user.ID,
 		Fullname:     user.Fullname,
 		StoryCount:   len(stories),
+
 		HasNewStory:  len(stories) > 0}
 
 	for _, story := range stories {

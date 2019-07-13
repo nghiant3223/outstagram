@@ -53,18 +53,18 @@ func (r *CommentRepo) GetReplies(id uint) (*models.Comment, error) {
 	return &comment, nil
 }
 
-func (r *CommentRepo) GetRepliesWithLimit(id , limit , offset uint) (*models.Comment, error) {
+func (r *CommentRepo) GetRepliesWithLimit(id, limit, offset uint) (*models.Comment, error) {
 	var comment models.Comment
 
 	if err := r.db.First(&comment, id).Error; err != nil {
 		return nil, err
 	}
 
-	if err := r.db.Where("comment_id = ?", comment.ID).
-		Offset(offset).
-		Limit(models.Reply{}).
-		Find(&comment.Replies).
-		Error; err != nil {
+	if err := r.db.Raw(`
+	SELECT * 
+		FROM (SELECT * FROM reply WHERE comment_id = ? ORDER BY created_at DESC LIMIT ? OFFSET ?) AS reversed
+	ORDER BY created_at ASC
+	`, id, limit, offset).Scan(&comment.Replies).Error; err != nil {
 		return nil, err
 	}
 

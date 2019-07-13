@@ -3,6 +3,8 @@ package constants
 var ReactorCount = 10
 var StoryReactorCount = 100
 
+var PostCommentCount uint = 5
+
 var AlreadyExist = "entity already exist"
 var NotExist = "entity not exist"
 

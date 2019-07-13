@@ -13,7 +13,7 @@ func PostAPIRouter(router *gin.RouterGroup) {
 		log.Fatal(err.Error())
 	}
 
-	router.Use(middlewares.VerifyToken)
+	router.Use(middlewares.VerifyToken(true))
 
 	router.GET("/", postController.GetPosts)
 	router.POST("/", postController.CreatePost)

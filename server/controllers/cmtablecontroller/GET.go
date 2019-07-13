@@ -56,7 +56,9 @@ func (cc *Controller) GetComments(c *gin.Context) {
 	}
 
 	for _, comment := range commentable.Comments {
-		resBody.Comments = append(resBody.Comments, comment.ToDTO())
+		dtoComment := comment.ToDTO()
+		dtoComment.Reacted = cc.reactableService.CheckUserReaction(userID, comment.ReactableID)
+		resBody.Comments = append(resBody.Comments, dtoComment)
 	}
 
 	resBody.CommentCount = commentable.CommentCount
@@ -117,6 +119,7 @@ func (cc *Controller) GetCommentReplies(c *gin.Context) {
 	resBody.ReplyCount = comment.ReplyCount
 	for _, reply := range comment.Replies {
 		dtoReply := reply.ToDTO()
+		dtoReply.Reacted = cc.reactableService.CheckUserReaction(userID, reply.ReactableID)
 		resBody.Replies = append(resBody.Replies, dtoReply)
 	}
 

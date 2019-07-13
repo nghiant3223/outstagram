@@ -110,6 +110,8 @@ func (r *ReactableRepo) GetVisibility(reactableID uint) (privacyLevel.Privacy, u
 
 func (r *ReactableRepo) GetReactorsOrderByQuality(reactableID, userID uint, limit int) []models.User {
 	var users []models.User
+	var currentUserIndex int
+
 	query := `
 SELECT reactors.*
 FROM 
@@ -121,6 +123,21 @@ ORDER BY quality DESC
 LIMIT ?
 `
 	r.db.Raw(query, reactableID, userID, limit).Scan(&users)
+
+	for i := range users {
+		if users[i].ID == userID {
+			currentUserIndex = i
+			break
+		}
+	}
+
+	// Put current user to the start of `users` array
+	if currentUserIndex != 0 {
+		sortedUsers := append([]models.User{}, users[currentUserIndex])
+		sortedUsers = append(sortedUsers, users[:currentUserIndex]...)
+		sortedUsers = append(sortedUsers, users[currentUserIndex+1:]...)
+		return sortedUsers
+	}
 
 	return users
 }

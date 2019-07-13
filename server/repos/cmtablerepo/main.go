@@ -40,11 +40,11 @@ func (r *CommentableRepo) GetCommentsWithLimit(id, limit, offset uint) (*models.
 		return nil, err
 	}
 
-	if err := r.db.Where("commentable_id = ?", commentable.ID).
-		Offset(offset).
-		Limit(limit).
-		Find(&commentable.Comments).
-		Error; err != nil {
+	if err := r.db.Raw(`
+	SELECT * 
+		FROM (SELECT * FROM comment WHERE commentable_id = ? ORDER BY created_at DESC LIMIT ? OFFSET ?) AS reversed
+	ORDER BY created_at ASC
+	`, id, limit, offset).Scan(&commentable.Comments).Error; err != nil {
 		return nil, err
 	}
 

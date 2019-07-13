@@ -27,6 +27,7 @@ func (c *Comment) ToDTO() dtomodels.Comment {
 		CreatedAt:     c.CreatedAt,
 		OwnerFullname: c.User.Fullname,
 		OwnerID:       c.UserID,
+		OwnerUsername: c.User.Username,
 		ReactCount:    c.ReactCount,
 		Reactors:      c.Reactors,
 		CommentableID: c.CommentableID,

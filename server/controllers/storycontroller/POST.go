@@ -1,7 +1,6 @@
 package storycontroller
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	"log"
@@ -46,7 +45,6 @@ func (sc *Controller) CreateStory(c *gin.Context) {
 	}
 
 	for _, file := range files {
-		fmt.Println("start", "image")
 		image, err := sc.imageService.Save(file, userID, false)
 		if err != nil {
 			utils.ResponseWithError(c, http.StatusInternalServerError, "Error while saving story's image", err.Error())
@@ -61,12 +59,9 @@ func (sc *Controller) CreateStory(c *gin.Context) {
 
 		savedStory, _ := sc.storyBoardService.GetStoryByID(story.ID)
 		resBody.Stories = append(resBody.Stories, savedStory.ToDTO())
-		fmt.Println("end", "image")
 	}
 
 	for _, url := range imageURLs {
-		fmt.Println("start", url)
-
 		image, err := sc.imageService.SaveURL(url, userID, false)
 		if err != nil {
 			utils.ResponseWithError(c, http.StatusInternalServerError, "Error while saving story's image", err.Error())
@@ -81,7 +76,6 @@ func (sc *Controller) CreateStory(c *gin.Context) {
 
 		savedStory, _ := sc.storyBoardService.GetStoryByID(story.ID)
 		resBody.Stories = append(resBody.Stories, savedStory.ToDTO())
-		fmt.Println("end", url, *image)
 	}
 
 	utils.ResponseWithSuccess(c, http.StatusCreated, "Create story successfully", resBody)

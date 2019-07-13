@@ -14,6 +14,8 @@ func UserAPIRouter(router *gin.RouterGroup) {
 		log.Fatal(err.Error())
 	}
 
-	router.GET("/:userID", middlewares.VerifyToken, userController.GetUsersInfo)
+	// TODO: Handle this route for case that does not require verifyToken
+	router.GET("/:userID", middlewares.VerifyToken(true), userController.GetUsersInfo)
+	router.GET("/:userID/posts", middlewares.VerifyToken(false), userController.GetUsersInfo)
 	router.GET("/:userID/storyboard", userController.GetUserStoryBoard)
 }

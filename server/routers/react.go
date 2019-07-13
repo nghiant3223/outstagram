@@ -13,7 +13,7 @@ func ReactAPIRouter(router *gin.RouterGroup) {
 		log.Fatal(err.Error())
 	}
 
-	router.POST("/:rctableID", middlewares.VerifyToken, reactController.CreateReaction)
+	router.POST("/:rctableID", middlewares.VerifyToken(true), reactController.CreateReaction)
 
-	router.DELETE("/:rctableID", middlewares.VerifyToken, reactController.RemoveReaction)
+	router.DELETE("/:rctableID", middlewares.VerifyToken(true), reactController.RemoveReaction)
 }
