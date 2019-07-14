@@ -7,8 +7,12 @@
 
 .ThreaterModal {
   position: relative;
-  align-self: center !important;
-  margin-top: 0 !important;
+}
+
+.ThreaterModal__CloseIcon {
+  position: absolute;
+  top: -1.75em !important;
+  right: -2.25em !important;
 }
 
 /******************************************************************/
@@ -54,6 +58,15 @@
 
 .ThreaterContainer__InfoContainer__CommentContainer > div:first-child {
   margin-bottom: 0px !important;
+}
+
+.ThreaterContainer__ImageContainer .ThreaterContainer__ImageContainer__Navigation {
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.ThreaterContainer__ImageContainer:hover .ThreaterContainer__ImageContainer__Navigation {
+  opacity: 1;
 }
 
 .ThreaterContainer__InfoContainer__Description {

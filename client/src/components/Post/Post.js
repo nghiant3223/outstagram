@@ -90,7 +90,7 @@ class Post extends Component {
 
     render() {
         const { reacted, reactCount, comments, commentCount, isLoadingMoreComment } = this.state;
-        const { images, imageID, ownerFullname, createdAt, reactors, content, commentableID, reactableID } = this.props;
+        const { images, imageID, ownerFullname, createdAt, reactors, content, commentableID, reactableID, viewableID } = this.props;
 
         return (
             <div className="Post">
@@ -101,7 +101,7 @@ class Post extends Component {
                 </div>
 
                 <div>
-                    <GridImageContainer imageIDs={images ? images.map(image => image.id) : [imageID]} />
+                    <GridImageContainer images={images ? images : [{ id: imageID, commentableID, reactableID, viewableID, content }]} />
                 </div>
 
                 {reactors &&

@@ -101,3 +101,7 @@
 .no-vertical-padding {
  padding: 0 !important;
 }
+
+.pointer {
+  cursor: pointer;
+}

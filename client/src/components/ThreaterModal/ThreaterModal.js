@@ -22,34 +22,39 @@ class ThreaterModal extends Component {
     componentWillReceiveProps(nextProps) {
         if (this.props.post !== nextProps.post && nextProps.post !== undefined) {
             this.setState({ currentIndex: nextProps.post.currentIndex })
+            console.log(nextProps.post)
         }
     }
 
     onNextClick = () => {
-        const { post: { imageIDs } } = this.props;
-        this.setState((prevState) => ({ currentIndex: (prevState.currentIndex + 1) % imageIDs.length }));
+        const { post: { images } } = this.props;
+        this.setState((prevState) => ({ currentIndex: (prevState.currentIndex + 1) % images.length }));
     }
 
     onPrevClick = () => {
-        const { post: { imageIDs } } = this.props;
-        this.setState((prevState) => ({ currentIndex: (prevState.currentIndex - 1) % imageIDs.length }));
+        const { post: { images } } = this.props;
+        this.setState((prevState) => ({ currentIndex: (prevState.currentIndex - 1) % images.length }));
     }
 
     render() {
-        const { isModalOpen, closeModal, post } = this.props;
+        const { isModalOpen, close, post } = this.props;
         const { currentIndex } = this.state;
+        const currentPostImage = post.images[currentIndex]
 
         return (
-            <Modal size="fullscreen" basic className="ThreaterModal"
+            <Modal className="ThreaterModal"
+                size="large"
+                basic
                 closeOnEscape
                 centered
                 closeOnDimmerClick
                 open={isModalOpen}
-                onClose={closeModal}>
+                onClose={close}>
+                <i className="ThreaterModal__CloseIcon close icon" onClick={close}></i>
                 {post &&
                     <div className="ThreaterContainer">
                         <div className="ThreaterContainer__ImageContainer" id="x">
-                            <AmpImage src={noAuthStatic(`/images/others/${post.imageIDs[currentIndex]}`, { size: "origin" })} fit="contain" container="auto" />
+                            <AmpImage src={noAuthStatic(`/images/others/${currentPostImage.id}?size=origin`)} fit="contain" container="auto" />
 
                             <div className="ThreaterContainer__ImageContainer__Navigation ThreaterContainer__ImageContainer__Navigation--Prev"
                                 onClick={this.onPrevClick}>
@@ -65,8 +70,10 @@ class ThreaterModal extends Component {
                             <PostHeader fullname="Trọng Nghĩa" createdAt={"5 minute ago"} />
 
                             <div className="ThreaterContainer__InfoContainer__Description">
-                                {/* <p className="ThreaterContainer__InfoContainer__Description__Add">Add description</p> */}
-                                <p>This is the description</p>
+                                {currentPostImage.content ?
+                                    <p className="ThreaterContainer__InfoContainer__Description__Add">Add description</p>
+                                    :
+                                    <p>This is the description</p>}
                             </div>
 
                             <div>
@@ -100,7 +107,7 @@ class ThreaterModal extends Component {
 const mapStateToProps = ({ threaterReducer: { isModalOpen, onDisplayPost: post } }) => ({ isModalOpen, post });
 
 const mapDispatchToProps = (dispatch) => ({
-    closeModal: () => dispatch(threaterAction.closeModal())
+    close: () => dispatch(threaterAction.closeModal())
 });
 
 

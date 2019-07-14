@@ -36,6 +36,8 @@ class GridImageContainer extends Component {
     }
 
     openModal(currentIndex) {
+        const { openThreaterModal, images } = this.props;
+        openThreaterModal({ currentIndex, images });
     }
 
     onClose() {
@@ -44,13 +46,13 @@ class GridImageContainer extends Component {
 
     renderOne() {
         const { countFrom } = this.state;
-        const { imageIDs } = this.props;
-        const imageURLs = imageIDs.map(id => noAuthStatic(`/images/others/${id}?size=origin`));
+        const { images } = this.props;
+        const imageURLs = images.map(image => noAuthStatic(`/images/others/${image.id}?size=origin`));
         const overlay = imageURLs.length > countFrom && countFrom == 1 ? this.renderCountOverlay(true) : this.renderOverlay();
 
         return <Grid>
             <Grid.Row className="no-vertical-padding">
-                <Grid.Column className={`border height-two background`} onClick={this.openModal.bind(this, 0)} style={{ background: `url(${imageURLs[0]})` }}>
+                <Grid.Column className={`border height-two background pointer`} onClick={this.openModal.bind(this, 0)} style={{ background: `url(${imageURLs[0]})` }}>
                     {overlay}
                 </Grid.Column>
             </Grid.Row>
@@ -59,16 +61,17 @@ class GridImageContainer extends Component {
 
     renderTwo() {
         const { countFrom } = this.state;
-        const { imageIDs } = this.props;
-        const imageURLs = imageIDs.map(id => noAuthStatic(`/images/others/${id}?size=origin`)); const overlay = imageURLs.length > countFrom && [2, 3].includes(+countFrom) ? this.renderCountOverlay(true) : this.renderOverlay();
+        const { images } = this.props;
+        const imageURLs = images.map(image => noAuthStatic(`/images/others/${image.id}?size=origin`));
+        const overlay = imageURLs.length > countFrom && [2, 3].includes(+countFrom) ? this.renderCountOverlay(true) : this.renderOverlay();
         const conditionalRender = [3, 4].includes(imageURLs.length) || imageURLs.length > +countFrom && [3, 4].includes(+countFrom);
 
         return <Grid>
             <Grid.Row columns={2} className="no-vertical-padding">
-                <Grid.Column className="border height-two background" onClick={this.openModal.bind(this, conditionalRender ? 1 : 0)} style={{ background: `url(${conditionalRender ? imageURLs[1] : imageURLs[0]})` }}>
+                <Grid.Column className="border height-two background pointer" onClick={this.openModal.bind(this, conditionalRender ? 1 : 0)} style={{ background: `url(${conditionalRender ? imageURLs[1] : imageURLs[0]})` }}>
                     {this.renderOverlay()}
                 </Grid.Column>
-                <Grid.Column className="border height-two background" onClick={this.openModal.bind(this, conditionalRender ? 2 : 1)} style={{ background: `url(${conditionalRender ? imageURLs[2] : imageURLs[1]})` }}>
+                <Grid.Column className="border height-two background pointer" onClick={this.openModal.bind(this, conditionalRender ? 2 : 1)} style={{ background: `url(${conditionalRender ? imageURLs[2] : imageURLs[1]})` }}>
                     {overlay}
                 </Grid.Column>
             </Grid.Row>
@@ -77,20 +80,20 @@ class GridImageContainer extends Component {
 
     renderThree() {
         const { countFrom } = this.state;
-        const { imageIDs } = this.props;
-        const imageURLs = imageIDs.map(id => noAuthStatic(`/images/others/${id}?size=origin`));
+        const { images } = this.props;
+        const imageURLs = images.map(image => noAuthStatic(`/images/others/${image.id}?size=origin`));
         const overlay = !countFrom || countFrom > 5 || imageURLs.length > countFrom && [4, 5].includes(+countFrom) ? this.renderCountOverlay(true) : this.renderOverlay(conditionalRender ? 3 : 4);
         const conditionalRender = imageURLs.length == 4 || imageURLs.length > +countFrom && +countFrom == 4;
 
         return <Grid>
             <Grid.Row columns={3} className="no-vertical-padding">
-                <Grid.Column className="border height-three background" onClick={this.openModal.bind(this, conditionalRender ? 1 : 2)} style={{ background: `url(${conditionalRender ? imageURLs[1] : imageURLs[2]})` }}>
+                <Grid.Column className="border height-three background pointer" onClick={this.openModal.bind(this, conditionalRender ? 1 : 2)} style={{ background: `url(${conditionalRender ? imageURLs[1] : imageURLs[2]})` }}>
                     {this.renderOverlay(conditionalRender ? 1 : 2)}
                 </Grid.Column>
-                <Grid.Column className="border height-three background" onClick={this.openModal.bind(this, conditionalRender ? 2 : 3)} style={{ background: `url(${conditionalRender ? imageURLs[2] : imageURLs[3]})` }}>
+                <Grid.Column className="border height-three background pointer" onClick={this.openModal.bind(this, conditionalRender ? 2 : 3)} style={{ background: `url(${conditionalRender ? imageURLs[2] : imageURLs[3]})` }}>
                     {this.renderOverlay(conditionalRender ? 2 : 3)}
                 </Grid.Column>
-                <Grid.Column className="border height-three background" onClick={this.openModal.bind(this, conditionalRender ? 3 : 4)} style={{ background: `url(${conditionalRender ? imageURLs[3] : imageURLs[4]})` }}>
+                <Grid.Column className="border height-three background pointer" onClick={this.openModal.bind(this, conditionalRender ? 3 : 4)} style={{ background: `url(${conditionalRender ? imageURLs[3] : imageURLs[4]})` }}>
                     {overlay}
                 </Grid.Column>
             </Grid.Row>
@@ -103,19 +106,19 @@ class GridImageContainer extends Component {
     }
 
     renderCountOverlay(more) {
-        const { imageIDs } = this.props;
+        const { images } = this.props;
         const { countFrom } = this.state;
-        const extra = imageIDs.length - (countFrom && countFrom > 5 ? 5 : countFrom);
+        const extra = images.length - (countFrom && countFrom > 5 ? 5 : countFrom);
 
         return [more && <div key="count" className="cover"></div>, more && <div key="count-sub" className="cover-text" style={{ fontSize: '200%' }}><p>+{extra}</p></div>]
     }
 
     render() {
         const { countFrom } = this.state;
-        const { imageIDs } = this.props;
-        const imagesToShow = [...imageIDs];
+        const { images } = this.props;
+        const imagesToShow = [...images];
 
-        if (countFrom && imageIDs.length > countFrom) {
+        if (countFrom && images.length > countFrom) {
             imagesToShow.length = countFrom;
         }
 
@@ -140,7 +143,7 @@ GridImageContainer.propTypes = {
 };
 
 const mapDispatchToProps = (dispatch) => ({
-    openThreaterModal: (postImage) => dispatch(threaterActions.openModal(postImage))
+    openThreaterModal: (post) => dispatch(threaterActions.openModal(post))
 });
 
 export default connect(null, mapDispatchToProps)(GridImageContainer);
