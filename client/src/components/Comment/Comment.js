@@ -161,7 +161,11 @@ class Comment extends Component {
                                         </SemanticComment.Action>
                                         <Dot style={{ marginLeft: 0 }} />
                                         {getDiffFromPast(createdAt)}
-                                        {reactCount > 0 && <Fragment><Dot /> {reactCount} {pruralize("Like", reactCount)}</Fragment>}
+                                        {reactCount > 0 &&
+                                            <Fragment>
+                                                <Dot />
+                                                <ClickableText> {reactCount} {pruralize("Like", reactCount)}</ClickableText>
+                                            </Fragment>}
                                     </SemanticComment.Actions>}
 
                                 {notFetchedReplyCount > 0 &&

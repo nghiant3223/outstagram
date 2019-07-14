@@ -1,16 +1,16 @@
-import React, { Component } from 'react';
-import { Comment as SemanticReply, Icon } from "semantic-ui-react";
+import React, { Component, Fragment } from 'react';
+import { Comment as SemanticReply } from "semantic-ui-react";
 import { Link } from 'react-router-dom';
+import pruralize from "pluralize";
 
 import Dot from '../Dot/Dot';
 import Avatar from '../Avatar/Avatar';
 import { getDiffFromPast } from '../../utils/time';
-import * as postServices from "../../services/post.service";
 import * as reactableServices from "../../services/reactable.service";
 import * as commentService from "../../services/comment.service";
-import PostInput from '../PostInput/PostInput';
 
 import "./Reply.css";
+import ClickableText from '../ClickableText/ClickableText';
 
 class Reply extends Component {
     constructor(props) {
@@ -18,7 +18,8 @@ class Reply extends Component {
 
         this.state = {
             reply: undefined,
-            reacted: props.reacted
+            reacted: props.reacted,
+            reactCount: props.reactCount
         }
     }
 
@@ -45,7 +46,7 @@ class Reply extends Component {
             reactableServices.react(reactableID);
         }
 
-        this.setState((prevState) => ({ reacted: !prevState.reacted }));
+        this.setState((prevState) => ({ reacted: !prevState.reacted, reactCount: prevState.reactCount + (reacted ? -1 : 1) }));
     }
 
     onReplyClick = () => {
@@ -54,7 +55,7 @@ class Reply extends Component {
     }
 
     render() {
-        const { reply } = this.state;
+        const { reply, reactCount } = this.state;
 
         // If reply is not submitted
         if (reply === undefined) {
@@ -86,6 +87,11 @@ class Reply extends Component {
                                         <SemanticReply.Action><div onClick={this.onReplyClick}>Reply</div></SemanticReply.Action>
                                         <Dot style={{ marginLeft: 0 }} />
                                         {getDiffFromPast(createdAt)}
+                                        {reactCount > 0 &&
+                                            <Fragment>
+                                                <Dot />
+                                                <ClickableText> {reactCount} {pruralize("Like", reactCount)}</ClickableText>
+                                            </Fragment>}
                                     </SemanticReply.Actions>}
                             </SemanticReply.Content>
                         </div>

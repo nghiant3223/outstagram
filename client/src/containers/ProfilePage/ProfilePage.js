@@ -57,15 +57,6 @@ class ProfilePage extends Component {
             );
         }
 
-        const images = ['https://unsplash.it/100/400',
-            'https://www.gettyimages.ie/gi-resources/images/Homepage/Hero/UK/CMS_Creative_164657191_Kingfisher.jpg',
-            // 'https://images.pexels.com/photos/1133957/pexels-photo-1133957.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
-            // 'https://cdn.pixabay.com/photo/2016/10/27/22/53/heart-1776746_960_720.jpg',
-            // 'https://images.pexels.com/photos/257840/pexels-photo-257840.jpeg?auto=compress&cs=tinysrgb&h=350',
-            // "https://images.pexels.com/photos/67636/rose-blue-flower-rose-blooms-67636.jpeg?auto=compress&cs=tinysrgb&h=350",
-            "https://cdn.pixabay.com/photo/2015/04/19/08/32/rose-729509__340.jpg"]
-
-
         return (
             <div>
                 <Container className="ProfileSummaryContainer">
@@ -78,7 +69,7 @@ class ProfilePage extends Component {
                 </Container>
 
                 <Container className="ProfileBodyContainer" white={false}>
-                    {posts.map((post) => <Post images={images} {...post} key={post.id} />)}
+                    {posts.map((post) => <Post {...post} key={post.id} />)}
                 </Container>
             </div>
         )
