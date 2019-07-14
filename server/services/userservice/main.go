@@ -69,8 +69,8 @@ func (s *UserService) GetFollowings(userID uint) []*models.User {
 	return s.userRepo.GetFollowings(userID)
 }
 
-func (s *UserService) CheckFollow(following, follower uint) (bool, error) {
-	return s.userRepo.CheckFollow(following, follower)
+func (s *UserService) CheckFollow(follow, followed uint) (bool, error) {
+	return s.userRepo.CheckFollow(follow, followed)
 }
 
 func (s *UserService) Follow(following, follower uint) error {

@@ -46,7 +46,7 @@ func (mc *Controller) GetNewsFeed(c *gin.Context) {
 			return
 		}
 
-		dtoPost, err := mc.postService.GetDTOPost(post, userID)
+		dtoPost, err := mc.postService.GetDTOPost(post, userID, userID)
 		if err != nil {
 			if gorm.IsRecordNotFoundError(err) {
 				utils.ResponseWithError(c, http.StatusNotFound, "Post not found", err.Error())

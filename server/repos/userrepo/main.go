@@ -150,8 +150,8 @@ func (r *UserRepo) GetFollowingsWithAffinity(userID uint) []*models.User {
 	return users
 }
 
-func (r *UserRepo) CheckFollow(following, follower uint) (bool, error) {
-	rows, err := r.db.Raw("SELECT 1 FROM follows WHERE user_follow_id = ? AND user_followed_id = ?", following, follower).Rows()
+func (r *UserRepo) CheckFollow(follow, followed uint) (bool, error) {
+	rows, err := r.db.Raw("SELECT 1 FROM follows WHERE user_follow_id = ? AND user_followed_id = ?", follow, followed).Rows()
 	if err != nil {
 		return false, err
 	}

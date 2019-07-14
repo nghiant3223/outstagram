@@ -7,16 +7,16 @@ import (
 	"outstagram/server/middlewares"
 )
 
-func StoryAPIRouter(router *gin.RouterGroup) {
+func StoryAPIRouter(router *gin.Engine, routerGroup *gin.RouterGroup) {
 	storyController, err := injection.InitializeStoryController()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
 
-	router.Use(middlewares.VerifyToken(true))
+	routerGroup.Use(middlewares.VerifyToken(true))
 
-	router.GET("", storyController.GetMyStoryBoard)
+	routerGroup.GET("", storyController.GetMyStoryBoard)
 
-	router.POST("", storyController.CreateStory)
-	router.POST("/:storyID/views", storyController.ViewStory)
+	routerGroup.POST("", storyController.CreateStory)
+	routerGroup.POST("/:storyID/views", storyController.ViewStory)
 }

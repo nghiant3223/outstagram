@@ -7,16 +7,16 @@ import (
 	"outstagram/server/middlewares"
 )
 
-func FollowAPIRouter(router *gin.RouterGroup) {
+func FollowAPIRouter(router *gin.Engine, routerGroup *gin.RouterGroup) {
 	followController, err := injection.InitializeFollowController()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
 
-	router.Use(middlewares.VerifyToken(true))
+	routerGroup.Use(middlewares.VerifyToken(true))
 
-	router.POST("/:followingID", followController.CreateFollow)
+	routerGroup.POST("/:followingID", followController.CreateFollow)
 
-	router.DELETE("/:followingID", followController.RemoveFollow)
+	routerGroup.DELETE("/:followingID", followController.RemoveFollow)
 }
 

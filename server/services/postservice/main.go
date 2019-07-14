@@ -86,7 +86,7 @@ func (s *PostService) GetPostByID(postID, userID uint) (*models.Post, error) {
 }
 
 // getDTOPost maps post, including post's images, post's comments into a DTO object
-func (s *PostService) GetDTOPost(post *models.Post, userID uint) (*dtomodels.Post, error) {
+func (s *PostService) GetDTOPost(post *models.Post, userID, audienceUserID uint) (*dtomodels.Post, error) {
 	// Set basic post's info
 	dtoPost := dtomodels.Post{
 		ID:            post.ID,
@@ -100,8 +100,8 @@ func (s *PostService) GetDTOPost(post *models.Post, userID uint) (*dtomodels.Pos
 		OwnerID:       post.UserID,
 		OwnerFullname: post.User.Fullname,
 		ReactCount:    s.reactableService.GetReactCount(post.ReactableID),
-		Reacted:       s.reactableService.CheckUserReaction(userID, post.ReactableID),
-		Reactors:      s.reactableService.GetReactorDTOs(post.ReactableID, userID, 5),
+		Reacted:       s.reactableService.CheckUserReaction(audienceUserID, post.ReactableID),
+		Reactors:      s.reactableService.GetReactorDTOs(post.ReactableID, audienceUserID, 5, 0),
 	}
 
 	// Map post's images to DTO
@@ -131,7 +131,7 @@ func (s *PostService) GetDTOPost(post *models.Post, userID uint) (*dtomodels.Pos
 	dtoPost.CommentCount = commentable.CommentCount
 	for _, comment := range commentable.Comments {
 		dtoComment := comment.ToDTO()
-		dtoComment.Reacted = s.reactableService.CheckUserReaction(userID, comment.ReactableID)
+		dtoComment.Reacted = s.reactableService.CheckUserReaction(audienceUserID, comment.ReactableID)
 		dtoPost.Comments = append(dtoPost.Comments, dtoComment)
 	}
 

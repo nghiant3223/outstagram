@@ -108,7 +108,7 @@ func (r *ReactableRepo) GetVisibility(reactableID uint) (privacyLevel.Privacy, u
 	return 0, 0, errors.New(fmt.Sprintf("Database error, invalid use of reactable_id = %v", reactableID))
 }
 
-func (r *ReactableRepo) GetReactorsOrderByQuality(reactableID, userID uint, limit int) []models.User {
+func (r *ReactableRepo) GetReactorsOrderByQuality(reactableID, userID uint, limit, offset int) []models.User {
 	var users []models.User
 	var currentUserIndex int
 
@@ -119,10 +119,11 @@ FROM
 	LEFT JOIN
 	(SELECT user.id as following_id, quality FROM user INNER JOIN follows ON user.id = user_followed_id WHERE user_follow_id = ?) followings
 	ON reactors.id = following_id
-ORDER BY quality DESC 
+ORDER BY quality DESC
 LIMIT ?
+OFFSET ?
 `
-	r.db.Raw(query, reactableID, userID, limit).Scan(&users)
+	r.db.Raw(query, reactableID, userID, limit, offset).Scan(&users)
 
 	for i := range users {
 		if users[i].ID == userID {

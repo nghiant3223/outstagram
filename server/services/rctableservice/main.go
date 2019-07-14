@@ -6,18 +6,25 @@ import (
 	postVisibility "outstagram/server/enums/postprivacy"
 	"outstagram/server/models"
 	"outstagram/server/repos/rctablerepo"
+	"outstagram/server/services/userservice"
+	"outstagram/server/utils"
 )
 
 type ReactableService struct {
 	reactableRepo *rctablerepo.ReactableRepo
+	userService   *userservice.UserService
 }
 
-func New(reactableRepo *rctablerepo.ReactableRepo) *ReactableService {
-	return &ReactableService{reactableRepo: reactableRepo}
+func New(reactableRepo *rctablerepo.ReactableRepo,
+	userService *userservice.UserService) *ReactableService {
+	return &ReactableService{
+		reactableRepo: reactableRepo,
+		userService:   userService,
+	}
 }
 
-func (s *ReactableService) GetReactorsOrderByQuality(reactableID, userID uint, limit int) []models.User {
-	return s.reactableRepo.GetReactorsOrderByQuality(reactableID, userID, limit)
+func (s *ReactableService) GetReactorsOrderByQuality(reactableID, userID uint, limit, offset int) []models.User {
+	return s.reactableRepo.GetReactorsOrderByQuality(reactableID, userID, limit, offset)
 }
 
 func (s *ReactableService) GetReactCount(reactableID uint) int {
@@ -28,21 +35,25 @@ func (s *ReactableService) GetVisibilityByID(reactableID uint) (postVisibility.P
 	return s.reactableRepo.GetVisibility(reactableID)
 }
 
-func (s *ReactableService) GetReactors(reactableID, userID uint, limit int) []models.User {
-	return s.reactableRepo.GetReactorsOrderByQuality(reactableID, userID, limit)
+func (s *ReactableService) GetReactors(reactableID, userID uint, limit, offset int) []models.User {
+	return s.reactableRepo.GetReactorsOrderByQuality(reactableID, userID, limit, offset)
 }
 
-func (s *ReactableService) GetReactorDTOs(reactableID, userID uint, limit int) []dtomodels.BasicUser {
-	var basicUsers []dtomodels.BasicUser
-	for _, user := range s.reactableRepo.GetReactorsOrderByQuality(reactableID, userID, limit) {
-		basicUsers = append(basicUsers, user.ToBasicUserDTO())
+func (s *ReactableService) GetReactorDTOs(reactableID, userID uint, limit, offset int) []dtomodels.BasicUser {
+	var reactors []dtomodels.BasicUser
+	for _, user := range s.reactableRepo.GetReactorsOrderByQuality(reactableID, userID, limit, offset) {
+		dtoReactor := user.ToBasicUserDTO()
+		followed, _ := s.userService.CheckFollow(userID, user.ID)
+		dtoReactor.Followed = utils.NewBoolPointer(followed)
+		reactors = append(reactors, dtoReactor)
 	}
-	return basicUsers
+
+	return reactors
 }
 func (s *ReactableService) GetReactorsFullname(reactableID, userID uint) []string {
 	var users []string
 
-	for _, user := range s.GetReactorsOrderByQuality(reactableID, userID, constants.ReactorCount) {
+	for _, user := range s.GetReactorsOrderByQuality(reactableID, userID, constants.ReactorCount, 0) {
 		users = append(users, user.Fullname)
 	}
 

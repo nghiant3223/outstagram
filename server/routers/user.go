@@ -8,14 +8,17 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func UserAPIRouter(router *gin.RouterGroup) {
+func UserAPIRouter(router *gin.Engine, routerGroup *gin.RouterGroup) {
 	userController, err := injection.InitializeUserController()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
 
-	// TODO: Handle this route for case that does not require verifyToken
-	router.GET("/:userID", middlewares.VerifyToken(true), userController.GetUsersInfo)
-	router.GET("/:userID/posts", middlewares.VerifyToken(false), userController.GetUsersInfo)
-	router.GET("/:userID/storyboard", userController.GetUserStoryBoard)
+	routerGroup.Use(middlewares.VerifyToken(true))
+
+	routerGroup.GET("/:userID", userController.GetUsersInfo)
+
+	routerGroup.GET("/:userID/posts", userController.GetUserPosts)
+
+	routerGroup.GET("/:userID/storyboard", userController.GetUserStoryBoard)
 }

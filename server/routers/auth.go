@@ -6,12 +6,12 @@ import (
 	"outstagram/server/injection"
 )
 
-func AuthAPIRouter(router *gin.RouterGroup) {
+func AuthAPIRouter(router *gin.Engine, routerGroup *gin.RouterGroup) {
 	authController, err := injection.InitializeAuthController()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
 
-	router.POST("/register", authController.Register)
-	router.POST("/login", authController.Login)
+	routerGroup.POST("/register", authController.Register)
+	routerGroup.POST("/login", authController.Login)
 }

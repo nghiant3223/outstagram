@@ -33,19 +33,19 @@ func main() {
 
 	apiRouter := router.Group("/api")
 	{
-		routers.MeAPIRouter(apiRouter.Group("/me"))
-		routers.AuthAPIRouter(apiRouter.Group("/auth"))
-		routers.UserAPIRouter(apiRouter.Group("/users"))
-		routers.PostAPIRouter(apiRouter.Group("/posts"))
-		routers.StoryAPIRouter(apiRouter.Group("/stories"))
-		routers.FollowAPIRouter(apiRouter.Group("/follows"))
-		routers.ReactAPIRouter(apiRouter.Group("/reactions"))
-		routers.CommentableAPIRouter(apiRouter.Group("/commentable"))
+		routers.MeAPIRouter(router, apiRouter.Group("/me"))
+		routers.AuthAPIRouter(router, apiRouter.Group("/auth"))
+		routers.UserAPIRouter(router, apiRouter.Group("/users"))
+		routers.PostAPIRouter(router, apiRouter.Group("/posts"))
+		routers.StoryAPIRouter(router, apiRouter.Group("/stories"))
+		routers.FollowAPIRouter(router, apiRouter.Group("/follows"))
+		routers.ReactAPIRouter(router, apiRouter.Group("/reactables"))
+		routers.CommentableAPIRouter(router, apiRouter.Group("/commentables"))
 	}
 
 	staticRouter := router.Group("/static")
 	{
-		routers.ImageStaticRouter(staticRouter.Group("/images"))
+		routers.ImageStaticRouter(router, staticRouter.Group("/images"))
 	}
 
 	PORT := os.Getenv("PORT")

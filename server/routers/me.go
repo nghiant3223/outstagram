@@ -7,15 +7,16 @@ import (
 	"outstagram/server/middlewares"
 )
 
-func MeAPIRouter(router *gin.RouterGroup) {
+func MeAPIRouter(router *gin.Engine, routerGroup *gin.RouterGroup) {
 	meController, err := injection.InitializeMeController()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
 
-	router.Use(middlewares.VerifyToken(true))
+	routerGroup.Use(middlewares.VerifyToken(true))
 
-	router.GET("",  meController.GetMe)
-	router.GET("/newsfeed", meController.GetNewsFeed)
-	router.GET("/storyfeed", meController.GetStoryFeed)
+	routerGroup.GET("",  meController.GetMe)
+	routerGroup.GET("/newsfeed", meController.GetNewsFeed)
+	routerGroup.GET("/storyfeed", meController.GetStoryFeed)
+	routerGroup.GET("/posts", middlewares.RedirectToDuplicateRoute(router, "/api/users/%v/posts"))
 }

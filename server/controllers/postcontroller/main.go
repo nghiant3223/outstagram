@@ -14,6 +14,14 @@ type Controller struct {
 	viewableService  *vwableservice.ViewableService
 }
 
-	func New(postService *postservice.PostService, imageService *imgservice.ImageService, postImageService *postimgservice.PostImageService, viewableService *vwableservice.ViewableService) *Controller {
-		return &Controller{postService: postService, imageService: imageService, postImageService: postImageService, viewableService: viewableService}
+func New(postService *postservice.PostService,
+	imageService *imgservice.ImageService,
+	postImageService *postimgservice.PostImageService,
+	viewableService *vwableservice.ViewableService) *Controller {
+	return &Controller{
+		postService:      postService,
+		imageService:     imageService,
+		postImageService: postImageService,
+		viewableService:  viewableService,
 	}
+}
