@@ -12,10 +12,32 @@ import PostInput from '../PostInput/PostInput';
 
 import * as threaterAction from "../../actions/threater.modal";
 import PostHeader from '../PostHeader/PostHeader';
+import { noAuthStatic } from '../../axios';
 
 class ThreaterModal extends Component {
+    state = {
+        currentIndex: -1
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (this.props.post !== nextProps.post && nextProps.post !== undefined) {
+            this.setState({ currentIndex: nextProps.post.currentIndex })
+        }
+    }
+
+    onNextClick = () => {
+        const { post: { imageIDs } } = this.props;
+        this.setState((prevState) => ({ currentIndex: (prevState.currentIndex + 1) % imageIDs.length }));
+    }
+
+    onPrevClick = () => {
+        const { post: { imageIDs } } = this.props;
+        this.setState((prevState) => ({ currentIndex: (prevState.currentIndex - 1) % imageIDs.length }));
+    }
+
     render() {
-        const { isModalOpen, closeModal } = this.props;
+        const { isModalOpen, closeModal, post } = this.props;
+        const { currentIndex } = this.state;
 
         return (
             <Modal size="fullscreen" basic className="ThreaterModal"
@@ -24,50 +46,58 @@ class ThreaterModal extends Component {
                 closeOnDimmerClick
                 open={isModalOpen}
                 onClose={closeModal}>
-                <div className="ThreaterContainer">
-                    <div className="ThreaterContainer__ImageContainer">
-                        <AmpImage src="https://unsplash.it/1000/400" fitType="contain" container="auto" />
-                        <div className="ThreaterContainer__ImageContainer__Navigation ThreaterContainer__ImageContainer__Navigation--Prev"><Icon name="chevron left" size="big" color="grey" inverted /></div>
-                        <div className="ThreaterContainer__ImageContainer__Navigation ThreaterContainer__ImageContainer__Navigation--Next"><Icon name="chevron right" size="big" color="grey" inverted /></div>
-                    </div>
+                {post &&
+                    <div className="ThreaterContainer">
+                        <div className="ThreaterContainer__ImageContainer" id="x">
+                            <AmpImage src={noAuthStatic(`/images/others/${post.imageIDs[currentIndex]}`, { size: "origin" })} fit="contain" container="auto" />
 
-                    <div className="ThreaterContainer__InfoContainer">
-                        <PostHeader fullname="Trọng Nghĩa" createdAt={"5 minute ago"} />
-
-                        <div className="ThreaterContainer__InfoContainer__Description">
-                            {/* <p className="ThreaterContainer__InfoContainer__Description__Add">Add description</p> */}
-                            <p>This is the description</p>
+                            <div className="ThreaterContainer__ImageContainer__Navigation ThreaterContainer__ImageContainer__Navigation--Prev"
+                                onClick={this.onPrevClick}>
+                                <Icon name="chevron left" size="big" color="grey" inverted />
+                            </div>
+                            <div className="ThreaterContainer__ImageContainer__Navigation ThreaterContainer__ImageContainer__Navigation--Next"
+                                onClick={this.onNextClick}>
+                                <Icon name="chevron right" size="big" color="grey" inverted />
+                            </div>
                         </div>
 
-                        <div>
-                            <FeedbackSummary />
-                        </div>
+                        <div className="ThreaterContainer__InfoContainer">
+                            <PostHeader fullname="Trọng Nghĩa" createdAt={"5 minute ago"} />
 
-                        <div>
-                            <PostAction />
-                        </div>
+                            <div className="ThreaterContainer__InfoContainer__Description">
+                                {/* <p className="ThreaterContainer__InfoContainer__Description__Add">Add description</p> */}
+                                <p>This is the description</p>
+                            </div>
 
-                        <div className="ThreaterContainer__InfoContainer__CommentContainer">
-                            <Comment />
-                            <Comment />
-                            <Comment />
-                            <Comment />
-                            <Comment />
-                            <Comment />
-                            <Comment />
-                        </div>
+                            <div>
+                                <FeedbackSummary />
+                            </div>
 
-                        <div>
-                            <PostInput inverted={true} />
+                            <div>
+                                <PostAction />
+                            </div>
+
+                            <div className="ThreaterContainer__InfoContainer__CommentContainer">
+                                <Comment />
+                                <Comment />
+                                <Comment />
+                                <Comment />
+                                <Comment />
+                                <Comment />
+                                <Comment />
+                            </div>
+
+                            <div>
+                                <PostInput inverted={true} />
+                            </div>
                         </div>
-                    </div>
-                </div>
+                    </div>}
             </Modal>
         )
     }
 }
 
-const mapStateToProps = ({ threaterReducer: { isModalOpen } }) => ({ isModalOpen });
+const mapStateToProps = ({ threaterReducer: { isModalOpen, onDisplayPost: post } }) => ({ isModalOpen, post });
 
 const mapDispatchToProps = (dispatch) => ({
     closeModal: () => dispatch(threaterAction.closeModal())

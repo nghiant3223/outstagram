@@ -44,6 +44,8 @@
 
 .ThreaterContainer__InfoContainer__CommentContainer {
   overflow-y: auto;
+  padding-top: 1em;
+  padding-bottom: 1em;
 }
 
 .ThreaterContainer__InfoContainer__CommentContainer > div:last-child {

@@ -90,7 +90,7 @@ class Post extends Component {
 
     render() {
         const { reacted, reactCount, comments, commentCount, isLoadingMoreComment } = this.state;
-        const { images, ownerFullname, createdAt, reactors, content, commentableID, reactableID } = this.props;
+        const { images, imageID, ownerFullname, createdAt, reactors, content, commentableID, reactableID } = this.props;
 
         return (
             <div className="Post">
@@ -100,32 +100,35 @@ class Post extends Component {
                     {content ? <p>{content}</p> : <p className="ThreaterContainer__InfoContainer__Description__Add">Add description</p>}
                 </div>
 
-                <GridImageContainer images={images.map(image => noAuthStatic(`/images/others/${image.id}`, { size: "origin" }))} />
-
                 <div>
-                    <FeedbackSummary reactableID={reactableID} reactors={reactors} commentCount={commentCount} reacted={reacted} reactCount={reactCount} displayCommentCount={comments.length} />
+                    <GridImageContainer imageIDs={images ? images.map(image => image.id) : [imageID]} />
                 </div>
+
+                {reactors &&
+                    <div>
+                        <FeedbackSummary reactableID={reactableID} reactors={reactors} commentCount={commentCount} reacted={reacted} reactCount={reactCount} displayCommentCount={comments.length} />
+                    </div>}
 
                 <div>
                     <PostAction onReactClick={this.onReactClick} reacted={reacted} onCommentClick={this.onCommentButtonClick} />
                 </div>
 
-                <div className="ThreaterContainer__InfoContainer__CommentContainer">
-                    {comments.length < commentCount &&
-                        <div onClick={this.onMoreCommentClick} style={{ cursor: "pointer" }}>
-                            <Icon name="reply" color="blue" className="MoreCommentIcon" />
-                            <ClickableText>See more comments</ClickableText>
-                            {isLoadingMoreComment && <Loading />}
-                        </div>}
-                    {comments.map((comment) => <Comment {...comment} key={comment.id} replaceComment={this.replaceComment} commentableID={commentableID} />)}
-                </div>
+                {comments.length > 0 &&
+                    <div className="ThreaterContainer__InfoContainer__CommentContainer">
+                        {comments.length < commentCount &&
+                            <div onClick={this.onMoreCommentClick} style={{ cursor: "pointer" }}>
+                                <Icon name="reply" color="blue" className="MoreCommentIcon" />
+                                <ClickableText>See more comments</ClickableText>
+                                {isLoadingMoreComment && <Loading />}
+                            </div>}
+                        {comments.map((comment) => <Comment {...comment} key={comment.id} replaceComment={this.replaceComment} commentableID={commentableID} />)}
+                    </div>}
 
                 <div>
                     <PostInput inverted onSubmit={this.onCommentSubmit} ref={el => this.postInput = el} isCommentInput style={{ fontSize: "1.25em" }} placeholder="Write your comment ..." />
                 </div>
-
             </div>
-        )
+        );
     }
 }
 

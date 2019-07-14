@@ -2,9 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types'
 
 import "./AmpImage.css";
+import { capitalize } from '../../utils/lang';
 
 function AmpImage(props) {
-    const { fitType, src, container } = props;
+    const { fit, src, container } = props;
 
     const style = {};
     if (typeof container === "object") {
@@ -13,14 +14,15 @@ function AmpImage(props) {
     }
 
     return (
-        <div className={container === "auto" ? "AutoResizeContainer" : "FixedContainer"} style={{ ...style }}>
-            <amp-img class={fitType === "contain" ? "Contain" : "Cover"} layout="fill" src={src}></amp-img>
+        <div style={{ ...style }}
+            className={container === "auto" ? "AutoResizeContainer" : "FixedContainer"}
+            dangerouslySetInnerHTML={{ __html: `<amp-img class="${capitalize(fit)}" layout="fill" src="${src}"/>` }}>
         </div>
     );
 }
 
 AmpImage.propTypes = {
-    fitType: PropTypes.oneOf(["contain", "cover"]).isRequired,
+    fit: PropTypes.oneOf(["contain", "cover"]).isRequired,
     src: PropTypes.string.isRequired,
     container: PropTypes.oneOfType([PropTypes.oneOf(["auto"]), PropTypes.shape({ width: PropTypes.number.isRequired, height: PropTypes.number.isRequired })])
 }
