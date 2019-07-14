@@ -48,7 +48,7 @@ class Post extends Component {
     onCommentSubmit = (content) => {
         const { commentableID } = this.props;
         const { id, fullname } = this.props.user;
-        const comment = { content, ownerFullname: fullname, ownerID: id, isNew: true, id: genUID(), commentableID, reacted: false, replyCount: 0 }
+        const comment = { content, ownerFullname: fullname, ownerID: id, isNew: true, id: genUID(), commentableID, reacted: false, replyCount: 0, reactCount: 0 }
         this.setState((prevState) => ({ comments: [...prevState.comments, comment], commentCount: prevState.commentCount + 1 }));
     }
 
@@ -121,7 +121,7 @@ class Post extends Component {
                 </div>
 
                 <div>
-                    <PostInput inverted onSubmit={this.onCommentSubmit} ref={el => this.postInput = el} isCommentInput style={{fontSize: "1.25em"}} placeholder="Write your comment ..." />
+                    <PostInput inverted onSubmit={this.onCommentSubmit} ref={el => this.postInput = el} isCommentInput style={{ fontSize: "1.25em" }} placeholder="Write your comment ..." />
                 </div>
 
             </div>

@@ -27,7 +27,8 @@
   margin-right: 0.5em;
 }
 
-.Comment__ActionContainer {
+.Comment__ActionContainer,
+.Comment_MoreReplies {
   margin-left: 1.25em;
   margin-top: 0.25em;
 }

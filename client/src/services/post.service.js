@@ -10,8 +10,8 @@ export function createPost(files, urls, content) {
     return requireAuthApi.post("/posts", formData, { headers: { 'Content-Type': 'multipart/form-data' } });
 }
 
-export function getPosts(limit, offset) {
-    return requireAuthApi.get(`/posts?limit=${limit}&offset=${offset}`);
+export function getPosts(userID, limit, offset) {
+    return requireAuthApi.get(`/users/${userID}/posts?limit=${limit}&offset=${offset}`);
 }
 
 export function getUserPosts(userID, limit, offset) {

@@ -1,5 +1,6 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux'
+import pruralize from "pluralize";
 import { Comment as SemanticComment, Icon } from "semantic-ui-react";
 import { Link } from 'react-router-dom';
 
@@ -26,7 +27,9 @@ class Comment extends Component {
             reacted: props.reacted,
             replyInputShow: false,
             replies: [],
-            isLoadingMoreReply: false
+            replyCount: props.replyCount,
+            isLoadingMoreReply: false,
+            reactCount: props.reactCount
         }
     }
 
@@ -53,7 +56,7 @@ class Comment extends Component {
             reactableServices.react(reactableID);
         }
 
-        this.setState((prevState) => ({ reacted: !prevState.reacted }));
+        this.setState((prevState) => ({ reacted: !prevState.reacted, reactCount: prevState.reactCount + (reacted ? -1 : 1) }));
     }
 
     onReplyClick = () => {
@@ -70,8 +73,8 @@ class Comment extends Component {
     onReplySubmit = (content) => {
         const { commentableID } = this.props;
         const { id, fullname, username } = this.props.user;
-        const reply = { content, ownerFullname: fullname, ownerUsername: username, ownerID: id, isNew: true, id: genUID(), commentableID, reacted: false, replyCount: 0 }
-        this.setState((prevState) => ({ replies: [...prevState.replies, reply] }));
+        const reply = { content, ownerFullname: fullname, ownerUsername: username, ownerID: id, isNew: true, id: genUID(), commentableID, reacted: false, replyCount: 0, reactCount: 0 }
+        this.setState((prevState) => ({ replies: [...prevState.replies, reply], replyCount: prevState.replyCount + 1 }));
     }
 
     // Replace the temporary reply by the newly created reply
@@ -120,13 +123,13 @@ class Comment extends Component {
     }
 
     render() {
-        const { comment, replyInputShow, replies, isLoadingMoreReply } = this.state;
+        const { comment, replyInputShow, replies, replyCount, isLoadingMoreReply, reactCount } = this.state;
 
         // If comment is not submitted
         if (comment === undefined) {
-            var { ownerID, ownerFullname, content, createdAt, ownerUsername, replyCount, commentableID: postCmtableID, id, isNew } = this.props;
+            var { ownerID, ownerFullname, content, createdAt, ownerUsername, commentableID: postCmtableID, id, isNew } = this.props;
         } else {
-            var { ownerID, ownerFullname, content, createdAt, ownerUsername, replyCount, commentableID: postCmtableID, id } = this.state.comment;
+            var { ownerID, ownerFullname, content, createdAt, ownerUsername, commentableID: postCmtableID, id } = this.state.comment;
         }
 
         // `replyCount` is the total number of replies
@@ -158,12 +161,13 @@ class Comment extends Component {
                                         </SemanticComment.Action>
                                         <Dot style={{ marginLeft: 0 }} />
                                         {getDiffFromPast(createdAt)}
+                                        {reactCount > 0 && <Fragment><Dot /> {reactCount} {pruralize("Like", reactCount)}</Fragment>}
                                     </SemanticComment.Actions>}
 
                                 {notFetchedReplyCount > 0 &&
-                                    <div onClick={this.onMoreReplyClick} style={{ marginTop: "0.5em" }}>
+                                    <div onClick={this.onMoreReplyClick} className="Comment_MoreReplies" style={{ marginTop: "0.5em" }}>
                                         <Icon name="reply" color="blue" className="MoreCommentIcon" />
-                                        <ClickableText>{notFetchedReplyCount} {notFetchedReplyCount > 1 ? "replies" : "reply"}</ClickableText>
+                                        <ClickableText>{notFetchedReplyCount} {pruralize("Reply", notFetchedReplyCount)}</ClickableText>
                                         {isLoadingMoreReply && <Loading />}
                                     </div>}
 
