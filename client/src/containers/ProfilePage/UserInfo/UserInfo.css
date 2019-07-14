@@ -9,21 +9,21 @@
   margin-top: 1em;
 }
 
+.InfoHeader > div {
+  margin-left: 0.25em;
+  margin-right: 0.25em;
+}
+
 .InfoHeader__Fullname {
   font-size: 1.5em;
   line-height: 1.5em;
 }
 
-.InfoHeader__Button {
-  width: 80px;
-  margin-left: 0.5em !important;
-  text-align: center;
-}
-
 .InfoItemContainer {
   display: flex;
   justify-content: center;
-  margin-top: 1em;
+  padding-top: 1em;
+  padding-bottom: 1em;
 }
 
 .InfoItemContainer > div {

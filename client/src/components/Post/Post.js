@@ -90,7 +90,7 @@ class Post extends Component {
 
     render() {
         const { reacted, reactCount, comments, commentCount, isLoadingMoreComment } = this.state;
-        const { images, ownerFullname, createdAt, reactors, content, commentableID } = this.props;
+        const { images, ownerFullname, createdAt, reactors, content, commentableID, reactableID } = this.props;
 
         return (
             <div className="Post">
@@ -103,7 +103,7 @@ class Post extends Component {
                 <GridImageContainer images={images.map(image => noAuthStatic(`/images/others/${image.id}`, { size: "origin" }))} />
 
                 <div>
-                    <FeedbackSummary reactors={reactors} commentCount={commentCount} reacted={reacted} reactCount={reactCount} displayCommentCount={comments.length} />
+                    <FeedbackSummary reactableID={reactableID} reactors={reactors} commentCount={commentCount} reacted={reacted} reactCount={reactCount} displayCommentCount={comments.length} />
                 </div>
 
                 <div>

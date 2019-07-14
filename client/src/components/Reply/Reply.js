@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import { connect } from 'react-redux'
 import { Comment as SemanticReply } from "semantic-ui-react";
 import { Link } from 'react-router-dom';
 import pruralize from "pluralize";
@@ -6,6 +7,7 @@ import pruralize from "pluralize";
 import Dot from '../Dot/Dot';
 import Avatar from '../Avatar/Avatar';
 import { getDiffFromPast } from '../../utils/time';
+import * as reactorActions from "../../actions/reactor.action";
 import * as reactableServices from "../../services/reactable.service";
 import * as commentService from "../../services/comment.service";
 
@@ -54,6 +56,18 @@ class Reply extends Component {
         focusReplyInput();
     }
 
+    onNumberOfLikeClick = () => {
+        const { openReactorModal, isNew } = this.props;
+
+        if (!isNew) {
+            const { reactableID } = this.props;
+            openReactorModal(reactableID)
+        } else {
+            const { reactableID } = this.state.comment;
+            openReactorModal(reactableID)
+        }
+    }
+
     render() {
         const { reply, reactCount } = this.state;
 
@@ -90,7 +104,7 @@ class Reply extends Component {
                                         {reactCount > 0 &&
                                             <Fragment>
                                                 <Dot />
-                                                <ClickableText> {reactCount} {pruralize("Like", reactCount)}</ClickableText>
+                                                <ClickableText onClick={this.onNumberOfLikeClick}> {reactCount} {pruralize("Like", reactCount)}</ClickableText>
                                             </Fragment>}
                                     </SemanticReply.Actions>}
                             </SemanticReply.Content>
@@ -117,4 +131,8 @@ class Reply extends Component {
     }
 }
 
-export default Reply;
+const mapDispatchToProps = (dispatch) => ({
+    openReactorModal: (id) => dispatch(reactorActions.openModal(id))
+});
+
+export default connect(null, mapDispatchToProps)(Reply);

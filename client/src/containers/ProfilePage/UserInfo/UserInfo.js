@@ -4,6 +4,7 @@ import { Button } from 'semantic-ui-react';
 import * as userServices from '../../../services/user.service';
 
 import "./UserInfo.css";
+import FollowButton from '../../../components/FollowButton/FollowButton';
 
 class UserInfo extends Component {
     constructor(props) {
@@ -47,7 +48,7 @@ class UserInfo extends Component {
                     <div className="InfoHeader__Fullname">{user.fullname}</div>
                     {!user.isMe &&
                         (<div className="InfoHeader__Button">
-                            <Button compact size='tiny' toggle active={followed} onClick={this.onFollowClick}>{followed ? "Following" : "Follow"}</Button>
+                            <FollowButton followed={followed} userID={user.id} />
                         </div>)
                     }
                 </div>

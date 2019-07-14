@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import Dot from '../Dot/Dot';
 import Avatar from '../Avatar/Avatar';
 import { getDiffFromPast } from '../../utils/time';
+import * as reactorActions from "../../actions/reactor.action";
 import * as commentableServices from "../../services/commentable.service";
 import * as reactableServices from "../../services/reactable.service";
 import * as commentServices from "../../services/comment.service";
@@ -122,6 +123,18 @@ class Comment extends Component {
         this.replyInput.focus();
     }
 
+    onNumberOfLikeClick = () => {
+        const { openReactorModal, isNew } = this.props;
+
+        if (!isNew) {
+            const { reactableID } = this.props;
+            openReactorModal(reactableID)
+        } else {
+            const { reactableID } = this.state.comment;
+            openReactorModal(reactableID)
+        }
+    }
+
     render() {
         const { comment, replyInputShow, replies, replyCount, isLoadingMoreReply, reactCount } = this.state;
 
@@ -164,7 +177,7 @@ class Comment extends Component {
                                         {reactCount > 0 &&
                                             <Fragment>
                                                 <Dot />
-                                                <ClickableText> {reactCount} {pruralize("Like", reactCount)}</ClickableText>
+                                                <ClickableText onClick={this.onNumberOfLikeClick}> {reactCount} {pruralize("Like", reactCount)}</ClickableText>
                                             </Fragment>}
                                     </SemanticComment.Actions>}
 
@@ -204,4 +217,8 @@ class Comment extends Component {
 
 const mapStateToProps = ({ authReducer: { user } }) => ({ user });
 
-export default connect(mapStateToProps)(Comment);
+const mapDispatchToProps = (dispatch) => ({
+    openReactorModal: (id) => dispatch(reactorActions.openModal(id))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Comment);

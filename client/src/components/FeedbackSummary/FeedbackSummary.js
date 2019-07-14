@@ -1,15 +1,17 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import { connect } from 'react-redux';
 import { Icon } from 'semantic-ui-react';
 
+import * as reactorActions from "../../actions/reactor.action";
+
 import "./FeedbackSummary.css";
+import ClickableText from '../ClickableText/ClickableText';
 
 const REACTOR_DISPLAY_COUNT = 3;
 
 function FeedbackSummary(props) {
-    const { commentCount, user, reacted, reactCount, displayCommentCount } = props;
+    const { commentCount, user, reacted, reactCount, displayCommentCount, openModal, reactableID } = props;
     const reactors = props.reactors || [];
     const displayReactors = [];
     let reactorString = "";
@@ -37,7 +39,7 @@ function FeedbackSummary(props) {
     return (
         <div className="FeedbackSummary">
             <div className="FeedbackSummary__Left">
-                {reactorString && <Icon name={"heart"} color="red" inverted />}{reactorString}
+                {reactorString && <Icon name={"heart"} color="red" inverted />} <ClickableText onClick={() => openModal(reactableID)}>{reactorString}</ClickableText>
             </div>
 
             <div className="FeedbackSummary__Right">
@@ -49,4 +51,8 @@ function FeedbackSummary(props) {
 
 const mapStateToProps = ({ authReducer: { user } }) => ({ user });
 
-export default connect(mapStateToProps)(FeedbackSummary);
+const mapDispatchToProps = (dispatch) => ({
+    openModal: (id) => dispatch(reactorActions.openModal(id))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(FeedbackSummary);

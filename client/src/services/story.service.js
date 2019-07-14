@@ -21,9 +21,9 @@ export function createStory(files, urls) {
 }
 
 export function reactStory(reactableID) {
-    return requireAuthApi.post(`/reactions/${reactableID}`);
+    return requireAuthApi.post(`/reactables/${reactableID}`);
 }
 
 export function unreactStory(reactableID) {
-    return requireAuthApi.delete(`/reactions/${reactableID}`);
+    return requireAuthApi.delete(`/reactables/${reactableID}`);
 }

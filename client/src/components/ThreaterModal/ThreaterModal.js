@@ -58,7 +58,7 @@ class ThreaterModal extends Component {
                         </div>
 
                         <div>
-                            <PostInput inverted={false} />
+                            <PostInput inverted={true} />
                         </div>
                     </div>
                 </div>

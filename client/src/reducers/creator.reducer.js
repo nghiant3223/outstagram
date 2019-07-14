@@ -1,7 +1,7 @@
 import * as actionTypes from '../constants/actionTypes';
 
 const initialState = {
-    isModalOpen: true
+    isModalOpen: false
 };
 
 export default function storyReducer(state = initialState, action) {

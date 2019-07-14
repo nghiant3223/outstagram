@@ -12,7 +12,6 @@ import socket from '../../Socket';
 import "./CreatorModal.css";
 import { isImageUrl } from '../../utils/image';
 
-import Input from '../Input/Input';
 import UploadTypeSelectionContainer from './UploadTypeSelectionContainer/UploadTypeSelectionContainer';
 import UploadTypeContainer from './UploadTypeContainer/UploadTypeContainer';
 import ChosenImageContainer from './ChosenImageContainer/ChosenImageContainer';
@@ -125,21 +124,18 @@ class CreatorModal extends Component {
                     <Form onSubmit={this.onFormSubmit}>
                         {
                             this.state.renderImages.length === 0 ?
-                                (
-                                    <UploadTypeContainer expand imageURL={imageURL} onUrlInputChange={this.onUrlInputChange} triggerFileInput={this.triggerFileInput} />
-                                ) :
-                                (
-                                    <div>
-                                        <ChosenImageContainer renderImages={renderImages} />
-                                        <UploadTypeContainer expand={false} imageURL={imageURL} onUrlInputChange={this.onUrlInputChange} triggerFileInput={this.triggerFileInput} />
-                                        {uploadType === "post" && <DescriptionInput value={caption} onChange={this.onCaptionChange} />}
-                                    </div>
-                                )
+                                <UploadTypeContainer expand imageURL={imageURL} onUrlInputChange={this.onUrlInputChange} triggerFileInput={this.triggerFileInput} />
+                                :
+                                <div>
+                                    <ChosenImageContainer renderImages={renderImages} />
+                                    <UploadTypeContainer expand={false} imageURL={imageURL} onUrlInputChange={this.onUrlInputChange} triggerFileInput={this.triggerFileInput} />
+                                    {uploadType === "post" && <DescriptionInput value={caption} onChange={this.onCaptionChange} />}
+                                </div>
                         }
 
                         <UploadTypeSelectionContainer onImagesUpload={this.onImagesUpload} closeModal={this.props.closeModal} onUploadTypeChange={this.onUploadTypeChange} />
 
-                        <input type="file" ref={el => this.fileInput = el} multiple onClick={e => e.target.value = null} onChange={this.onFileInputChange} style={{ display: "none" }} uploadType={uploadType} />
+                        <input type="file" ref={el => this.fileInput = el} multiple onClick={e => e.target.value = null} onChange={this.onFileInputChange} style={{ display: "none" }} />
                     </Form>
                 </Modal>
             </div>

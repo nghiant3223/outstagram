@@ -45,16 +45,29 @@ func InitializeUserController() (*usercontroller.Controller, error) {
 	wire.Build(
 		usercontroller.New,
 
+		vwablerepo.New,
+		vwableservice.New,
+
 		userservice.New,
 		userrepo.New,
+
+		postservice.New,
+		postrepo.New,
+
+		postimgservice.New,
+		postimgrepo.New,
+
+		imgservice.New,
+		imgrepo.New,
+
+		cmtableservice.New,
+		cmtablerepo.New,
 
 		storybservice.New,
 		storybrepo.New,
 
 		rctableservice.New,
 		rctablerepo.New,
-
-		cmtablerepo.New,
 
 		db.New,
 	)

@@ -1,0 +1,36 @@
+.ReactorContainer {
+    min-height: 200px;
+}
+
+.ReactorContainer__Loading {
+    min-height: 200px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.ReactorContainer__Header {
+    font-size: 1.1em;
+    font-weight: 700;
+}
+
+.ReactorContainer__Reactor {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+  align-items: center;
+}
+
+.ReactorContainer__Reactor__Container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ReactorContainer__Reactor__Container > div:nth-child(2) {
+  margin-left: 0.75em;
+  font-weight: bold;
+}
