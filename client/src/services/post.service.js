@@ -17,3 +17,11 @@ export function getPosts(userID, limit, offset) {
 export function getUserPosts(userID, limit, offset) {
     return requireAuthApi.get(`/users/:${userID}/posts?limit=${limit}&offset=${offset}`);
 }
+
+export function getPostImage(postImageID) {
+    return requireAuthApi.get(`/posts/images/${postImageID}`);
+}
+
+export function getSpecificPost(postID) {
+    return requireAuthApi.get(`/posts/specific/${postID}`);
+}

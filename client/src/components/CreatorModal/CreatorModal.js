@@ -24,7 +24,7 @@ const initialState = {
     renderImages: [],
     imageURL: "",
     caption: "",
-    uploadType: "story"
+    uploadType: "post"
 }
 
 class CreatorModal extends Component {
@@ -110,7 +110,7 @@ class CreatorModal extends Component {
     }
 
     render() {
-        const { renderImages, imageURL, caption, uploadType } = this.state;
+        const { renderImages, imageURL, caption, uploadType, isLoading } = this.state;
         const { isModalOpen, closeModal } = this.props;
 
         return (
@@ -133,7 +133,7 @@ class CreatorModal extends Component {
                                 </div>
                         }
 
-                        <UploadTypeSelectionContainer onImagesUpload={this.onImagesUpload} closeModal={this.props.closeModal} onUploadTypeChange={this.onUploadTypeChange} />
+                        <UploadTypeSelectionContainer isLoading={isLoading} onImagesUpload={this.onImagesUpload} closeModal={this.props.closeModal} onUploadTypeChange={this.onUploadTypeChange} />
 
                         <input type="file" ref={el => this.fileInput = el} multiple onClick={e => e.target.value = null} onChange={this.onFileInputChange} style={{ display: "none" }} />
                     </Form>

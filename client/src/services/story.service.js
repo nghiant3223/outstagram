@@ -5,7 +5,7 @@ export function getStoryFeed() {
 }
 
 export function getUserStoryBoard(userID) {
-    return noAuthApi.get(`/users/${userID}/storyboard`);
+    return requireAuthApi.get(`/users/${userID}/storyboard`);
 }
 
 export function createStoryView(storyID) {

@@ -47,7 +47,7 @@ class GridImageContainer extends Component {
     renderOne() {
         const { countFrom } = this.state;
         const { images } = this.props;
-        const imageURLs = images.map(image => noAuthStatic(`/images/others/${image.id}?size=origin`));
+        const imageURLs = images.map(image => noAuthStatic(`/images/others/${image.imageID}?size=origin`));
         const overlay = imageURLs.length > countFrom && countFrom == 1 ? this.renderCountOverlay(true) : this.renderOverlay();
 
         return <Grid>
@@ -62,7 +62,7 @@ class GridImageContainer extends Component {
     renderTwo() {
         const { countFrom } = this.state;
         const { images } = this.props;
-        const imageURLs = images.map(image => noAuthStatic(`/images/others/${image.id}?size=origin`));
+        const imageURLs = images.map(image => noAuthStatic(`/images/others/${image.imageID}?size=origin`));
         const overlay = imageURLs.length > countFrom && [2, 3].includes(+countFrom) ? this.renderCountOverlay(true) : this.renderOverlay();
         const conditionalRender = [3, 4].includes(imageURLs.length) || imageURLs.length > +countFrom && [3, 4].includes(+countFrom);
 
@@ -81,7 +81,7 @@ class GridImageContainer extends Component {
     renderThree() {
         const { countFrom } = this.state;
         const { images } = this.props;
-        const imageURLs = images.map(image => noAuthStatic(`/images/others/${image.id}?size=origin`));
+        const imageURLs = images.map(image => noAuthStatic(`/images/others/${image.imageID}?size=origin`));
         const overlay = !countFrom || countFrom > 5 || imageURLs.length > countFrom && [4, 5].includes(+countFrom) ? this.renderCountOverlay(true) : this.renderOverlay(conditionalRender ? 3 : 4);
         const conditionalRender = imageURLs.length == 4 || imageURLs.length > +countFrom && +countFrom == 4;
 

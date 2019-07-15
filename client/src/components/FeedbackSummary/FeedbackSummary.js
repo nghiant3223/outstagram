@@ -19,11 +19,11 @@ function FeedbackSummary(props) {
     if (reactors.length > 0) {
         if (reacted) {
             displayReactors.push("You");
-            for (let i = reactors[0].id === user.id ? 1 : 0; i < REACTOR_DISPLAY_COUNT - 1 && i < reactors.length; i++) {
+            for (let i = 1; i < REACTOR_DISPLAY_COUNT && i < reactors.length; i++) {
                 displayReactors.push(reactors[i].fullname);
             }
         } else {
-            for (let i = reactors[0].id === user.id ? 1 : 0; i < REACTOR_DISPLAY_COUNT && i < reactors.length; i++) {
+            for (let i = 0; i < REACTOR_DISPLAY_COUNT && i < reactors.length; i++) {
                 displayReactors.push(reactors[i].fullname);
             }
         }
@@ -39,7 +39,7 @@ function FeedbackSummary(props) {
     return (
         <div className="FeedbackSummary">
             <div className="FeedbackSummary__Left">
-                {reactorString && <Icon name={"heart"} color="red" inverted />} <ClickableText onClick={() => openModal(reactableID)}>{reactorString}</ClickableText>
+                {reactCount > 0 && <Icon name={"heart"} color="red" inverted />} <ClickableText onClick={() => openModal(reactableID)}>{reactorString}</ClickableText>
             </div>
 
             <div className="FeedbackSummary__Right">

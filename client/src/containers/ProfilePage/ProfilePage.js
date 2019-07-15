@@ -69,7 +69,7 @@ class ProfilePage extends Component {
                 </Container>
 
                 <Container className="ProfileBodyContainer" white={false}>
-                    {posts.map((post) => <Post {...post} key={post.id} />)}
+                    {posts.map((post) => <Post {...post} key={post.id} showImageGrid={true} />)}
                 </Container>
             </div>
         )

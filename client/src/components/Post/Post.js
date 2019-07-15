@@ -27,21 +27,40 @@ class Post extends Component {
         this.state = {
             reacted: props.reacted,
             reactCount: props.reactCount,
+            reactors: props.reactors,
             comments: props.comments || [],
             commentCount: props.commentCount,
-            isLoadingMoreComment: false
+            isLoadingMoreComment: false,
+            description: props.description
         }
     }
 
     onReactClick = async () => {
         const { reacted } = this.state;
         const { reactableID } = this.props;
+        const { id, fullname } = this.props.user;
+
         if (reacted) {
             reactableServices.unreact(reactableID);
         } else {
             reactableServices.react(reactableID);
         }
-        this.setState((prevState) => ({ reacted: !prevState.reacted, reactCount: prevState.reactCount + (prevState.reacted ? -1 : 1) }));
+
+        this.setState((prevState) => {
+            if (!reacted) {
+                return {
+                    reacted: !prevState.reacted,
+                    reactCount: prevState.reactCount + 1,
+                    reactors: [{ id, fullname }, ...prevState.reactors]
+                }
+            } else {
+                return {
+                    reacted: !prevState.reacted,
+                    reactCount: prevState.reactCount - 1,
+                    reactors: prevState.reactors.filter((reactor) => reactor.id !== id)
+                }
+            }
+        });
     }
 
     // Create temporary comment
@@ -71,7 +90,13 @@ class Post extends Component {
     }
 
     onCommentButtonClick = () => {
-        this.postInput.scrollTo();
+        const { isTheater } = this.props;
+
+        if (isTheater !== undefined) {
+            this.postInput.scrollTo();
+        } else {
+            this.postInput.focus();
+        }
     }
 
     onMoreCommentClick = async () => {
@@ -88,26 +113,40 @@ class Post extends Component {
         }
     }
 
+    renderDescription() {
+        const { content, ownerID, user } = this.props;
+
+        if (content) {
+            return <p>{content}</p>;
+        }
+
+        if (user.id !== ownerID) {
+            return null;
+        }
+
+        return <p className="ThreaterContainer__InfoContainer__Description__Add">Add description</p>
+    }
+
     render() {
-        const { reacted, reactCount, comments, commentCount, isLoadingMoreComment } = this.state;
-        const { images, imageID, ownerFullname, createdAt, reactors, content, commentableID, reactableID, viewableID } = this.props;
+        const { reacted, reactCount, reactors, comments, commentCount, isLoadingMoreComment } = this.state;
+        const { id, images, imageID, ownerFullname, createdAt, content, commentableID, reactableID, viewableID, showImageGrid } = this.props;
 
         return (
             <div className="Post">
                 <PostHeader fullname={ownerFullname} createdAt={getDiffFromPast(createdAt)} />
 
                 <div className="ThreaterContainer__InfoContainer__Description">
-                    {content ? <p>{content}</p> : <p className="ThreaterContainer__InfoContainer__Description__Add">Add description</p>}
+                    {this.renderDescription()}
                 </div>
+
+                {showImageGrid &&
+                    <div>
+                        <GridImageContainer images={images ? images : [{ id, imageID, commentableID, reactableID, viewableID, content }]} />
+                    </div>}
 
                 <div>
-                    <GridImageContainer images={images ? images : [{ id: imageID, commentableID, reactableID, viewableID, content }]} />
+                    <FeedbackSummary reactableID={reactableID} reactors={reactors} commentCount={commentCount} reacted={reacted} reactCount={reactCount} displayCommentCount={comments.length} />
                 </div>
-
-                {reactors &&
-                    <div>
-                        <FeedbackSummary reactableID={reactableID} reactors={reactors} commentCount={commentCount} reacted={reacted} reactCount={reactCount} displayCommentCount={comments.length} />
-                    </div>}
 
                 <div>
                     <PostAction onReactClick={this.onReactClick} reacted={reacted} onCommentClick={this.onCommentButtonClick} />
@@ -116,7 +155,7 @@ class Post extends Component {
                 {comments.length > 0 &&
                     <div className="ThreaterContainer__InfoContainer__CommentContainer">
                         {comments.length < commentCount &&
-                            <div onClick={this.onMoreCommentClick} style={{ cursor: "pointer" }}>
+                            <div onClick={this.onMoreCommentClick} style={{ cursor: "pointer", marginTop: "0.5em" }}>
                                 <Icon name="reply" color="blue" className="MoreCommentIcon" />
                                 <ClickableText>See more comments</ClickableText>
                                 {isLoadingMoreComment && <Loading />}
@@ -125,7 +164,7 @@ class Post extends Component {
                     </div>}
 
                 <div>
-                    <PostInput inverted onSubmit={this.onCommentSubmit} ref={el => this.postInput = el} isCommentInput style={{ fontSize: "1.25em" }} placeholder="Write your comment ..." />
+                    <PostInput isThreater={true} inverted onSubmit={this.onCommentSubmit} ref={el => this.postInput = el} isCommentInput style={{ fontSize: "1.25em" }} placeholder="Write your comment ..." />
                 </div>
             </div>
         );

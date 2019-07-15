@@ -16,6 +16,12 @@ export default function authReducer(state = initialState, action) {
         case actionTypes.AUTH_SUCCESS:
             return { ...state, isAuthenticated: true, user: action.payload };
 
+        case actionTypes.UDPATE_FOLLOWING_COUNT: {
+            const { user } = state;
+            user.followingCount += action.payload;
+            return { ...state, user };
+        }
+
         default:
             return state;
     }

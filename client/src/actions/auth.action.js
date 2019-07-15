@@ -34,3 +34,7 @@ export const getMe = () =>
             dispatch({ type: actionTypes.AUTH_FAIL });
         }
     }
+
+export function updateUserFollowingCount(isIncrement) {
+    return { type: actionTypes.UDPATE_FOLLOWING_COUNT, payload: isIncrement ? 1 : -1 }
+}

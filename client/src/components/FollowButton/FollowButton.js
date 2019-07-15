@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
+import { connect } from 'react-redux'
 import { Button, Icon } from 'semantic-ui-react';
 
 import * as userServices from "../../services/user.service";
+import * as actionTypes from "../../actions/auth.action";
 
 import "./FollowButton.css";
 
-export default function FollowButton(props) {
+function FollowButton(props) {
     const [followed, setFollowed] = useState(props.followed)
 
     const toggleFollow = () => {
-        const { userID } = props;
+        const { userID, updateFollowingCount } = props;
 
         if (!followed) {
             userServices.followUser(userID);
@@ -18,6 +20,7 @@ export default function FollowButton(props) {
         }
 
         setFollowed(!followed);
+        updateFollowingCount(followed);
     }
 
     return (
@@ -40,3 +43,9 @@ export default function FollowButton(props) {
 
     );
 }
+
+const mapDispatchToProps = (dispatch) => ({
+    updateFollowingCount: (followed) => dispatch(actionTypes.updateUserFollowingCount(!followed))
+});
+
+export default connect(null, mapDispatchToProps)(FollowButton);
