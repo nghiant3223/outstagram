@@ -36,6 +36,6 @@ func (fc *Controller) RemoveFollow(c *gin.Context) {
 		return
 	}
 
-	utils.ResponseWithSuccess(c, http.StatusCreated, "Follow user successfully", nil)
+	utils.ResponseWithSuccess(c, http.StatusNoContent, "Follow user successfully", nil)
 }
 

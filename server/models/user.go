@@ -44,8 +44,8 @@ func (u *User) ToMeDTO() dtomodels.Me {
 	}
 }
 
-func (u *User) ToBasicUserDTO() dtomodels.BasicUser {
-	return dtomodels.BasicUser{
+func (u *User) ToSimpleUser() dtomodels.SimpleUser {
+	return dtomodels.SimpleUser{
 		ID:       u.ID,
 		Fullname: u.Fullname,
 		Username: u.Username,

@@ -42,5 +42,5 @@ func (rc *Controller) CreateReaction(c *gin.Context) {
 		return
 	}
 
-	utils.ResponseWithSuccess(c, http.StatusOK, "Create react successfully", nil)
+	utils.ResponseWithSuccess(c, http.StatusCreated, "Create react successfully", nil)
 }

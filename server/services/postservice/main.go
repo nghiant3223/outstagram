@@ -10,6 +10,7 @@ import (
 	"outstagram/server/services/cmtableservice"
 	"outstagram/server/services/rctableservice"
 	"outstagram/server/services/userservice"
+	"outstagram/server/utils"
 )
 
 type PostService struct {
@@ -25,6 +26,10 @@ func New(postRepo *postrepo.PostRepo, userService *userservice.UserService, reac
 
 func (s *PostService) Save(post *models.Post) error {
 	return s.postRepo.Save(post)
+}
+
+func (s *PostService) Update(post *models.Post, values map[string]interface{}) error {
+	return s.postRepo.Update(post, values)
 }
 
 // GetUserPosts return array of all posts that user has
@@ -50,14 +55,14 @@ func (s *PostService) GetUsersPostsWithLimit(userID, limit, offset uint) ([]mode
 // GetPostByID lets user get the post that has the postID specified in parameter
 // User may be restricted to view the post due to its visibility. In such case, ErrRecordNotFound is returned.
 // `userID` is the id of user who wants to view the post
-func (s *PostService) GetPostByID(postID, userID uint) (*models.Post, error) {
+func (s *PostService) GetPostByID(postID, audienceID uint) (*models.Post, error) {
 	post, err := s.postRepo.FindByID(postID)
 
 	if err != nil {
 		return nil, err
 	}
 
-	if userID == post.UserID {
+	if audienceID == post.UserID {
 		return post, nil
 	}
 
@@ -69,12 +74,12 @@ func (s *PostService) GetPostByID(postID, userID uint) (*models.Post, error) {
 		return nil, gorm.ErrRecordNotFound
 	}
 
-	if userID == 0 {
+	if audienceID == 0 {
 		return nil, gorm.ErrRecordNotFound
 	}
 
 	// If post.Privacy is OnlyFollowers
-	ok, err := s.userService.CheckFollow(userID, post.UserID)
+	ok, err := s.userService.CheckFollow(audienceID, post.UserID)
 	if err != nil {
 		return nil, err
 	}
@@ -88,6 +93,14 @@ func (s *PostService) GetPostByID(postID, userID uint) (*models.Post, error) {
 // getDTOPost maps post, including post's images, post's comments into a DTO object
 func (s *PostService) GetDTOPost(post *models.Post, userID, audienceUserID uint) (*dtomodels.Post, error) {
 	// Set basic post's info
+
+	var imageCount int
+	if len(post.Images) > 0 {
+		imageCount = len(post.Images)
+	} else {
+		imageCount = 1
+	}
+
 	dtoPost := dtomodels.Post{
 		ID:            post.ID,
 		ViewableID:    post.ViewableID,
@@ -96,7 +109,7 @@ func (s *PostService) GetDTOPost(post *models.Post, userID, audienceUserID uint)
 		CreatedAt:     post.CreatedAt,
 		Content:       post.Content,
 		Visibility:    post.Privacy,
-		ImageCount:    len(post.Images),
+		ImageCount:    imageCount,
 		OwnerID:       post.UserID,
 		OwnerFullname: post.User.Fullname,
 		ReactCount:    s.reactableService.GetReactCount(post.ReactableID),
@@ -104,25 +117,14 @@ func (s *PostService) GetDTOPost(post *models.Post, userID, audienceUserID uint)
 		Reactors:      s.reactableService.GetReactorDTOs(post.ReactableID, audienceUserID, 5, 0),
 	}
 
-	// Map post's images to DTO
-	for _, postImage := range post.Images {
-		image := postImage.Image
-		dtoPostImage := dtomodels.PostImage{
-			ID:            postImage.ID,
-			Tiny:          image.Tiny,
-			Origin:        image.Origin,
-			Huge:          image.Huge,
-			Big:           image.Huge,
-			Medium:        image.Medium,
-			Small:         image.Small,
-			ReactableID:   postImage.ReactableID,
-			CommentableID: postImage.CommentableID,
-			ViewableID:    postImage.ViewableID,
+	if imageCount == 1 {
+		dtoPost.ImageID = utils.NewUintPointer(post.Image.ID)
+	} else {
+		for _, postImage := range post.Images {
+			dtoPost.Images = append(dtoPost.Images, dtomodels.SimplePostImage{ID: postImage.ID, ImageID: postImage.ImageID})
 		}
-		dtoPost.Images = append(dtoPost.Images, dtoPostImage)
 	}
 
-	// Get post's comments
 	commentable, err := s.commentableService.GetCommentsWithLimit(post.CommentableID, userID, constants.PostCommentCount, 0)
 	if err != nil {
 		return nil, err

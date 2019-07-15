@@ -114,5 +114,5 @@ func (sc *Controller) ViewStory(c *gin.Context) {
 		return
 	}
 
-	utils.ResponseWithSuccess(c, http.StatusOK, "Save view successfully", nil)
+	utils.ResponseWithSuccess(c, http.StatusCreated, "Save view successfully", nil)
 }

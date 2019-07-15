@@ -35,5 +35,12 @@ func (r *PostImageRepo) FindByID(id uint) (*models.PostImage, error) {
 		return nil, err
 	}
 
+	r.db.Model(&image).Related(&image.Post)
+	r.db.Model(&image.Post).Related(&image.Post.User)
+
 	return &image, nil
+}
+
+func (r *PostImageRepo) Update(post *models.Post, values map[string]interface{}) error {
+	return r.db.Model(&post).Update(values).Error
 }

@@ -7,7 +7,7 @@ import (
 // PostImage entity
 type PostImage struct {
 	gorm.Model
-	Content       uint
+	Content       *string
 	CommentableID uint
 	ViewableID    uint
 	ReactableID   uint

@@ -35,5 +35,5 @@ func (rc *Controller) RemoveReaction(c *gin.Context) {
 		return
 	}
 
-	utils.ResponseWithSuccess(c, http.StatusOK, "Remove react successfully", nil)
+	utils.ResponseWithSuccess(c, http.StatusNoContent, "Remove react successfully", nil)
 }

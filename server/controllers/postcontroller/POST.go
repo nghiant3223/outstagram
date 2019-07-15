@@ -32,8 +32,45 @@ func (pc *Controller) CreatePost(c *gin.Context) {
 
 	files := form.File["images"]
 	imageURLs := reqBody.ImageURLs
-	if len(files) < 1 && len(imageURLs) < 1 {
+
+	if len(files)+len(imageURLs) < 1 {
 		utils.ResponseWithError(c, http.StatusBadRequest, "Missing post's images", nil)
+		return
+	}
+
+	if len(files)+len(imageURLs) == 1 {
+		post := models.Post{Content: reqBody.Content, Privacy: reqBody.Visibility, UserID: userID}
+
+		var image *models.Image
+		var err error
+
+		if len(files) > 0 {
+			image, err = pc.imageService.Save(files[0], userID, false)
+		} else if len(imageURLs) > 0 {
+			image, err = pc.imageService.SaveURL(imageURLs[0], userID, false)
+		}
+
+		if err != nil {
+			utils.ResponseWithError(c, http.StatusInternalServerError, "Error while saving post's image", err.Error())
+			return
+		}
+
+		post.ImageID = image.ID
+
+		if err := pc.postService.Save(&post); err != nil {
+			utils.ResponseWithError(c, http.StatusInternalServerError, "Error while saving post", err.Error())
+			return
+		}
+
+		savedPost, err := pc.postService.GetPostByID(post.ID, userID)
+		dtoPost, err := pc.postService.GetDTOPost(savedPost, userID, userID)
+		if err != nil {
+			utils.ResponseWithError(c, http.StatusInternalServerError, "Error while saving post", err.Error())
+			return
+		}
+
+		resBody.Post = *dtoPost
+		utils.ResponseWithSuccess(c, 200, "Create post successfully", resBody)
 		return
 	}
 
@@ -89,7 +126,7 @@ func (pc *Controller) CreatePost(c *gin.Context) {
 	}
 
 	resBody.Post = *dtoPost
-	utils.ResponseWithSuccess(c, 200, "Create post successfully", resBody)
+	utils.ResponseWithSuccess(c, http.StatusCreated, "Create post successfully", resBody)
 }
 
 func (pc *Controller) ViewPost(c *gin.Context) {
@@ -125,5 +162,5 @@ func (pc *Controller) ViewPost(c *gin.Context) {
 		return
 	}
 
-	utils.ResponseWithSuccess(c, http.StatusOK, "Save view successfully", nil)
+	utils.ResponseWithSuccess(c, http.StatusCreated, "Save view successfully", nil)
 }

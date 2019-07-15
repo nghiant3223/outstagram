@@ -37,6 +37,8 @@ func (r *PostRepo) FindByID(id uint) (*models.Post, error) {
 
 	r.db.Model(&post).Related(&post.User)
 	r.db.Model(&post).Related(&post.Images)
+	r.db.Model(&post).Related(&post.Image)
+
 	for j := 0; j < len(post.Images); j++ {
 		r.db.Model(&post.Images[j]).Related(&post.Images[j].Image)
 	}
@@ -49,6 +51,7 @@ func (r *PostRepo) GetPostsByUserIDWithLimit(userID, limit, offset uint) ([]mode
 	if err := r.db.Where("user_id = ?", userID).
 		Offset(offset).
 		Limit(limit).
+		Order("created_at desc").
 		Find(&posts).
 		Error; err != nil {
 		return nil, err
@@ -56,6 +59,7 @@ func (r *PostRepo) GetPostsByUserIDWithLimit(userID, limit, offset uint) ([]mode
 
 	for i := 0; i < len(posts); i++ {
 		r.db.Model(&posts[i]).Related(&posts[i].Images)
+		r.db.Model(&posts[i]).Related(&posts[i].Image)
 		for j := 0; j < len(posts[i].Images); j++ {
 			r.db.Model(&posts[i].Images[j]).Related(&posts[i].Images[j].Image)
 			r.db.Model(&posts[i]).Related(&posts[i].User)
@@ -67,7 +71,9 @@ func (r *PostRepo) GetPostsByUserIDWithLimit(userID, limit, offset uint) ([]mode
 
 func (r *PostRepo) GetPostsByUserID(userID uint) ([]models.Post, error) {
 	var posts []models.Post
+
 	if err := r.db.Where("user_id = ?", userID).
+		Order("created_at desc").
 		Find(&posts).
 		Error; err != nil {
 		return nil, err
@@ -75,7 +81,16 @@ func (r *PostRepo) GetPostsByUserID(userID uint) ([]models.Post, error) {
 
 	for i := 0; i < len(posts); i++ {
 		r.db.Model(&posts[i]).Related(&posts[i].Images)
+		r.db.Model(&posts[i]).Related(&posts[i].Image)
+		r.db.Model(&posts[i]).Related(&posts[i].User)
+		for j := 0; j < len(posts[i].Images); j++ {
+			r.db.Model(&posts[i].Images[j]).Related(&posts[i].Images[j].Image)
+		}
 	}
 
 	return posts, nil
+}
+
+func (r *PostRepo) Update(post *models.Post, values map[string]interface{}) error {
+	return r.db.Model(&post).Update(values).Error
 }

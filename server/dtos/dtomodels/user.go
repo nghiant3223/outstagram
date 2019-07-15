@@ -9,7 +9,7 @@ type User struct {
 	Gender   bool    `json:"gender"`
 }
 
-type BasicUser struct {
+type SimpleUser struct {
 	ID       uint   `json:"id"`
 	Username string `json:"username"`
 	Fullname string `json:"fullname"`

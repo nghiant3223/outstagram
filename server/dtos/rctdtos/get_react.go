@@ -8,6 +8,6 @@ type GetReactionsRequest struct {
 }
 
 type GetReactionsResponse struct {
-	Reactors   []dtomodels.BasicUser `json:"reactors"`
-	ReactCount int                   `json:"reactCount"`
+	Reactors   []dtomodels.SimpleUser `json:"reactors"`
+	ReactCount int                    `json:"reactCount"`
 }

@@ -107,7 +107,7 @@ func (s *StoryBoardService) GetUserStoryBoardDTO(userID uint) (*dtomodels.StoryB
 		dtoStory := story.ToDTO()
 		storyReactors := s.reactableService.GetReactorsOrderByQuality(story.ReactableID, userID, constants.StoryReactorCount, 0)
 		for _, reactor := range storyReactors {
-			dtoStory.Reactors = append(dtoStory.Reactors, reactor.ToBasicUserDTO())
+			dtoStory.Reactors = append(dtoStory.Reactors, reactor.ToSimpleUser())
 		}
 		dtoStoryBoard.Stories = append(dtoStoryBoard.Stories, dtoStory)
 	}
