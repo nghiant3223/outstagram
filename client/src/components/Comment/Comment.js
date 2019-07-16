@@ -140,7 +140,7 @@ class Comment extends Component {
 
         // If comment is not submitted
         if (comment === undefined) {
-            var { ownerID, ownerFullname, content, createdAt, ownerUsername, commentableID: postCmtableID, id, isNew } = this.props;
+            var { ownerID, ownerFullname, content, createdAt, ownerUsername, commentableID: postCmtableID, id, isNew, userID } = this.props;
         } else {
             var { ownerID, ownerFullname, content, createdAt, ownerUsername, commentableID: postCmtableID, id } = this.state.comment;
         }
@@ -191,7 +191,7 @@ class Comment extends Component {
                                 {replies.map((reply) => <Reply {...reply} postCmtableID={postCmtableID} cmtID={id} key={reply.id} replaceReply={this.replaceReply} focusReplyInput={this.focusReplyInput} />)}
                             </SemanticComment.Content>
 
-                            {(replyInputShow || replies.length > 0) && <PostInput style={{ paddingTop: 0, paddingBottom: 0, marginTop: "0.25em" }} inverted focusOnMount onSubmit={this.onReplySubmit} placeholder="Write your reply ..." ref={el => this.replyInput = el} />}
+                            {(replyInputShow || replies.length > 0) && <PostInput userID={userID} style={{ paddingTop: 0, paddingBottom: 0, marginTop: "0.25em" }} inverted focusOnMount onSubmit={this.onReplySubmit} placeholder="Write your reply ..." ref={el => this.replyInput = el} />}
                         </div>
                     </div>
                 </SemanticComment>

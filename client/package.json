@@ -17,7 +17,8 @@
     "redux": "^4.0.1",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0",
-    "semantic-ui-react": "^0.87.2"
+    "semantic-ui-react": "^0.87.2",
+    "uuid": "^3.3.2"
   },
   "scripts": {
     "start": "PORT=8080 react-scripts start",

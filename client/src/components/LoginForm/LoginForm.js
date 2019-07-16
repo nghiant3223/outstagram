@@ -2,7 +2,10 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
+import "./LoginForm.css";
+
 import * as authActions from '../../actions/auth.action';
+import { Button, Form } from 'semantic-ui-react';
 
 function loginForm(props) {
     const [username, setUsername] = useState('');
@@ -24,18 +27,21 @@ function loginForm(props) {
     }
 
     return (
-        <div>
-            <form onSubmit={onFormSubmit}>
-                Username: <br />
-                <input name="username" value={username} onChange={onUsernameChange} /> <br />
-
-                Password: <br />
-                <input name="password" value={password} onChange={onPasswordChange} /> <br />
-
-                <button type="submit">Login</button> <br />
-
-                <Link to="/register">Register here</Link>
-            </form>
+        <div className="FormContainer">
+            <div className="FormContainer__Inner">
+                <Form onSubmit={onFormSubmit}>
+                    <Form.Field>
+                        <label>Username</label>
+                        <input name="username" placeholder="Username" value={username} onChange={onUsernameChange} /> <br />
+                    </Form.Field>
+                    <Form.Field>
+                        <label>Password</label>
+                        <input name="password" placeholder="Password" type="password" value={password} onChange={onPasswordChange} /> <br />
+                    </Form.Field>
+                    <Button type='submit'>Login</Button>
+                    <Link to="/register">Register here</Link>
+                </Form>
+            </div>
         </div>
     )
 }

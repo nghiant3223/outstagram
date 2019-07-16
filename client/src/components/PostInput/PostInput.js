@@ -54,7 +54,7 @@ class PostInput extends Component {
 
     render() {
         const { content } = this.state;
-        const { inverted, isCommentInput, placeholder, style: propsStyle } = this.props;
+        const { inverted, isCommentInput, placeholder, style: propsStyle, userID } = this.props;
 
         const style = {
             position: "relative",
@@ -69,7 +69,7 @@ class PostInput extends Component {
                 ref={el => this.input = el}
                 style={propsStyle !== undefined ? { ...style, ...propsStyle } : { ...style }}>
                 <div>
-                    <Avatar width="2em" />
+                    <Avatar width="2em" userID={userID} />
                 </div>
                 <div className="PostInput__InputContainer">
                     {content === "" && <div className="PostInput__Placeholder" onClick={this.onPlaceholderClick}>{placeholder}</div>}

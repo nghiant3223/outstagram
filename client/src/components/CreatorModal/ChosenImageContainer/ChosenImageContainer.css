@@ -1,0 +1,40 @@
+.CreatorModal__ChosendImageContainer__ChosenImage__Close {
+  position: relative;
+}
+
+.CreatorModal__ChosendImageContainer__ChosenImage__Close
+  .CreatorModal__ChosendImageContainer__ChosenImage__CloseButton {
+  opacity: 0;
+}
+
+.CreatorModal__ChosendImageContainer__ChosenImage__Close:hover
+  .CreatorModal__ChosendImageContainer__ChosenImage__CloseButton {
+  opacity: 1;
+}
+
+.CreatorModal__ChosendImageContainer__ChosenImage__CloseButton {
+  position: absolute;
+  right: -2em;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3em !important;
+  height: 3em !important;
+  display: inline-block !important;
+  border-radius: 50% !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  background: white !important;
+  transition: opacity 0.15s;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+  border: 1px solid #e0e0e0 !important
+}
+.CreatorModal__ChosendImageContainer__ChosenImage__CloseButton > i {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  display: block;
+  font-size: 1.5em;
+  margin-left: -0.475em !important;
+  margin-top: 0.15em !important;
+}

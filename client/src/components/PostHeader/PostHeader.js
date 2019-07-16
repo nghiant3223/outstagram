@@ -8,7 +8,7 @@ export default function PostHeader({ userID, fullname, createdAt }) {
     return (
         <div className="PostHeader">
             <div className="PostHeader__Avatar">
-                <Avatar width="2.75rem" />
+                <Avatar width="2.75rem" userID={userID} />
             </div>
 
             <div className="PostHeader__Info">

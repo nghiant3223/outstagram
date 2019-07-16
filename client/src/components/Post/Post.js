@@ -27,7 +27,7 @@ class Post extends Component {
         this.state = {
             reacted: props.reacted,
             reactCount: props.reactCount,
-            reactors: props.reactors,
+            reactors: props.reactors || [],
             comments: props.comments || [],
             commentCount: props.commentCount,
             isLoadingMoreComment: false,
@@ -46,8 +46,10 @@ class Post extends Component {
             reactableServices.react(reactableID);
         }
 
+        console.log("here");
+
         this.setState((prevState) => {
-            if (!reacted) {
+            if (!prevState.reacted) {
                 return {
                     reacted: !prevState.reacted,
                     reactCount: prevState.reactCount + 1,
@@ -129,11 +131,11 @@ class Post extends Component {
 
     render() {
         const { reacted, reactCount, reactors, comments, commentCount, isLoadingMoreComment } = this.state;
-        const { id, images, imageID, ownerFullname, createdAt, content, commentableID, reactableID, viewableID, showImageGrid } = this.props;
+        const { id, images, imageID, ownerFullname, createdAt, content, commentableID, reactableID, viewableID, showImageGrid, user } = this.props;
 
         return (
             <div className="Post">
-                <PostHeader fullname={ownerFullname} createdAt={getDiffFromPast(createdAt)} />
+                <PostHeader fullname={ownerFullname} createdAt={getDiffFromPast(createdAt)} userID={user.id} />
 
                 <div className="ThreaterContainer__InfoContainer__Description">
                     {this.renderDescription()}
@@ -160,11 +162,11 @@ class Post extends Component {
                                 <ClickableText>See more comments</ClickableText>
                                 {isLoadingMoreComment && <Loading />}
                             </div>}
-                        {comments.map((comment) => <Comment {...comment} key={comment.id} replaceComment={this.replaceComment} commentableID={commentableID} />)}
+                        {comments.map((comment) => <Comment userID={user.id} {...comment} key={comment.id} replaceComment={this.replaceComment} commentableID={commentableID} />)}
                     </div>}
 
                 <div>
-                    <PostInput isThreater={true} inverted onSubmit={this.onCommentSubmit} ref={el => this.postInput = el} isCommentInput style={{ fontSize: "1.25em" }} placeholder="Write your comment ..." />
+                    <PostInput userID={user.id} isThreater={true} inverted onSubmit={this.onCommentSubmit} ref={el => this.postInput = el} isCommentInput style={{ fontSize: "1.25em" }} placeholder="Write your comment ..." />
                 </div>
             </div>
         );

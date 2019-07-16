@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, Redirect } from 'react-router-dom';
+import { Button, Form } from 'semantic-ui-react';
 
 import { registerUser } from '../../services/auth.service';
 
@@ -53,27 +54,37 @@ function registerForm() {
 
     return (
 
-        <div>
-            <form onSubmit={onFormSubmit}>
-                Fullname: <br />
-                <input name="fullname" value={fullname} onChange={onFullnameChange} /> <br />
+        <div className="FormContainer">
+            <div className="FormContainer__Inner">
+                <Form onSubmit={onFormSubmit}>
+                    <Form.Field>
+                        <label>Fullname</label>
+                        <input name="fullname" placeholder="Fullname" value={fullname} onChange={onFullnameChange} />
+                    </Form.Field>
+                    <Form.Field>
+                        <label>Email</label>
+                        <input name="email" placeholder="Email" value={email} onChange={onEmailChange} />
+                    </Form.Field>
 
-                Email: <br />
-                <input name="email" value={email} onChange={onEmailChange} /> <br />
+                    <Form.Field>
+                        <label>Username</label>
+                        <input name="username" placeholder="Username" value={username} onChange={onUsernameChange} />
+                    </Form.Field>
 
-                Username: <br />
-                <input name="username" value={username} onChange={onUsernameChange} /> <br />
+                    <Form.Field>
+                        <label>Password</label>
+                        <input name="password" placeholder="Password" type="password" value={password} onChange={onPasswordChange} />
+                    </Form.Field>
 
-                Password: <br />
-                <input name="password" value={password} onChange={onPasswordChange} /> <br />
+                    <Form.Field>
+                        <label>Avatar</label>
+                        <input type="file" multiple onClick={e => e.target.value = null} onChange={onAvatarChange} />
+                    </Form.Field>
 
-                Avatar: <br />
-                <input type="file" multiple onClick={e => e.target.value = null} onChange={onAvatarChange} /> <br />
-
-                <button type="submit">Register</button> <br />
-
-                <Link to="/login">Login here</Link>
-            </form>
+                    <Button type='submit'>Signup</Button>
+                    <Link to="/login">Login here</Link>
+                </Form>
+            </div>
         </div>
     )
 }

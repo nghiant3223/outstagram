@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import uuid from "uuid/v1";
 import { Modal, Form, Icon, Segment, Grid, Divider, Header } from 'semantic-ui-react';
 
 import * as storyServices from '../../services/story.service';
@@ -16,6 +17,7 @@ import UploadTypeSelectionContainer from './UploadTypeSelectionContainer/UploadT
 import UploadTypeContainer from './UploadTypeContainer/UploadTypeContainer';
 import ChosenImageContainer from './ChosenImageContainer/ChosenImageContainer';
 import DescriptionInput from './DescriptionInput/DescriptionInput';
+import { validURL, genUID } from '../../utils/lang';
 
 const initialState = {
     isLoading: false,
@@ -41,7 +43,7 @@ class CreatorModal extends Component {
             this.setState({ isLoading: true });
             switch (uploadType) {
                 case "story":
-                    const { data: { data: { stories } } } = await storyServices.createStory(uploadImages, uploadUrls);
+                    const { data: { data: { stories } } } = await storyServices.createStory(uploadImages.map(image => image.file), uploadUrls.map(url => url.file));
 
                     stories.forEach((story) => storyFeedManager.prependStory(story));
                     socket.emit("STORY.CLIENT.POST_STORY", stories);
@@ -49,7 +51,7 @@ class CreatorModal extends Component {
                     break;
 
                 case "post":
-                    await postServices.createPost(uploadImages, uploadUrls, caption);
+                    await postServices.createPost(uploadImages.map(image => image.file), uploadUrls.map(url => url.file), caption);
                     break;
 
                 default:
@@ -74,8 +76,20 @@ class CreatorModal extends Component {
 
     onFileInputChange = (e) => {
         e.persist();
+
         const files = e.target.files;
-        this.setState((prevState) => ({ uploadImages: [...prevState.uploadImages, ...files], renderImages: [...prevState.renderImages, ...files] }))
+        const chosenFiles = Array.from(files).map((file) => ({ file: file, id: uuid() }));
+
+        this.setState((prevState) => ({
+            uploadImages: [
+                ...prevState.uploadImages,
+                ...chosenFiles
+            ],
+            renderImages: [
+                ...prevState.renderImages,
+                ...chosenFiles
+            ]
+        }));
     }
 
     onUrlInputChange = (e) => {
@@ -87,14 +101,39 @@ class CreatorModal extends Component {
             return;
         }
 
+        if (!validURL(url)) {
+            alert("The string you pasted is not URL");
+            return
+        }
+
         isImageUrl(url, (ok) => {
             if (!ok) {
-                alert("Not an image");
+                alert("The url is not an image");
                 return;
             }
 
-            this.setState((prevState) => ({ uploadUrls: [...prevState.uploadUrls, url], imageURL: "", renderImages: [...prevState.renderImages, url] }));
+            const id = uuid();
+
+            this.setState((prevState) => ({
+                imageURL: "",
+                uploadUrls: [
+                    ...prevState.uploadUrls,
+                    { file: url, id }
+                ],
+                renderImages: [
+                    ...prevState.renderImages,
+                    { file: url, id }
+                ]
+            }));
         });
+    }
+
+    removeImage = (id) => {
+        this.setState((prevState) => ({
+            uploadUrls: prevState.uploadUrls.filter((file) => file.id !== id),
+            uploadImages: prevState.uploadImages.filter((file) => file.id !== id),
+            renderImages: prevState.renderImages.filter((file) => file.id !== id),
+        }));
     }
 
     triggerFileInput = () => {
@@ -127,7 +166,7 @@ class CreatorModal extends Component {
                                 <UploadTypeContainer expand imageURL={imageURL} onUrlInputChange={this.onUrlInputChange} triggerFileInput={this.triggerFileInput} />
                                 :
                                 <div>
-                                    <ChosenImageContainer renderImages={renderImages} />
+                                    <ChosenImageContainer renderImages={renderImages} removeImage={this.removeImage} />
                                     <UploadTypeContainer expand={false} imageURL={imageURL} onUrlInputChange={this.onUrlInputChange} triggerFileInput={this.triggerFileInput} />
                                     {uploadType === "post" && <DescriptionInput value={caption} onChange={this.onCaptionChange} />}
                                 </div>
