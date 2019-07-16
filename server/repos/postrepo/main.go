@@ -60,6 +60,7 @@ func (r *PostRepo) GetPostsByUserIDWithLimit(userID, limit, offset uint) ([]mode
 	for i := 0; i < len(posts); i++ {
 		r.db.Model(&posts[i]).Related(&posts[i].Images)
 		r.db.Model(&posts[i]).Related(&posts[i].Image)
+		r.db.Model(&posts[i]).Related(&posts[i].User)
 		for j := 0; j < len(posts[i].Images); j++ {
 			r.db.Model(&posts[i].Images[j]).Related(&posts[i].Images[j].Image)
 			r.db.Model(&posts[i]).Related(&posts[i].User)
