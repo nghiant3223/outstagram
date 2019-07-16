@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { TextArea, Button, Form } from 'semantic-ui-react';
 
 import * as postServices from "../../services/post.service";
@@ -6,6 +6,7 @@ import * as postServices from "../../services/post.service";
 import "./PostDescription.css";
 
 function PostDescription(props) {
+    const textArea = useRef(null);
     const { content, ownerID, user, isPost, id } = props;
 
     if (content) {
@@ -29,15 +30,19 @@ function PostDescription(props) {
         setShowTextArea(false);
     }
 
-    console.log(isPost);
+    const onAddClick = () => {
+        setShowTextArea(true);
+        setTimeout(() => { textArea.current.focus() }, 0);
+    }
+
 
     return (description && !showTextArea) ? <p>{description}</p> :
         (
-            showTextArea ?
-                <div className="DescriptionContainer">
+            <div>
+                <div className="DescriptionContainer" style={{ display: showTextArea ? "block" : "none" }}>
                     <div>
                         <Form>
-                            <TextArea value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Add description" />
+                            <input value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Add description" ref={textArea} />
                         </Form>
                     </div>
                     <div style={{ marginLeft: "auto" }} className="DescriptionContainer__ButtonContainer">
@@ -45,8 +50,10 @@ function PostDescription(props) {
                         <Button primary size="mini" onClick={onFormSubmit}>Add</Button>
                     </div>
                 </div>
-                :
-                <p className="ThreaterContainer__InfoContainer__Description__Add" onClick={() => setShowTextArea(true)}>Add description</p>
+                <p className="ThreaterContainer__InfoContainer__Description__Add" style={{ display: !showTextArea ? "block" : "none" }} onClick={onAddClick}>
+                    Add description
+                </p>
+            </div>
         )
 }
 
