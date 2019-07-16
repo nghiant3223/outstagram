@@ -29,11 +29,11 @@ func (s *PostImageService) Save(postImage *models.PostImage) error {
 	return s.postImageRepo.Save(postImage)
 }
 
-func (s *PostImageService) FindByID(id uint) (*models.PostImage, error) {
+func (s *PostImageService) GetPostImageByID(id uint) (*models.PostImage, error) {
 	return s.postImageRepo.FindByID(id)
 }
 
-func (s *PostImageService) Update(post *models.Post, values map[string]interface{}) error {
+func (s *PostImageService) Update(post *models.PostImage, values map[string]interface{}) error {
 	return s.postImageRepo.Update(post, values)
 }
 

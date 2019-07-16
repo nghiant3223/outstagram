@@ -111,7 +111,7 @@ class ThreaterModal extends Component {
                                 <Icon name="chevron right" size="big" color="grey" inverted />
                             </div>
                         </div>
-                        <Post {...postOrPostImage} showImageGrid={false} key={postOrPostImage.id} />
+                        <Post {...postOrPostImage} showImageGrid={false} key={postOrPostImage.id} isPost={this.props.post && this.props.post.images.length == 1} />
                     </div>}
             </Modal>
         )

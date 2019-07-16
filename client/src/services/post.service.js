@@ -25,3 +25,11 @@ export function getPostImage(postImageID) {
 export function getSpecificPost(postID) {
     return requireAuthApi.get(`/posts/specific/${postID}`);
 }
+
+export function updateSpecificPost(postID, body) {
+    return requireAuthApi.put(`/posts/specific/${postID}`, body);
+}
+
+export function updatePostImage(postImageID, body) {
+    return requireAuthApi.put(`/posts/images/${postImageID}`, body);
+}

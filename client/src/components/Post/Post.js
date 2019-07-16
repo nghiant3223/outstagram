@@ -19,6 +19,7 @@ import "./Post.css";
 import { genUID } from '../../utils/lang';
 import Loading from '../Loading/Loading';
 import ClickableText from '../ClickableText/ClickableText';
+import PostDescription from '../PostDescription/PostDescription';
 
 class Post extends Component {
     constructor(props) {
@@ -45,8 +46,6 @@ class Post extends Component {
         } else {
             reactableServices.react(reactableID);
         }
-
-        console.log("here");
 
         this.setState((prevState) => {
             if (!prevState.reacted) {
@@ -115,20 +114,6 @@ class Post extends Component {
         }
     }
 
-    renderDescription() {
-        const { content, ownerID, user } = this.props;
-
-        if (content) {
-            return <p>{content}</p>;
-        }
-
-        if (user.id !== ownerID) {
-            return null;
-        }
-
-        return <p className="ThreaterContainer__InfoContainer__Description__Add">Add description</p>
-    }
-
     render() {
         const { reacted, reactCount, reactors, comments, commentCount, isLoadingMoreComment } = this.state;
         const { id, images, imageID, ownerFullname, createdAt, content, commentableID, reactableID, viewableID, showImageGrid, user } = this.props;
@@ -170,6 +155,11 @@ class Post extends Component {
                 </div>
             </div>
         );
+    }
+
+    renderDescription() {
+        const { content, ownerID, user, id, showImageGrid, isPost } = this.props;
+        return <PostDescription content={content} ownerID={ownerID} user={user} id={id} isPost={showImageGrid || isPost} />
     }
 }
 

@@ -65,7 +65,7 @@ func (pc *Controller) GetPostImage(c *gin.Context) {
 		return
 	}
 
-	postImage, err := pc.postImageService.FindByID(postImageID)
+	postImage, err := pc.postImageService.GetPostImageByID(postImageID)
 	if err != nil {
 		utils.ResponseWithError(c, http.StatusInternalServerError, "Error while retrieving post", err.Error())
 		return

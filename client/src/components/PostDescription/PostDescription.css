@@ -1,0 +1,13 @@
+.DescriptionContainer>div {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+}
+
+.DescriptionContainer__ButtonContainer {
+    text-align: right;
+}
+
+.DescriptionContainer__ButtonContainer button {
+    margin-left: 0.5em !important;
+    margin-left: 0.5em !important;
+}

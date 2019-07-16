@@ -37,8 +37,22 @@ function registerForm() {
         setAvatar(e.target.files[0]);
     }
 
+    const formValidation = () => {
+        if (avatar === undefined) {
+            alert("Avatar mustn't be null");
+            return false;
+        }
+
+        return true;
+    }
+
     const onFormSubmit = (e) => {
         e.preventDefault();
+
+        if (!formValidation()) {
+            return;
+        }
+
         registerUser(fullname, email, username, password, avatar)
             .then(() => {
                 setShouldRedirect(true);
