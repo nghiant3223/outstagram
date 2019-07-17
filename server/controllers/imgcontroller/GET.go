@@ -2,11 +2,13 @@ package imgcontroller
 
 import (
 	"errors"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	"net/http"
 	"os"
 	"outstagram/server/constants"
+	"outstagram/server/db"
 	"outstagram/server/models"
 	"outstagram/server/utils"
 	"regexp"
@@ -54,18 +56,31 @@ func (ic *Controller) GetUserAvatar(c *gin.Context) {
 		return
 	}
 
-	user, err := ic.userService.FindByID(userID)
+	var imageID uint
+	redisClient, _ := db.NewRedisSupplier()
+	id, err := redisClient.Get(fmt.Sprintf("avatarImageID:%v", userID)).Result()
 	if err != nil {
-		if gorm.IsRecordNotFoundError(err) {
-			utils.ResponseWithError(c, http.StatusNotFound, "User not fond", err.Error())
+		user, err := ic.userService.FindByID(userID)
+		if err != nil {
+			if gorm.IsRecordNotFoundError(err) {
+				utils.ResponseWithError(c, http.StatusNotFound, "User not fond", err.Error())
+				return
+			}
+
+			utils.ResponseWithError(c, http.StatusInternalServerError, "Error while retrieving user", err.Error())
 			return
 		}
-
-		utils.ResponseWithError(c, http.StatusInternalServerError, "Error while retrieving user", err.Error())
-		return
+		imageID = user.AvatarImageID
+		redisClient.Set(fmt.Sprintf("avatarImageID:%v", userID), imageID, 0)
+	} else {
+		imageID, err = utils.StringToUint(id)
+		if err != nil {
+			utils.ResponseWithError(c, http.StatusBadRequest, "Invalid userID", err.Error())
+			return
+		}
 	}
 
-	image, err := ic.imageService.FindByID(user.AvatarImageID)
+	image, err := ic.imageService.FindByID(imageID)
 	if err != nil {
 		utils.ResponseWithError(c, http.StatusInternalServerError, "Error while retrieving user", err.Error())
 		return

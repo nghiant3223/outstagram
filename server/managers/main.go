@@ -46,5 +46,10 @@ var upgrader = websocket.Upgrader{
 	CheckOrigin:     func(r *http.Request) bool { return true },
 }
 
-var Hub = NewHub()
-var StoryManager = NewStoryManager(Hub)
+var Hub *hub
+var StoryManager *storyManager
+
+func Init() {
+	Hub = NewHub()
+	StoryManager = NewStoryManager(Hub)
+}

@@ -1,10 +1,12 @@
 package postcontroller
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	"log"
 	"net/http"
+	"outstagram/server/db"
 	"outstagram/server/dtos/postdtos"
 	"outstagram/server/models"
 	"outstagram/server/utils"
@@ -15,7 +17,7 @@ func (pc *Controller) CreatePost(c *gin.Context) {
 	if !ok {
 		log.Fatal("This route needs verifyToken middleware")
 	}
-
+	
 	var reqBody postdtos.CreatePostRequest
 	var resBody postdtos.CreatePostResponse
 
@@ -70,6 +72,12 @@ func (pc *Controller) CreatePost(c *gin.Context) {
 		}
 
 		resBody.Post = *dtoPost
+		followers := pc.userService.GetFollowers(userID)
+		for _, follower := range followers {
+			redisSupplier, _ := db.NewRedisSupplier()
+			redisSupplier.LPush(fmt.Sprintf("newsfeed:%v", follower.ID), savedPost.ID)
+		}
+
 		utils.ResponseWithSuccess(c, 200, "Create post successfully", resBody)
 		return
 	}
@@ -118,7 +126,7 @@ func (pc *Controller) CreatePost(c *gin.Context) {
 		utils.ResponseWithError(c, http.StatusInternalServerError, "Error while retrieving post", err.Error())
 		return
 	}
-
+	
 	dtoPost, err := pc.postService.GetDTOPost(savedPost, userID, userID)
 	if err != nil {
 		utils.ResponseWithError(c, http.StatusInternalServerError, "Error while saving post", err.Error())
@@ -126,6 +134,13 @@ func (pc *Controller) CreatePost(c *gin.Context) {
 	}
 
 	resBody.Post = *dtoPost
+
+	followers := pc.userService.GetFollowers(userID)
+	for _, follower := range followers {
+		redisSupplier, _ := db.NewRedisSupplier()
+		redisSupplier.LPush(fmt.Sprintf("newsfeed:%v", follower.ID), savedPost.ID)
+	}
+
 	utils.ResponseWithSuccess(c, http.StatusCreated, "Create post successfully", resBody)
 }
 

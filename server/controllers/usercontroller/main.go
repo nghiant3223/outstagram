@@ -24,6 +24,22 @@ func New(userService *userservice.UserService,
 	imageService *imgservice.ImageService,
 	postImageService *postimgservice.PostImageService,
 	viewableService *vwableservice.ViewableService) *Controller {
+
+	//redisSupplier, err := db.NewRedisSupplier()
+	//if err != nil {
+	//	log.Fatal(err.Error())
+	//}
+	//
+	//users, _ := userService.GetAllUsers()
+	//for _, user := range users {
+	//	postIDs := userService.GetPostFeed(user.ID)
+	//	for _, id := range postIDs {
+	//		if err := redisSupplier.LPush(fmt.Sprintf("newsfeed:%v", user.ID), id).Err(); err != nil {
+	//			log.Fatal(err.Error())
+	//		}
+	//	}
+	//}
+
 	return &Controller{
 		userService:       userService,
 		storyBoardService: storyBoardService,

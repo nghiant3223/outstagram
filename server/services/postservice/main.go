@@ -112,6 +112,7 @@ func (s *PostService) GetDTOPost(post *models.Post, userID, audienceUserID uint)
 		ImageCount:    imageCount,
 		OwnerID:       post.UserID,
 		OwnerFullname: post.User.Fullname,
+		OwnerUsername: post.User.Username,
 		ReactCount:    s.reactableService.GetReactCount(post.ReactableID),
 		Reacted:       s.reactableService.CheckUserReaction(audienceUserID, post.ReactableID),
 		Reactors:      s.reactableService.GetReactorDTOs(post.ReactableID, audienceUserID, 5, 0),

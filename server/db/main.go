@@ -4,39 +4,34 @@ import (
 	"flag"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
-	"github.com/joho/godotenv"
 	"log"
 	"os"
 	"outstagram/server/models"
 )
 
-var dbConn *gorm.DB
+var dbCon *gorm.DB
 
 func New() (*gorm.DB, error) {
-	if dbConn == nil {
-		if err := godotenv.Load(); err != nil {
-			log.Fatal("Cannot load .env file")
-		}
-
+	if dbCon == nil {
 		var err error
 
 		// If in TEST mode
 		if flag.Lookup("test.v") != nil {
-			dbConn, err = gorm.Open("mysql", "root:root@tcp(172.24.21.56:33060)/outstagram?charset=utf8mb4&parseTime=True&loc=Local")
+			dbCon, err = gorm.Open("mysql", "root:root@tcp(172.24.21.56:33060)/outstagram?charset=utf8mb4&parseTime=True&loc=Local")
 		} else {
-			dbConn, err = gorm.Open(os.Getenv("DB_DIALECT"), os.Getenv("DB_URL"))
+			dbCon, err = gorm.Open(os.Getenv("DB_DIALECT"), os.Getenv("DB_URL"))
 		}
 
 		if err != nil {
 			log.Fatal(err.Error())
 		}
 
-		dbConn.SingularTable(true)
+		dbCon.SingularTable(true)
 
 		if os.Getenv("ENV") != "production" {
-			//dbConn.LogMode(true)
-			//dbConn.Debug()
-			dbConn.AutoMigrate(
+			//dbCon.LogMode(true)
+			//dbCon.Debug()
+			dbCon.AutoMigrate(
 				&models.Comment{},
 				&models.Commentable{},
 				&models.Image{},
@@ -56,5 +51,5 @@ func New() (*gorm.DB, error) {
 		}
 	}
 
-	return dbConn, nil
+	return dbCon, nil
 }

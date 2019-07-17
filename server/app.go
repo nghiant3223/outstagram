@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/contrib/static"
 	"github.com/gin-gonic/gin"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
+	"github.com/joho/godotenv"
 	"log"
 	"os"
 	"outstagram/server/managers"
@@ -12,9 +13,14 @@ import (
 )
 
 func main() {
-	router := gin.Default()
+	if err := godotenv.Load(); err != nil {
+		log.Fatal("Cannot load .env file")
+	}
 
+	managers.Init()
 	go managers.Hub.Run(managers.StoryManager.WSMux)
+
+	router := gin.Default()
 	router.GET("/ws", managers.ServeWs)
 
 	if os.Getenv("ENV") == "production" {
