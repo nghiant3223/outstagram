@@ -30,3 +30,7 @@
   top: 0.65rem;
   font-size: 0.85rem;
 }
+
+.PostInput__InputContainer {
+  margin-right: 1em;
+}

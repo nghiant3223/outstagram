@@ -63,7 +63,7 @@ class UserInfo extends Component {
                         <div className="InfoItem__More">Followings</div>
                     </div>
                     <div className="InfoItem">
-                        <div className="InfoItem__Title">50</div>
+                        <div className="InfoItem__Title">{user.postCount}</div>
                         <div className="InfoItem__More">Posts</div>
                     </div>
                 </div>

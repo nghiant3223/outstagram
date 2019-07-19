@@ -1,10 +1,12 @@
 import React from 'react';
 
 import Avatar from '../Avatar/Avatar';
+import { Link } from 'react-router-dom';
 
 import "./PostHeader.css";
+import UserInfoPopup from '../UserInfoPopup/UserInfoPopup';
 
-export default function PostHeader({ userID, fullname, createdAt }) {
+export default function PostHeader({ userID, fullname, username, createdAt }) {
     return (
         <div className="PostHeader">
             <div className="PostHeader__Avatar">
@@ -12,7 +14,7 @@ export default function PostHeader({ userID, fullname, createdAt }) {
             </div>
 
             <div className="PostHeader__Info">
-                <div className="PostHeader__Info__Fullname">{fullname}</div>
+                <UserInfoPopup username={username} trigger={<div className="PostHeader__Info__Fullname"><Link to={`/${username}`}>{fullname}</Link></div>} />
                 <div className="PostHeader__Info__CreatedAt">{createdAt}</div>
             </div>
         </div>

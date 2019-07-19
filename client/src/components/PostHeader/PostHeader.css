@@ -23,6 +23,7 @@
   font-size: var(--title-font-size);
   margin-bottom: 0.5rem;
   line-height: 15px;
+  cursor: pointer;
 }
 
 .PostHeader__Info__CreatedAt {

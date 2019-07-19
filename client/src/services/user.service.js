@@ -11,3 +11,7 @@ export function followUser(userID) {
 export function unfollowUser(userID) {
     return requireAuthApi.delete(`/follows/${userID}`);
 }
+
+export function getNewsFeed() {
+    return requireAuthApi.get("/me/newsfeed");
+}

@@ -1,0 +1,15 @@
+.PlaceHolder__Image {
+  width: 614px;
+}
+
+.PostPlaceholder {
+  width: 614px;
+  border-radius: 5px;
+  background-color: white;
+  padding: 1em;
+}
+
+.PostPlaceholder__FeedbackSummary {
+  display: flex;
+  justify-content: space-between;
+}

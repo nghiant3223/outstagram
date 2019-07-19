@@ -5,7 +5,7 @@ import StoryFeedManager from '../../StoryFeedManager';
 import * as storyActions from '../../actions/story.action';
 
 import StoryCard from './StoryCard/StoryCard';
-import StoryCardPlaceholder from './StoryCardPlaceholder/StoryCardPlaceholder';
+import StoryCardPlaceholder from './StoryCard/StoryCardPlaceholder';
 
 import "./StoryFeed.css";
 import Container from '../Container/Container';
@@ -32,17 +32,9 @@ class StoryFeed extends Component {
 
                 <div className="StoryFeed__Main">
                     {fetchingStoryFeed ?
-                        (
-                            <Fragment>
-                                <StoryCardPlaceholder />
-                                <StoryCardPlaceholder />
-                                <StoryCardPlaceholder />
-                                <StoryCardPlaceholder />
-                                <StoryCardPlaceholder />
-                            </Fragment>
-                        ) :
-                        StoryFeedManager.getInstance().map((sbNode) => <StoryCard key={sbNode.getValue().storyBoardID} sbNode={sbNode} shouldUpdate={shouldUpdate} />)
-                    }
+                        Array(6).fill(0).map((_, index) => <StoryCardPlaceholder key={index} />)
+                        :
+                        StoryFeedManager.getInstance().map((sbNode) => <StoryCard key={sbNode.getValue().storyBoardID} sbNode={sbNode} shouldUpdate={shouldUpdate} />)}
                 </div>
             </Container>
         );

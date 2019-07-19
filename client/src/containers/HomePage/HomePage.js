@@ -3,25 +3,32 @@ import { connect } from 'react-redux';
 
 import socket from '../../Socket';
 import * as storyServices from '../../services/story.service';
+import * as userServices from '../../services/user.service';
 
 import StoryFeed from '../../components/StoryFeed/StoryFeed';
 import StoryModal from '../../components/StoryModal/StoryModal';
 import CreatorModal from '../../components/CreatorModal/CreatorModal';
 import Container from "../../components/Container/Container";
+import Post from "../../components/Post/Post";
 
 import './HomePage.css';
 
 import * as uiActions from '../../actions/ui.action';
 import StoryFeedManager from '../../StoryFeedManager';
+import PostPlaceholder from '../../components/Post/PostPlaceholder';
 
 class HomePage extends Component {
     state = {
-        isLoading: true
+        isLoading: true,
+        posts: []
     }
 
     async componentDidMount() {
         try {
             const { data: { data: { storyBoards } } } = await storyServices.getStoryFeed();
+            const { data: { data: { posts } } } = await userServices.getNewsFeed();
+
+            this.setState({ posts: posts || [] });
             StoryFeedManager.initialize(storyBoards);
 
             socket.on("STORY.SERVER.POST_STORY", (message) => {
@@ -72,17 +79,20 @@ class HomePage extends Component {
     }
 
     render() {
-        const { isLoading } = this.state;
-
-        if (isLoading) {
-            return null;
-        }
+        const { isLoading, posts } = this.state;
 
         return (
-            <Container>
-                <StoryFeed ref={(cmp) => { if (cmp) { this.storyFeed = cmp } }} fetchingStoryFeed={this.state.isLoading} />
+            <Container white={false}>
+                <StoryFeed ref={(cmp) => { if (cmp) { this.storyFeed = cmp } }} fetchingStoryFeed={isLoading} />
                 <StoryModal updateStoryFeed={this.updateStoryFeed} />
                 <CreatorModal updateStoryFeed={this.updateStoryFeed} />
+
+                <Container className="HomePage__PostContainer" white={false}>
+                    {isLoading ?
+                        Array(6).fill(0).map((_, index) => <PostPlaceholder key={index} />)
+                        :
+                        posts.map((post) => <Post {...post} key={post.id} showImageGrid />)}
+                </Container>
             </Container>
         );
     }

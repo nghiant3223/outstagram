@@ -116,11 +116,11 @@ class Post extends Component {
 
     render() {
         const { reacted, reactCount, reactors, comments, commentCount, isLoadingMoreComment } = this.state;
-        const { id, images, imageID, ownerFullname, createdAt, content, commentableID, reactableID, viewableID, showImageGrid, user } = this.props;
+        const { id, images, imageID, ownerFullname, ownerUsername, createdAt, content, commentableID, reactableID, viewableID, showImageGrid, user } = this.props;
 
         return (
             <div className="Post">
-                <PostHeader fullname={ownerFullname} createdAt={getDiffFromPast(createdAt)} userID={user.id} />
+                <PostHeader fullname={ownerFullname} createdAt={getDiffFromPast(createdAt)} userID={user.id} username={ownerUsername} />
 
                 <div className="ThreaterContainer__InfoContainer__Description">
                     {this.renderDescription()}
@@ -139,7 +139,8 @@ class Post extends Component {
                     <PostAction onReactClick={this.onReactClick} reacted={reacted} onCommentClick={this.onCommentButtonClick} />
                 </div>
 
-                {comments.length > 0 &&
+                {
+                    comments.length > 0 &&
                     <div className="ThreaterContainer__InfoContainer__CommentContainer">
                         {comments.length < commentCount &&
                             <div onClick={this.onMoreCommentClick} style={{ cursor: "pointer", marginTop: "0.5em" }}>
@@ -148,12 +149,13 @@ class Post extends Component {
                                 {isLoadingMoreComment && <Loading />}
                             </div>}
                         {comments.map((comment) => <Comment userID={user.id} {...comment} key={comment.id} replaceComment={this.replaceComment} commentableID={commentableID} />)}
-                    </div>}
+                    </div>
+                }
 
                 <div>
                     <PostInput userID={user.id} isThreater={true} inverted onSubmit={this.onCommentSubmit} ref={el => this.postInput = el} isCommentInput style={{ fontSize: "1.25em" }} placeholder="Write your comment ..." />
                 </div>
-            </div>
+            </div >
         );
     }
 
