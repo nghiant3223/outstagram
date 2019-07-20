@@ -10,7 +10,7 @@ export default function PostHeader({ userID, fullname, username, createdAt }) {
     return (
         <div className="PostHeader">
             <div className="PostHeader__Avatar">
-                <Avatar width="2.75rem" userID={userID} />
+                <UserInfoPopup username={username} trigger={<Link to={`/${username}`}><Avatar width="2.75rem" userID={userID} /></Link>} />
             </div>
 
             <div className="PostHeader__Info">

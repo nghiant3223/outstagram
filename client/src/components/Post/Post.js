@@ -116,11 +116,11 @@ class Post extends Component {
 
     render() {
         const { reacted, reactCount, reactors, comments, commentCount, isLoadingMoreComment } = this.state;
-        const { id, images, imageID, ownerFullname, ownerUsername, createdAt, content, commentableID, reactableID, viewableID, showImageGrid, user } = this.props;
+        const { id, images, imageID, ownerID, ownerFullname, ownerUsername, createdAt, content, commentableID, reactableID, viewableID, showImageGrid, user } = this.props;
 
         return (
             <div className="Post">
-                <PostHeader fullname={ownerFullname} createdAt={getDiffFromPast(createdAt)} userID={user.id} username={ownerUsername} />
+                <PostHeader fullname={ownerFullname} createdAt={getDiffFromPast(createdAt)} userID={ownerID} username={ownerUsername} />
 
                 <div className="ThreaterContainer__InfoContainer__Description">
                     {this.renderDescription()}

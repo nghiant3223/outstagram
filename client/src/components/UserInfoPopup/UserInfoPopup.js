@@ -1,15 +1,32 @@
 import React from 'react'
 import { Button, Header, Placeholder, Popup } from 'semantic-ui-react'
+import pluralize from "pluralize";
 
 import * as userServices from "../../services/user.service";
+import Avatar from '../Avatar/Avatar';
+
+import "./UserInfoPopup.css";
 
 const UserInfoPopup = (props) => {
     const { username, trigger } = props;
     const [data, setData] = React.useState(null)
 
+    const renderSubheader = (user) => {
+        if (user.followerCount > 0) {
+            return `${user.followerCount} ${pluralize("follower")}`
+        }
+
+        if (user.postCount > 0) {
+            return `${user.postCount} ${pluralize("post")}`
+        }
+
+        return `Join on ${new Date(user.createdAt).toLocaleDateString("en-US")}`
+    }
+
     return (
         <Popup
-            on='click'
+            on='hover'
+            position="top left"
             onClose={() => {
                 setData(null)
             }}
@@ -23,20 +40,21 @@ const UserInfoPopup = (props) => {
         >
             {data === null ? (
                 <Placeholder style={{ minWidth: '200px' }}>
-                    <Placeholder.Header>
+                    <Placeholder.Header image>
                         <Placeholder.Line />
-                        <Placeholder.Line />
-                    </Placeholder.Header>
-                    <Placeholder.Paragraph>
                         <Placeholder.Line length='medium' />
-                        <Placeholder.Line length='short' />
-                    </Placeholder.Paragraph>
+                    </Placeholder.Header>
                 </Placeholder>
             ) : (
-                    <React.Fragment>
-                        <Header as='h2' content={data.fullname} subheader={`${data.followerCount} followers`} />
-                        <p>{data.description}</p>
-                    </React.Fragment>
+                    <div className="UserInfoPopUp__Container">
+                        <div>
+                            <Avatar width="2.5em" userID={data.id} />
+                        </div>
+                        <div>
+                            <Header as='h4' content={data.fullname} subheader={renderSubheader(data)} />
+                            <p>{data.description}</p>
+                        </div>
+                    </div>
                 )}
         </Popup>
     )

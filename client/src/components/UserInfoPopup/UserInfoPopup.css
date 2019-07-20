@@ -1,0 +1,13 @@
+.UserInfoPopUp__Container {
+    display: flex;
+    align-items: center;
+}
+
+.UserInfoPopUp__Container>div {
+    margin-left: 0.25em;
+    margin-right: 0.25em;
+}
+
+.ui.header {
+    margin-bottom: 0px !important
+}
