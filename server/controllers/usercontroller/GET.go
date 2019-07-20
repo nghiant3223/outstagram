@@ -12,6 +12,7 @@ import (
 )
 
 func (uc *Controller) GetAllUser(c *gin.Context) {
+
 }
 
 func (uc *Controller) GetUsersInfo(c *gin.Context) {
@@ -32,7 +33,7 @@ func (uc *Controller) GetUsersInfo(c *gin.Context) {
 		return
 	}
 
-	authUserID, ok := utils.RetrieveUserID(c)
+	audienceUserID, ok := utils.RetrieveUserID(c)
 	if !ok {
 		log.Fatal("This route needs verifyToken middleware")
 	}
@@ -45,9 +46,12 @@ func (uc *Controller) GetUsersInfo(c *gin.Context) {
 	resBody.FollowerCount = len(uc.userService.GetFollowers(user.ID))
 	resBody.FollowingCount = len(uc.userService.GetFollowings(user.ID))
 
-	isMe := authUserID == user.ID
+	posts, _ := uc.postService.GetUserPosts(user.ID)
+	resBody.PostCount = len(posts)
+
+	isMe := audienceUserID == user.ID
 	if !isMe {
-		ok, err := uc.userService.CheckFollow(authUserID, user.ID)
+		ok, err := uc.userService.CheckFollow(audienceUserID, user.ID)
 		if err != nil {
 			utils.ResponseWithError(c, http.StatusOK, "Error while retrieving user", err.Error())
 			return

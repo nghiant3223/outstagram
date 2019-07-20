@@ -1,11 +1,15 @@
 package flcontroller
 
 import (
+	"encoding/json"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	"log"
 	"net/http"
 	"outstagram/server/constants"
+	"outstagram/server/db"
+	"outstagram/server/models"
 	"outstagram/server/utils"
 )
 
@@ -41,5 +45,20 @@ func (fc *Controller) CreateFollow(c *gin.Context) {
 		return
 	}
 
+	posts, _ := fc.postService.GetUsersPostsWithLimit(followingID, 10, 0)
+	fc.appendFollowingPostToNewsfeed(userID, posts)
 	utils.ResponseWithSuccess(c, http.StatusCreated, "Follow user successfully", nil)
+}
+
+func (fc *Controller) appendFollowingPostToNewsfeed(userID uint, posts []models.Post) {
+	redisSupplier, _ := db.NewRedisSupplier()
+	for _, post := range posts {
+		sRedisPost, err := json.Marshal(models.RedisPost{ID: post.ID, OwnerID: post.User.ID})
+		if err != nil {
+			log.Printf("Cannot append post to user with userID = %v newsfeed\n", userID)
+			continue
+		}
+
+		redisSupplier.LPush(fmt.Sprintf("newsfeed:%v", userID), string(sRedisPost))
+	}
 }

@@ -175,7 +175,13 @@ func InitializeFollowController() (*flcontroller.Controller, error) {
 	}
 	userRepo := userrepo.New(gormDB)
 	userService := userservice.New(userRepo)
-	controller := flcontroller.New(userService)
+	postRepo := postrepo.New(gormDB)
+	commentableRepo := cmtablerepo.New(gormDB)
+	reactableRepo := rctablerepo.New(gormDB, commentableRepo)
+	reactableService := rctableservice.New(reactableRepo, userService)
+	commentableService := cmtableservice.New(commentableRepo, reactableService)
+	postService := postservice.New(postRepo, userService, reactableService, commentableService)
+	controller := flcontroller.New(userService, postService)
 	return controller, nil
 }
 

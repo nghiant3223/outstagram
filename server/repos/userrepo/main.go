@@ -159,8 +159,7 @@ func (r *UserRepo) CheckFollow(follow, followed uint) (bool, error) {
 	return rows.Next(), nil
 }
 
-func (r *UserRepo) GetPostFeed(userID uint) []uint {
-	var ids []uint
+func (r *UserRepo) GetPostFeed(userID uint) []models.Post {
 	var posts []models.Post
 
 	query := `
@@ -196,9 +195,5 @@ FROM (
 			 THEN candidate_post.popularity * 0.25 + candidate_post.quality * 0.75 END DESC, candidate_post.created_at DESC;`
 
 	r.db.Raw(query, userID, userID).Scan(&posts)
-	for _, post := range posts {
-		ids = append(ids, post.ID)
-	}
-
-	return ids
+	return posts
 }

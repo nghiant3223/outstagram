@@ -1,6 +1,11 @@
 package usercontroller
 
 import (
+	"encoding/json"
+	"fmt"
+	"log"
+	"outstagram/server/db"
+	"outstagram/server/models"
 	"outstagram/server/services/imgservice"
 	"outstagram/server/services/postimgservice"
 	"outstagram/server/services/postservice"
@@ -25,20 +30,26 @@ func New(userService *userservice.UserService,
 	postImageService *postimgservice.PostImageService,
 	viewableService *vwableservice.ViewableService) *Controller {
 
-	//redisSupplier, err := db.NewRedisSupplier()
-	//if err != nil {
-	//	log.Fatal(err.Error())
-	//}
-	//
-	//users, _ := userService.GetAllUsers()
-	//for _, user := range users {
-	//	postIDs := userService.GetPostFeed(user.ID)
-	//	for _, id := range postIDs {
-	//		if err := redisSupplier.LPush(fmt.Sprintf("newsfeed:%v", user.ID), id).Err(); err != nil {
-	//			log.Fatal(err.Error())
-	//		}
-	//	}
-	//}
+	redisSupplier, err := db.NewRedisSupplier()
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+
+	users, _ := userService.GetAllUsers()
+	for _, user := range users {
+		posts := userService.GetPostFeed(user.ID)
+		for _, post := range posts {
+			sRedisPost, err := json.Marshal(models.RedisPost{ID: post.ID, OwnerID: post.User.ID})
+			if err != nil {
+				log.Printf("Cannot push post to user newsfeed: %v\n", err.Error())
+				continue
+			}
+
+			if err := redisSupplier.LPush(fmt.Sprintf("newsfeed:%v", user.ID), string(sRedisPost)).Err(); err != nil {
+				log.Fatal(err.Error())
+			}
+		}
+	}
 
 	return &Controller{
 		userService:       userService,

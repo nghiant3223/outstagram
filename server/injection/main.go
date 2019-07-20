@@ -214,6 +214,15 @@ func InitializeFollowController() (*flcontroller.Controller, error) {
 		userservice.New,
 		userrepo.New,
 
+		postservice.New,
+		postrepo.New,
+
+		cmtableservice.New,
+		cmtablerepo.New,
+
+		rctableservice.New,
+		rctablerepo.New,
+
 		db.New,
 	)
 

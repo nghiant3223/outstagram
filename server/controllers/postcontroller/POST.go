@@ -1,6 +1,7 @@
 package postcontroller
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
@@ -17,7 +18,7 @@ func (pc *Controller) CreatePost(c *gin.Context) {
 	if !ok {
 		log.Fatal("This route needs verifyToken middleware")
 	}
-	
+
 	var reqBody postdtos.CreatePostRequest
 	var resBody postdtos.CreatePostResponse
 
@@ -72,12 +73,7 @@ func (pc *Controller) CreatePost(c *gin.Context) {
 		}
 
 		resBody.Post = *dtoPost
-		followers := pc.userService.GetFollowers(userID)
-		for _, follower := range followers {
-			redisSupplier, _ := db.NewRedisSupplier()
-			redisSupplier.LPush(fmt.Sprintf("newsfeed:%v", follower.ID), savedPost.ID)
-		}
-
+		pc.appendPostToFollowerNewsFeed(userID, savedPost)
 		utils.ResponseWithSuccess(c, 200, "Create post successfully", resBody)
 		return
 	}
@@ -126,7 +122,7 @@ func (pc *Controller) CreatePost(c *gin.Context) {
 		utils.ResponseWithError(c, http.StatusInternalServerError, "Error while retrieving post", err.Error())
 		return
 	}
-	
+
 	dtoPost, err := pc.postService.GetDTOPost(savedPost, userID, userID)
 	if err != nil {
 		utils.ResponseWithError(c, http.StatusInternalServerError, "Error while saving post", err.Error())
@@ -134,13 +130,7 @@ func (pc *Controller) CreatePost(c *gin.Context) {
 	}
 
 	resBody.Post = *dtoPost
-
-	followers := pc.userService.GetFollowers(userID)
-	for _, follower := range followers {
-		redisSupplier, _ := db.NewRedisSupplier()
-		redisSupplier.LPush(fmt.Sprintf("newsfeed:%v", follower.ID), savedPost.ID)
-	}
-
+	pc.appendPostToFollowerNewsFeed(userID, savedPost)
 	utils.ResponseWithSuccess(c, http.StatusCreated, "Create post successfully", resBody)
 }
 
@@ -178,4 +168,20 @@ func (pc *Controller) ViewPost(c *gin.Context) {
 	}
 
 	utils.ResponseWithSuccess(c, http.StatusCreated, "Save view successfully", nil)
+}
+
+// Redis here
+func (pc *Controller) appendPostToFollowerNewsFeed(userID uint, post *models.Post) {
+	redisSupplier, _ := db.NewRedisSupplier()
+	redisPost := models.RedisPost{ID: post.ID, OwnerID: post.User.ID}
+
+	sRedisPost, err := json.Marshal(redisPost)
+	if err != nil {
+		log.Printf("Cannot append post to user with userID = %v newsfeed\n", userID)
+	}
+
+	followers := pc.userService.GetFollowers(userID)
+	for _, follower := range followers {
+		redisSupplier.LPush(fmt.Sprintf("newsfeed:%v", follower.ID), string(sRedisPost))
+	}
 }

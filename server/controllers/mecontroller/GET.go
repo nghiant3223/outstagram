@@ -1,6 +1,7 @@
 package mecontroller
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
@@ -10,6 +11,7 @@ import (
 	"outstagram/server/dtos/dtomodels"
 	"outstagram/server/dtos/medtos"
 	"outstagram/server/dtos/storydtos"
+	"outstagram/server/models"
 	"outstagram/server/utils"
 )
 
@@ -36,17 +38,22 @@ func (mc *Controller) GetNewsFeed(c *gin.Context) {
 
 	var getNewsfeedResponse medtos.GetNewsFeedResponse
 
-
 	redisSupplier, _ := db.NewRedisSupplier()
-	postIDs, err := redisSupplier.LRange(fmt.Sprintf("newsfeed:%v", userID), 0, 100).Result()
+	posts, err := redisSupplier.LRange(fmt.Sprintf("newsfeed:%v", userID), 0, 100).Result()
 	if err != nil {
 		utils.ResponseWithError(c, http.StatusInternalServerError, "Error while retrieving post", err.Error())
 		return
 	}
 
-	for _, strPostID := range postIDs {
-		postID, _ := utils.StringToUint(strPostID)
-		post, err := mc.postService.GetPostByID(postID, userID)
+	for _, sRedisPost := range posts {
+		var rPost models.RedisPost
+
+		if err := json.Unmarshal([]byte(sRedisPost), &rPost); err != nil {
+			log.Println(err.Error())
+			continue
+		}
+
+		post, err := mc.postService.GetPostByID(rPost.ID, userID)
 		if err != nil {
 			if gorm.IsRecordNotFoundError(err) {
 				continue
