@@ -12,6 +12,7 @@ export function unfollowUser(userID) {
     return requireAuthApi.delete(`/follows/${userID}`);
 }
 
-export function getNewsFeed() {
-    return requireAuthApi.get("/me/newsfeed");
+export function getNewsFeed(sinceID) {
+    const sinceUrl = sinceID !== undefined ? `&since_id=${sinceID}` : "";
+    return requireAuthApi.get("/me/newsfeed?pagination=true" + sinceUrl);
 }

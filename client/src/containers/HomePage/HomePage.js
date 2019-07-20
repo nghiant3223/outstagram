@@ -19,16 +19,22 @@ import PostPlaceholder from '../../components/Post/PostPlaceholder';
 
 class HomePage extends Component {
     state = {
+        posts: [],
+        sinceID: 0,
         isLoading: true,
-        posts: []
+        isFetchingMorePost: false,
     }
 
+    shouldScroll = true
+
     async componentDidMount() {
+        document.addEventListener('scroll', this.trackScrolling);
+
         try {
             const { data: { data: { storyBoards } } } = await storyServices.getStoryFeed();
-            const { data: { data: { posts } } } = await userServices.getNewsFeed();
+            const { data: { data: { posts, nextSinceID } } } = await userServices.getNewsFeed(0);
 
-            this.setState({ posts: posts || [] });
+            this.setState({ posts: posts || [], sinceID: nextSinceID });
             StoryFeedManager.initialize(storyBoards);
 
             socket.on("STORY.SERVER.POST_STORY", (message) => {
@@ -72,14 +78,36 @@ class HomePage extends Component {
     componentWillUnmount() {
         StoryFeedManager.removeInstance();
         this.props.closeModal();
+        document.removeEventListener('scroll', this.trackScrolling);
     }
 
     updateStoryFeed = () => {
         this.storyFeed.update();
     }
 
+    isBottom(el) {
+        return el.getBoundingClientRect().bottom <= window.innerHeight;
+    }
+
+    trackScrolling = async () => {
+        const { sinceID } = this.state;
+        const wrappedElement = document.getElementsByTagName("body")[0];
+
+        if (this.isBottom(wrappedElement) && this.shouldScroll && sinceID) {
+            this.shouldScroll = false;
+            this.setState({ isFetchingMorePost: true });
+            userServices.getNewsFeed(sinceID)
+                .then(({ data: { data: { posts, nextSinceID } } }) => {
+                    this.setState((prevState) => ({ posts: [...prevState.posts, ...posts], sinceID: nextSinceID }));
+                    this.shouldScroll = true;
+                })
+                .catch((e) => console.log("Error while fetching more post"))
+                .finally(() => this.setState({ isFetchingMorePost: false }));
+        }
+    };
+
     render() {
-        const { isLoading, posts } = this.state;
+        const { isLoading, isFetchingMorePost, posts } = this.state;
 
         return (
             <Container white={false}>
@@ -89,9 +117,11 @@ class HomePage extends Component {
 
                 <Container className="HomePage__PostContainer" white={false}>
                     {isLoading ?
-                        Array(6).fill(0).map((_, index) => <PostPlaceholder key={index} />)
+                        Array(3).fill(0).map((_, index) => <PostPlaceholder key={index} />)
                         :
-                        posts.map((post) => <Post {...post} key={post.id} showImageGrid />)}
+                        posts.map((post) => <Post {...post} key={post.id} showImageGrid />)
+                    }
+                    {isFetchingMorePost && <PostPlaceholder />}
                 </Container>
             </Container>
         );

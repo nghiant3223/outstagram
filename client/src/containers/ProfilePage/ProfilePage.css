@@ -1,7 +1,19 @@
 .ImagesContainer {
-    position: relative;
+  position: relative;
 }
 
 .ProfileSummaryContainer {
-    margin-bottom: 2rem;
+  margin-bottom: 2rem;
+}
+
+.InfoItem .line.square {
+  margin-bottom: 50px !important;
+}
+
+.line.medium-height {
+  margin-bottom: 1.5em !important
+}
+
+.line.big-height {
+  margin-bottom: 2em !important
 }
