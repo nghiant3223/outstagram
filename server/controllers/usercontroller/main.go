@@ -30,15 +30,27 @@ func New(userService *userservice.UserService,
 	postImageService *postimgservice.PostImageService,
 	viewableService *vwableservice.ViewableService) *Controller {
 
+	return &Controller{
+		userService:       userService,
+		storyBoardService: storyBoardService,
+		postService:       postService,
+		imageService:      imageService,
+		postImageService:  postImageService,
+		viewableService:   viewableService,
+	}
+}
+
+func (uc *Controller) InitNewsfeed() {
 	redisSupplier, err := db.NewRedisSupplier()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
 
-	users, _ := userService.GetAllUsers()
+	users, _ := uc.userService.GetAllUsers()
 	for _, user := range users {
-		posts := userService.GetPostFeed(user.ID)
+		posts := uc.userService.GetPostFeed(user.ID)
 		for _, post := range posts {
+			fmt.Printf("userID: %v - postID: %v\n", user.ID, post.ID)
 			sRedisPost, err := json.Marshal(models.RedisPost{ID: post.ID, OwnerID: post.User.ID})
 			if err != nil {
 				log.Printf("Cannot push post to user newsfeed: %v\n", err.Error())
@@ -49,14 +61,5 @@ func New(userService *userservice.UserService,
 				log.Fatal(err.Error())
 			}
 		}
-	}
-
-	return &Controller{
-		userService:       userService,
-		storyBoardService: storyBoardService,
-		postService:       postService,
-		imageService:      imageService,
-		postImageService:  postImageService,
-		viewableService:   viewableService,
 	}
 }

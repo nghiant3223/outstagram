@@ -38,16 +38,17 @@ func (uc *Controller) GetUsersInfo(c *gin.Context) {
 		log.Fatal("This route needs verifyToken middleware")
 	}
 
-	var resBody userdtos.GetUserResponse
+	var res userdtos.GetUserResponse
 
-	resBody.ID = user.ID
-	resBody.Fullname = user.Fullname
-	resBody.Username = user.Username
-	resBody.FollowerCount = len(uc.userService.GetFollowers(user.ID))
-	resBody.FollowingCount = len(uc.userService.GetFollowings(user.ID))
+	res.ID = user.ID
+	res.CreatedAt = user.CreatedAt
+	res.Fullname = user.Fullname
+	res.Username = user.Username
+	res.FollowerCount = len(uc.userService.GetFollowers(user.ID))
+	res.FollowingCount = len(uc.userService.GetFollowings(user.ID))
 
 	posts, _ := uc.postService.GetUserPosts(user.ID)
-	resBody.PostCount = len(posts)
+	res.PostCount = len(posts)
 
 	isMe := audienceUserID == user.ID
 	if !isMe {
@@ -57,11 +58,11 @@ func (uc *Controller) GetUsersInfo(c *gin.Context) {
 			return
 		}
 
-		resBody.Followed = utils.NewBoolPointer(ok)
+		res.Followed = utils.NewBoolPointer(ok)
 	}
 
-	resBody.IsMe = isMe
-	utils.ResponseWithSuccess(c, http.StatusOK, "Retrieve user's info successfully", resBody)
+	res.IsMe = isMe
+	utils.ResponseWithSuccess(c, http.StatusOK, "Retrieve user's info successfully", res)
 }
 
 func (uc *Controller) GetUserStoryBoard(c *gin.Context) {
@@ -71,7 +72,7 @@ func (uc *Controller) GetUserStoryBoard(c *gin.Context) {
 		return
 	}
 
-	var resBody userdtos.GetStoryBoardResponse
+	var res userdtos.GetStoryBoardResponse
 
 	userStoryBoardDTO, err := uc.storyBoardService.GetUserStoryBoardDTO(userID)
 	if err != nil {
@@ -85,8 +86,8 @@ func (uc *Controller) GetUserStoryBoard(c *gin.Context) {
 	}
 
 	userStoryBoardDTO.IsMy = false
-	resBody.StoryBoard = userStoryBoardDTO
-	utils.ResponseWithSuccess(c, http.StatusOK, "Get user's storyboard successfully", resBody)
+	res.StoryBoard = userStoryBoardDTO
+	utils.ResponseWithSuccess(c, http.StatusOK, "Get user's storyboard successfully", res)
 }
 
 func (uc *Controller) GetUserPosts(c *gin.Context) {
@@ -101,20 +102,20 @@ func (uc *Controller) GetUserPosts(c *gin.Context) {
 		return
 	}
 
-	var reqBody postdtos.GetPostRequest
-	var resBody postdtos.GetPostResponse
+	var req postdtos.GetPostRequest
+	var res postdtos.GetPostResponse
 	var posts []models.Post
 
-	if err := c.ShouldBindQuery(&reqBody); err != nil {
+	if err := c.ShouldBindQuery(&req); err != nil {
 		utils.ResponseWithError(c, http.StatusBadRequest, "Invalid query parameter", err.Error())
 		return
 	}
 
 	// If limit and offset are not specified
-	if reqBody.Offset == 0 && reqBody.Limit == 0 {
+	if req.Offset == 0 && req.Limit == 0 {
 		posts, err = uc.postService.GetUserPosts(userID)
 	} else {
-		posts, err = uc.postService.GetUsersPostsWithLimit(userID, reqBody.Limit, reqBody.Offset)
+		posts, err = uc.postService.GetUsersPostsWithLimit(userID, req.Limit, req.Offset)
 	}
 
 	if err != nil {
@@ -139,8 +140,8 @@ func (uc *Controller) GetUserPosts(c *gin.Context) {
 			return
 		}
 
-		resBody.Posts = append(resBody.Posts, *dtoPost)
+		res.Posts = append(res.Posts, *dtoPost)
 	}
 
-	utils.ResponseWithSuccess(c, http.StatusOK, "Fetch user's posts successfully", resBody)
+	utils.ResponseWithSuccess(c, http.StatusOK, "Fetch user's posts successfully", res)
 }

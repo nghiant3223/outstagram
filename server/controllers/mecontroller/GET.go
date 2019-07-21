@@ -7,6 +7,7 @@ import (
 	"github.com/jinzhu/gorm"
 	"log"
 	"net/http"
+	"outstagram/server/constants"
 	"outstagram/server/db"
 	"outstagram/server/dtos/dtomodels"
 	"outstagram/server/dtos/medtos"
@@ -36,10 +37,87 @@ func (mc *Controller) GetNewsFeed(c *gin.Context) {
 		log.Fatal("This route needs verifyToken middleware")
 	}
 
-	var getNewsfeedResponse medtos.GetNewsFeedResponse
+	var res medtos.GetNewsFeedResponse
+	var req medtos.GetNewsFeedRequest
+
+	if err := c.ShouldBindQuery(&req); err != nil {
+		utils.ResponseWithError(c, http.StatusBadRequest, "Invalid parameter", err.Error())
+		return
+	}
+
+	var posts []string
+	var err error
+	var start int64
+	var stop int64
 
 	redisSupplier, _ := db.NewRedisSupplier()
-	posts, err := redisSupplier.LRange(fmt.Sprintf("newsfeed:%v", userID), 0, 100).Result()
+	key := fmt.Sprintf("newsfeed:%v", userID)
+
+	// Get start & stop for fetching posts from redis. Next NextSinceID equals to the id of post at index 'stop'
+	if !req.Pagination {
+		start = 0
+		stop = constants.NewsfeedPaginationMax
+	} else if req.SinceID == 0 {
+		start = 0
+		stop = constants.NewsfeedPaginationCount
+
+		sRedisPosts, err := redisSupplier.LRange(key, 0, constants.NewsfeedPaginationCount).Result()
+		if err != nil {
+			utils.ResponseWithError(c, http.StatusInternalServerError, "Error while retrieving post", err.Error())
+			return
+		}
+
+		// If there is NextSinceID
+		if len(sRedisPosts) > int(constants.NewsfeedPaginationCount) {
+			var rPost models.RedisPost
+			if err := json.Unmarshal([]byte(sRedisPosts[len(sRedisPosts)-1 ]), &rPost); err != nil {
+				log.Println(err.Error())
+			}
+			res.NextSinceID = rPost.ID
+		} else {
+			res.NextSinceID = 0
+		}
+	} else {
+		sRedisPosts, err := redisSupplier.LRange(key, 0, constants.NewsfeedPaginationMax).Result()
+		if err != nil {
+			utils.ResponseWithError(c, http.StatusInternalServerError, "Error while retrieving post", err.Error())
+			return
+		}
+
+		// Iterate to get right SinceID
+		for i, sRedisPost := range sRedisPosts {
+			var rPost models.RedisPost
+			if err := json.Unmarshal([]byte(sRedisPost), &rPost); err != nil {
+				log.Println(err.Error())
+				continue
+			}
+
+			if rPost.ID == req.SinceID {
+				start = int64(i)
+				stop = start + constants.NewsfeedPaginationCount
+
+				if availablePostCount := int64(len(sRedisPosts)); stop >= availablePostCount {
+					// If there is no NextSinceID
+					// Example: 0 1 2 3 4 5, start = 3, NewsfeedPaginationCount = 3
+					// stop = 5, there is no NextSinceID
+					stop = availablePostCount
+					res.NextSinceID = 0
+				} else {
+					// If there is no NextSinceID
+					// Example: 0 1 2 3 4 5 6, start = 3, NewsfeedPaginationCount = 3
+					// stop = 6, NextSinceID equals id of post whose id = 6
+					var nextRPost models.RedisPost
+					if err := json.Unmarshal([]byte(sRedisPosts[stop]), &nextRPost); err != nil {
+						log.Println(err.Error())
+					}
+					res.NextSinceID = nextRPost.ID
+				}
+				break
+			}
+		}
+	}
+
+	posts, err = redisSupplier.LRange(key, start, stop-1).Result()
 	if err != nil {
 		utils.ResponseWithError(c, http.StatusInternalServerError, "Error while retrieving post", err.Error())
 		return
@@ -74,10 +152,10 @@ func (mc *Controller) GetNewsFeed(c *gin.Context) {
 			return
 		}
 
-		getNewsfeedResponse.Posts = append(getNewsfeedResponse.Posts, *dtoPost)
+		res.Posts = append(res.Posts, *dtoPost)
 	}
 
-	utils.ResponseWithSuccess(c, http.StatusOK, "Get post successfully", getNewsfeedResponse)
+	utils.ResponseWithSuccess(c, http.StatusOK, "Get post successfully", res)
 }
 
 func (mc *Controller) GetStoryFeed(c *gin.Context) {

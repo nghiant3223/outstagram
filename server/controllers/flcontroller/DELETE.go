@@ -46,7 +46,8 @@ func (fc *Controller) RemoveFollow(c *gin.Context) {
 
 func (fc *Controller) removeFollowingPostFromNewsfeed(userID, followingID uint) {
 	redisSupplier, _ := db.NewRedisSupplier()
-	sRedisPosts, err := redisSupplier.LRange(fmt.Sprintf("newsfeed:%v", userID), 0, 200).Result()
+	key := fmt.Sprintf("newsfeed:%v", userID)
+	sRedisPosts, err := redisSupplier.LRange(key, 0, constants.NewsfeedPaginationMax).Result()
 	if err != nil {
 		log.Printf("Cannot get user with userID = %v newsfeed\n", userID)
 		return

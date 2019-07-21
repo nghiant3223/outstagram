@@ -14,6 +14,8 @@ func UserAPIRouter(router *gin.Engine, routerGroup *gin.RouterGroup) {
 		log.Fatal(err.Error())
 	}
 
+	//userController.InitNewsfeed()
+
 	routerGroup.Use(middlewares.VerifyToken(true))
 
 	routerGroup.GET("/:userID", userController.GetUsersInfo)

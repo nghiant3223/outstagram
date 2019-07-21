@@ -1,12 +1,15 @@
 package userdtos
 
+import "time"
+
 type GetUserResponse struct {
-	ID             uint   `json:"id"`
-	IsMe           bool   `json:"isMe"`
-	Username       string `json:"username"`
-	Fullname       string `json:"fullname"`
-	FollowerCount  int    `json:"followerCount"`
-	FollowingCount int    `json:"followingCount"`
-	Followed       *bool  `json:"followed,omitempty"`
-	PostCount      int    `json:"postCount"`
+	ID             uint       `json:"id"`
+	IsMe           bool       `json:"isMe"`
+	Username       string     `json:"username"`
+	Fullname       string     `json:"fullname"`
+	FollowerCount  int        `json:"followerCount"`
+	FollowingCount int        `json:"followingCount"`
+	Followed       *bool      `json:"followed,omitempty"`
+	PostCount      int        `json:"postCount"`
+	CreatedAt      time.Time `json:"createdAt"`
 }
