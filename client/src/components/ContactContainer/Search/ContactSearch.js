@@ -1,22 +1,29 @@
-import PropTypes from 'prop-types'
-import _ from 'lodash'
-import faker from 'faker'
 import React, { Component } from 'react'
-import { Search, Grid, Header, Segment, Label } from 'semantic-ui-react'
+import { Search } from 'semantic-ui-react'
+import _ from 'lodash';
 
-const source = _.times(5, () => ({
-    title: faker.company.companyName(),
-    description: faker.company.catchPhrase(),
-    image: faker.internet.avatar(),
-    price: faker.finance.amount(0, 100, 2, '$'),
-}))
+import * as userServices from '../../../services/user.service';
+import Avatar from '../../Avatar/Avatar';
 
-const resultRenderer = ({ title }) => <Label content={title} />
+import "./ContactSearch.css";
 
-resultRenderer.propTypes = {
-    title: PropTypes.string,
-    description: PropTypes.string,
+const resultRenderer = ({ title }) => {
+    const [id, fullname] = title.split(' ');
+
+    if (title === "__feching_data__") {
+        return <div className="FechingData">Fetching data...</div>;
+    }
+
+    if (title === "__no_results__") {
+        return <div className="FechingData">No results</div>;
+    }
+
+    return <div className="ResultContainer">
+        <div><Avatar userID={id} /></div>
+        <div className="Fullname">{fullname}</div>
+    </div>
 }
+
 
 const initialState = { isLoading: false, results: [], value: '' }
 
@@ -26,19 +33,23 @@ export default class ContactSearch extends Component {
     handleResultSelect = (e, { result }) => this.setState({ value: result.title })
 
     handleSearchChange = (e, { value }) => {
-        this.setState({ isLoading: true, value })
+        if (value == "") {
+            this.setState({ value });
+            return;
+        }
 
-        setTimeout(() => {
-            if (this.state.value.length < 1) return this.setState(initialState)
-
-            const re = new RegExp(_.escapeRegExp(this.state.value), 'i')
-            const isMatch = result => re.test(result.title)
-
-            this.setState({
-                isLoading: false,
-                results: _.filter(source, isMatch),
-            })
-        }, 300)
+        this.setState({ isLoading: true, value, results: [{ title: "__feching_data__" }] })
+        userServices.searchUser(value).then(({ data: { data } }) => {
+            if (data) {
+                this.setState({ results: data.map((result) => ({ title: result.id + " " + result.fullname })) })
+            } else {
+                this.setState({ results: [{ title: "__no_results__" }] });
+            }
+        }).catch((e) => {
+            console.log("Cannot search user");
+        }).finally(() => {
+            this.setState({ isLoading: false });
+        });
     }
 
     render() {
@@ -49,9 +60,7 @@ export default class ContactSearch extends Component {
                 input={{ icon: 'search', iconPosition: 'left' }}
                 loading={isLoading}
                 onResultSelect={this.handleResultSelect}
-                onSearchChange={_.debounce(this.handleSearchChange, 500, {
-                    leading: true,
-                })}
+                onSearchChange={_.debounce(this.handleSearchChange, 500, { leading: true })}
                 results={results}
                 value={value}
                 resultRenderer={resultRenderer}

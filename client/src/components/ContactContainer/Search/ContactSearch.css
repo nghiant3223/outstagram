@@ -1,0 +1,12 @@
+.FechingData {
+  text-align: center;
+}
+
+.ResultContainer {
+  display: flex;
+  align-items: center;
+}
+
+.ResultContainer > div:first-child {
+  margin-right: 0.25em;
+}
