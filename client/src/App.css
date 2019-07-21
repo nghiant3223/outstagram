@@ -7,8 +7,19 @@ body {
   --primary-color: #296eac;
   --primary-dark-color: darkblue;
   --grey-color: rgba(0, 0, 0, 0.4);
-  --light-grey-color: rgba(0, 0, 0, 0.05);
   --bold-color: rgba(0, 0, 0, 0.87);
+
   --subtitle-font-size: 0.9em;
   --title-font-size: 1.05em;
+
+  --message-page-height: 500px;
+  --message-page-search: 66px;
+  --message-page-input: 3em;
+}
+
+.Fullname {
+  font-weight: 700;
+  color: var(--primary-color);
+  font-size: var(--title-font-size);
+  cursor: pointer;
 }

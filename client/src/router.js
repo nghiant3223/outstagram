@@ -7,6 +7,7 @@ import HomePage from './containers/HomePage/HomePage';
 import NotFoundPage from './containers/NotFoundPage/NotFoundPage';
 import EntrancePage from './containers/EntrancePage/EntrancePage';
 import ProfilePage from './containers/ProfilePage/ProfilePage';
+import MessagePage from './containers/MessagePage/MessagePage';
 
 const PrivateRoute = ({ component: Component, isAuthenticated, ...rest }) =>
     <Route {...rest} render={props => isAuthenticated ? <Component {...props} /> : <Redirect to='/login' />} />;
@@ -20,6 +21,7 @@ export default function router({ isAuthenticated }) {
                     <Switch>
                         <PrivateRoute path='/' exact component={HomePage} isAuthenticated={isAuthenticated} />
                         <PrivateRoute path='/:username' exact component={ProfilePage} isAuthenticated={isAuthenticated} />
+                        <PrivateRoute path='/messages/:username' exact component={MessagePage} isAuthenticated={isAuthenticated} />
                         <Route component={NotFoundPage} />
                     </Switch>
                 </MainLayout>

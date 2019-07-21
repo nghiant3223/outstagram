@@ -1,0 +1,38 @@
+.ContactContainer__SearchContainer {
+  display: flex;
+  justify-content: center;
+  padding: 1em 0;
+}
+
+.ui.search {
+  display: inline-block;
+}
+
+.ContactItemContainer__ContactItem {
+  display: flex;
+  padding: 1em 0;
+  cursor: pointer;
+}
+
+.ContactItemContainer__ContactItem--Active {
+    background-color: #f5f6f6;
+}
+
+.ContactItemContainer__ContactItem > div {
+    margin-left: 0.5em;
+    margin-right: 0.5em;
+}
+
+.ContactItemContainer__ContactItem__Content {
+  overflow: hidden;
+}
+
+.ContactItemContainer__ContactItem__Content > div {
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.ContactItemContainer__ContactItem__Time {
+    display: flex;
+    align-items: center;
+}

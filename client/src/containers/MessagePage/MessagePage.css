@@ -1,0 +1,37 @@
+.MessagePage {
+  display: flex;
+  height: var(--message-page-height);
+}
+
+.MessageInfoContainer {
+  flex-basis: 614px;
+  border-left: 1.25px solid rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+}
+
+.ContactContainer {
+  flex-grow: 1;
+  width: calc(935px - 614px);
+}
+
+.MessageInfoContainer__Info {
+  flex-basis: 66px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 1.25px solid rgba(0, 0, 0, 0.15);
+}
+
+.MessageInfoContainer__Info__Detail__Fullname {
+  display: flex;
+}
+
+.MessageInfoContainer__Info__Detail__Fullname > div {
+  margin-left: 0.25em;
+  margin-right: 0.25em;
+}
+
+.MessageInfoContainer__Info__Detail {
+  text-align: center;
+}
