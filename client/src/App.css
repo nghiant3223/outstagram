@@ -23,3 +23,11 @@ body {
   font-size: var(--title-font-size);
   cursor: pointer;
 }
+
+a {
+  color: black;
+}
+
+a:hover {
+  color: black;
+}

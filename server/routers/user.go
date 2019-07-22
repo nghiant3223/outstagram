@@ -16,11 +16,15 @@ func UserAPIRouter(router *gin.Engine, routerGroup *gin.RouterGroup) {
 
 	//userController.InitNewsfeed()
 
+
 	routerGroup.Use(middlewares.VerifyToken(true))
+
+	routerGroup.GET("/", userController.SearchUser)
 
 	routerGroup.GET("/:userID", userController.GetUsersInfo)
 
 	routerGroup.GET("/:userID/posts", userController.GetUserPosts)
 
 	routerGroup.GET("/:userID/storyboard", userController.GetUserStoryBoard)
+
 }

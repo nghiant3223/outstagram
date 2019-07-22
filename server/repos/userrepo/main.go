@@ -1,6 +1,7 @@
 package userrepo
 
 import (
+	"fmt"
 	"outstagram/server/models"
 
 	"github.com/jinzhu/gorm"
@@ -161,7 +162,6 @@ func (r *UserRepo) CheckFollow(follow, followed uint) (bool, error) {
 
 func (r *UserRepo) GetPostFeed(userID uint) []models.Post {
 	var posts []models.Post
-
 	query := `
 SELECT candidate_post.id
 FROM (
@@ -196,4 +196,42 @@ FROM (
 
 	r.db.Raw(query, userID, userID).Scan(&posts)
 	return posts
+}
+
+func (r *UserRepo) Search(text string, options ...map[string]interface{}) ([]*models.User, error) {
+	var users []*models.User
+
+	query := r.db
+
+	if text != "" {
+		regex := "%" + text + "%"
+		query = query.
+			Or("username LIKE ?", regex).
+			Or("fullname LIKE ?", regex).
+			Or("email LIKE ?", regex)
+	}
+
+	if err := query.Find(&users).Error; err != nil {
+		return nil, err
+	}
+
+	if len(options) > 0 {
+		options := options[0]
+		if meUserID, ok := options["include_me"]; ok {
+			if id, _ok := meUserID.(uint); _ok {
+				foundIdx := -1
+				for i, user := range users {
+					if user.ID == id {
+						foundIdx = i
+					}
+				}
+				if foundIdx != -1 {
+					fmt.Println("ok")
+					users = append(users[:foundIdx], users[foundIdx+1:]...)
+				}
+			}
+		}
+	}
+
+	return users, nil
 }

@@ -1,18 +1,46 @@
 package usercontroller
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	"log"
 	"net/http"
+	"outstagram/server/dtos/dtomodels"
 	"outstagram/server/dtos/postdtos"
 	"outstagram/server/dtos/userdtos"
 	"outstagram/server/models"
 	"outstagram/server/utils"
 )
 
-func (uc *Controller) GetAllUser(c *gin.Context) {
+func (uc *Controller) SearchUser(c *gin.Context) {
+	var req userdtos.SearchUserRequest
 
+	if err := c.ShouldBindQuery(&req); err != nil {
+		utils.ResponseWithError(c, http.StatusBadRequest, "Bad request", err.Error())
+		return
+	}
+
+	options := make(map[string]interface{})
+	if req.IncludeMe != nil && !*req.IncludeMe {
+		if userID, ok := utils.RetrieveUserID(c); ok {
+			fmt.Println("here")
+			options["include_me"] = userID
+		}
+	}
+
+	users, err := uc.userService.Search(req.Filter, options)
+	if err != nil {
+		utils.ResponseWithError(c, http.StatusInternalServerError, "Error while searching for user", err.Error())
+		return
+	}
+
+	var dtoUsers []dtomodels.User
+	for _, user := range users {
+		dtoUsers = append(dtoUsers, user.ToUserDTO())
+	}
+
+	utils.ResponseWithSuccess(c, http.StatusOK, "Fetching user successfully", dtoUsers)
 }
 
 func (uc *Controller) GetUsersInfo(c *gin.Context) {

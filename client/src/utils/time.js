@@ -20,3 +20,9 @@ export function getDiffFromPast(time) {
         return time;
     }
 }
+
+export function toHHMM(time) {
+    const h = time.getHours();
+    const m = time.getMinutes();
+    return (h < 10 ? ('0' + h.toString()) : h.toString()) + ':' + (m < 10 ? ('0' + m.toString()) : m.toString());
+}

@@ -41,6 +41,10 @@ func (s *UserService) VerifyLogin(username, password string) (*models.User, erro
 	return user, nil
 }
 
+func (s *UserService) Search(text string, options ...map[string]interface{}) ([]*models.User, error) {
+	return s.userRepo.Search(text, options...)
+}
+
 func (s *UserService) Save(user *models.User) error {
 	if s.CheckExistsByID(user.ID) {
 		return s.userRepo.Save(user)

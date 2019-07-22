@@ -1,42 +1,39 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 import ContactSearch from './Search/ContactSearch';
 
 import "./ContactContainer.css";
-import Avatar from '../Avatar/Avatar';
+import Contact from './Contact/Contact';
+import * as roomServices from "../../services/room.service";
 
 class ContactContainer extends Component {
+    state = {
+        rooms: [],
+        isLoading: false
+    }
+
+    async componentDidMount() {
+        this.setState({ isLoading: true });
+        try {
+            const { data: { data: { rooms } } } = await roomServices.getRecentRooms();
+            this.setState({ rooms: rooms || [] });
+        } catch (e) {
+            console.log("Error while fetching rooms", e);
+        } finally {
+            this.setState({ isLoading: false });
+        }
+    }
+
+
     render() {
+        const { rooms } = this.state;
+
         return (
             <div className="ContactContainer">
                 <div className="ContactContainer__SearchContainer">
-                    <ContactSearch />
+                    <ContactSearch onContactClick={this.onContactClick} />
                 </div>
                 <div className="ContactContainer__ContactItemContainer">
-                    <div className="ContactItemContainer__ContactItem">
-                        <div>
-                            <Avatar />
-                        </div>
-                        <div className="ContactItemContainer__ContactItem__Content">
-                            <div className="Fullname">Trọng Nghĩa</div>
-                            <div>lmaoooooooooooooooooooooooooooooooo</div>
-                        </div>
-                        <div className="ContactItemContainer__ContactItem__Time">
-                            1.12
-                        </div>
-                    </div>
-
-                    <div className="ContactItemContainer__ContactItem ContactItemContainer__ContactItem--Active">
-                        <div>
-                            <Avatar />
-                        </div>
-                        <div className="ContactItemContainer__ContactItem__Content">
-                            <div className="Fullname">Trọng Nghĩa</div>
-                            <div>lmaoooooooooooooooooooooooooooooooo</div>
-                        </div>
-                        <div className="ContactItemContainer__ContactItem__Time">
-                            1.12
-                        </div>
-                    </div>
+                    {rooms.map((contact) => <Contact {...contact} key={contact.id} />)}
                 </div>
             </div>
         )

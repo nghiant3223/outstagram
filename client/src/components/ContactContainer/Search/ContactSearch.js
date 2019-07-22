@@ -27,10 +27,18 @@ const resultRenderer = ({ title }) => {
 
 const initialState = { isLoading: false, results: [], value: '' }
 
-export default class ContactSearch extends Component {
+class ContactSearch extends Component {
     state = initialState
 
-    handleResultSelect = (e, { result }) => this.setState({ value: result.title })
+    handleResultSelect = (e, { result }) => {
+        const components = result.title.split(' ');
+
+        if (components.length > 0) {
+            const [id] = components;
+            const { onContactClick } = this.props;
+            onContactClick(id);
+        }
+    }
 
     handleSearchChange = (e, { value }) => {
         if (value == "") {
@@ -64,8 +72,9 @@ export default class ContactSearch extends Component {
                 results={results}
                 value={value}
                 resultRenderer={resultRenderer}
-                {...this.props}
             />
         )
     }
 }
+
+export default ContactSearch;

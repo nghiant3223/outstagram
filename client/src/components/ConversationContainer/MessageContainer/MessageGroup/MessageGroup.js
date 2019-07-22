@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Avatar from '../../Avatar/Avatar';
+import Avatar from '../../../Avatar/Avatar';
 import Message from './Message/Message';
 
 import "./MessageGroup.css";
@@ -22,7 +22,8 @@ function MessageGroup(props) {
 }
 
 MessageGroup.propTypes = {
-    right: PropTypes.bool
+    right: PropTypes.bool,
+    messages: PropTypes.array
 }
 
 MessageGroup.defaultProps = {

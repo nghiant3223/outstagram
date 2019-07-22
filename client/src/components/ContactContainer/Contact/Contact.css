@@ -1,0 +1,34 @@
+.ContactItemContainer__ContactItem {
+  display: flex;
+  padding: 1em 0;
+  cursor: pointer;
+}
+
+.ContactItemContainer__ContactItem--Active {
+  background-color: #f5f6f6;
+}
+
+.ContactItemContainer__ContactItem > div {
+  margin-left: 0.5em;
+  margin-right: 0.5em;
+}
+
+.ContactItemContainer__ContactItem__Content {
+  overflow: hidden;
+  width: 215px;
+}
+
+.ContactItemContainer__ContactItem__Content > div {
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.ContactItemContainer__ContactItem__Time {
+  display: flex;
+  align-items: center;
+  font-size: 0.9em;
+}
+
+.ContactItemContainer__ContactItem__Content__LastMessage {
+  font-size: 0.9em;
+}

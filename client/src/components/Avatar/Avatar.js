@@ -12,8 +12,13 @@ export default function Avatar({ isActive, userID, size = "small", width = "2.5e
         className += " Avatar--Inactive"
     }
 
-    const avatarURL = userID ? noAuthStatic('/images/avatars/' + userID, { size }) : defaultAvatar
-    return (
-        <div className={className} style={{ background: `url(${avatarURL})`, backgroundPosition: "50% 50%", backgroundSize: "cover", width: width, height: height || width }} />
-    )
+    const avatarURL = userID ? noAuthStatic('/images/avatars/' + userID, { size }) : defaultAvatar;
+    const style = {
+        background: `url(${avatarURL})`,
+        backgroundPosition: "50% 50%",
+        backgroundSize: "cover",
+        width: width, height: height || width
+    }
+
+    return <div className={className} style={style} />;
 }

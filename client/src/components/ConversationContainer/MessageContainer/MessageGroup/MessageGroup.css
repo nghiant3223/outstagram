@@ -1,7 +1,7 @@
 .MessageGroup {
   display: flex;
-  margin-top: 1.25em;
-  margin-bottom: 1.25em;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
 }
 
 .MessageGroup--Left {
