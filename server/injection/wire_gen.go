@@ -13,6 +13,7 @@ import (
 	"outstagram/server/controllers/mecontroller"
 	"outstagram/server/controllers/postcontroller"
 	"outstagram/server/controllers/rctcontroller"
+	"outstagram/server/controllers/roomcontroller"
 	"outstagram/server/controllers/storycontroller"
 	"outstagram/server/controllers/usercontroller"
 	"outstagram/server/db"
@@ -25,6 +26,7 @@ import (
 	"outstagram/server/repos/rctablerepo"
 	"outstagram/server/repos/rctrepo"
 	"outstagram/server/repos/replyrepo"
+	"outstagram/server/repos/roomrepo"
 	"outstagram/server/repos/storybrepo"
 	"outstagram/server/repos/userrepo"
 	"outstagram/server/repos/vwablerepo"
@@ -37,6 +39,7 @@ import (
 	"outstagram/server/services/rctableservice"
 	"outstagram/server/services/rctservice"
 	"outstagram/server/services/replyservice"
+	"outstagram/server/services/roomservice"
 	"outstagram/server/services/storybservice"
 	"outstagram/server/services/userservice"
 	"outstagram/server/services/vwableservice"
@@ -215,5 +218,18 @@ func InitializeImageController() (*imgcontroller.Controller, error) {
 	userRepo := userrepo.New(gormDB)
 	userService := userservice.New(userRepo)
 	controller := imgcontroller.New(imageService, userService)
+	return controller, nil
+}
+
+func InitializeRoomController() (*roomcontroller.Controller, error) {
+	gormDB, err := db.New()
+	if err != nil {
+		return nil, err
+	}
+	roomRepo := roomrepo.New(gormDB)
+	userRepo := userrepo.New(gormDB)
+	userService := userservice.New(userRepo)
+	roomService := roomservice.New(roomRepo, userService)
+	controller := roomcontroller.New(roomService)
 	return controller, nil
 }

@@ -10,6 +10,7 @@ import (
 	"outstagram/server/controllers/mecontroller"
 	"outstagram/server/controllers/postcontroller"
 	"outstagram/server/controllers/rctcontroller"
+	"outstagram/server/controllers/roomcontroller"
 	"outstagram/server/controllers/storycontroller"
 	"outstagram/server/controllers/usercontroller"
 	"outstagram/server/db"
@@ -22,6 +23,7 @@ import (
 	"outstagram/server/repos/rctablerepo"
 	"outstagram/server/repos/rctrepo"
 	"outstagram/server/repos/replyrepo"
+	"outstagram/server/repos/roomrepo"
 	"outstagram/server/repos/storybrepo"
 	"outstagram/server/repos/userrepo"
 	"outstagram/server/repos/vwablerepo"
@@ -34,6 +36,7 @@ import (
 	"outstagram/server/services/rctableservice"
 	"outstagram/server/services/rctservice"
 	"outstagram/server/services/replyservice"
+	"outstagram/server/services/roomservice"
 	"outstagram/server/services/storybservice"
 	"outstagram/server/services/userservice"
 	"outstagram/server/services/vwableservice"
@@ -270,4 +273,20 @@ func InitializeImageController() (*imgcontroller.Controller, error) {
 	)
 
 	return &imgcontroller.Controller{}, nil
+}
+
+func InitializeRoomController() (*roomcontroller.Controller, error) {
+	wire.Build(
+		roomcontroller.New,
+
+		roomservice.New,
+		roomrepo.New,
+
+		userservice.New,
+		userrepo.New,
+
+		db.New,
+	)
+
+	return &roomcontroller.Controller{}, nil
 }
