@@ -2,16 +2,15 @@
   flex-grow: 1;
 }
 
-.ChatboxContainer__MessageContainer {
+.ChatboxContainer__ChatboxContainer {
   overflow: auto;
   height: calc(
-    var(--message-page-height) - 
-    var(--message-page-search) -
-    var(--message-page-input)
+    var(--message-page-height) - var(--message-page-search) -
+      var(--message-page-input)
   );
 }
 
-.ChatboxContainer__MessageContainer__Loader {
+.ChatboxContainer__ChatboxContainer__Loader {
   text-align: center;
   height: 2em;
   display: flex;

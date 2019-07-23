@@ -9,7 +9,7 @@ import ContainerContext from './ContainerContext';
 
 import * as roomServices from "../../../services/room.service";
 
-import "./MessageContainer.css";
+import "./ChatboxContainer.css";
 import Loading from '../../Loading/Loading';
 
 class ChatboxContainer extends Component {
@@ -41,13 +41,13 @@ class ChatboxContainer extends Component {
     }
 
     scrollToBottom() {
-        this.messageContainer.scrollTop = this.messageContainer.scrollHeight;
+        this.ChatboxContainer.scrollTop = this.ChatboxContainer.scrollHeight;
     }
 
     onMessageConainerScroll = async () => {
         const { messages } = this.state;
         const { roomIdOrUsername } = this.props;
-        const { scrollTop } = this.messageContainer;
+        const { scrollTop } = this.ChatboxContainer;
 
         if (scrollTop == 0) {
             this.setState({ isLoading: true });
@@ -56,7 +56,7 @@ class ChatboxContainer extends Component {
                 if (fetchMessages !== null) {
                     this.setState((prevState) => ({ messages: [...fetchMessages, ...prevState.messages] }));
                     setTimeout(() => {
-                        this.messageContainer.scrollTop = 10;
+                        this.ChatboxContainer.scrollTop = 10;
                     }, 500);
                 }
 
@@ -106,8 +106,8 @@ class ChatboxContainer extends Component {
         return (
             <ContainerContext.Provider value={{ replaceMessage: this.replaceMessage, roomIdOrUsername: roomIdOrUsername }}>
                 <div className="ChatboxContainer">
-                    <div className="ChatboxContainer__MessageContainer" onScroll={this.onMessageConainerScroll} ref={el => this.messageContainer = el}>
-                        {isLoading && <div className="ChatboxContainer__MessageContainer__Loader"><Loading /></div>}
+                    <div className="ChatboxContainer__ChatboxContainer" onScroll={this.onMessageConainerScroll} ref={el => this.ChatboxContainer = el}>
+                        {isLoading && <div className="ChatboxContainer__ChatboxContainer__Loader"><Loading /></div>}
                         <div style={{ padding: "0.5em" }}>
                             {renderMessages(messages, user.id)}
                         </div>

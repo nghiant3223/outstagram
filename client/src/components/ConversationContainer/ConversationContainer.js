@@ -2,10 +2,9 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router';
 
 import ContactInfo from './ContactInfo/ContactInfo';
-import ChatboxContainer from './MessageContainer/MessageContainer';
+import ChatboxContainer from './ChatboxContainer/ChatboxContainer';
 
 import * as roomServices from "../../services/room.service";
-
 
 class ConversationContainer extends Component {
     state = {

@@ -14,7 +14,7 @@ function MessageGroup(props) {
                 <Avatar />
             </div>}
 
-            <div className={["MessageGroup__MessageContainer", right ? "MessageGroup__MessageContainer--Right" : "MessageGroup__MessageContainer--Left"].join(" ")}>
+            <div className={["MessageGroup__ChatboxContainer", right ? "MessageGroup__ChatboxContainer--Right" : "MessageGroup__ChatboxContainer--Left"].join(" ")}>
                 {messages.map((message) => <Message key={message.id} {...message} />)}
             </div>
         </div>

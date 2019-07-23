@@ -17,42 +17,42 @@
   margin-right: 0.25em;
 }
 
-.MessageGroup__MessageContainer {
+.MessageGroup__ChatboxContainer {
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
-.MessageGroup__MessageContainer--Left {
+.MessageGroup__ChatboxContainer--Left {
   align-items: flex-start;
 }
 
-.MessageGroup__MessageContainer--Right {
+.MessageGroup__ChatboxContainer--Right {
   align-items: flex-end;
 }
 
-.MessageGroup__MessageContainer--Left .Message .Message__Content {
+.MessageGroup__ChatboxContainer--Left .Message .Message__Content {
   border-radius: 4px 15px 15px 4px;
 }
 
-.MessageGroup__MessageContainer--Left .Message:first-child .Message__Content {
+.MessageGroup__ChatboxContainer--Left .Message:first-child .Message__Content {
   border-top-left-radius: 15px;
 }
 
-.MessageGroup__MessageContainer--Left .Message:last-child .Message__Content {
+.MessageGroup__ChatboxContainer--Left .Message:last-child .Message__Content {
   border-bottom-left-radius: 15px;
 }
 
-.MessageGroup__MessageContainer--Right .Message .Message__Content {
+.MessageGroup__ChatboxContainer--Right .Message .Message__Content {
   background-color: var(--primary-color);
   color: white;
   border-radius: 15px 4px 4px 15px;
 }
 
-.MessageGroup__MessageContainer--Right .Message:first-child .Message__Content {
+.MessageGroup__ChatboxContainer--Right .Message:first-child .Message__Content {
   border-top-right-radius: 15px;
 }
 
-.MessageGroup__MessageContainer--Right .Message:last-child .Message__Content {
+.MessageGroup__ChatboxContainer--Right .Message:last-child .Message__Content {
   border-bottom-right-radius: 15px;
 }

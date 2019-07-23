@@ -1,7 +1,7 @@
 import React from 'react'
 
-import MessageGroup from '../components/ConversationContainer/MessageContainer/MessageGroup/MessageGroup';
-import TimeDivider from '../components/ConversationContainer/MessageContainer/TimeDivider/TimeDivider';
+import MessageGroup from '../components/ConversationContainer/ChatboxContainer/MessageGroup/MessageGroup';
+import TimeDivider from '../components/ConversationContainer/ChatboxContainer/TimeDivider/TimeDivider';
 
 import { MESSAGE_TIME_DISTANCE } from '../configs/story.config';
 
