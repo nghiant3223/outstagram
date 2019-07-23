@@ -7,12 +7,16 @@ import { genUID } from '../../../utils/lang';
 import { Message } from '../../../models/message';
 import ContainerContext from './ContainerContext';
 
+import * as roomServices from "../../../services/room.service";
+
 import "./MessageContainer.css";
+import Loading from '../../Loading/Loading';
 
 class ChatboxContainer extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            isLoading: false,
             messageContent: '',
             messages: props.messages
         }
@@ -24,17 +28,44 @@ class ChatboxContainer extends Component {
         }
     }
 
-    componentDidUpdate() {
-        this.scrollToBottom();
+    componentDidUpdate(prevProps) {
+        if (this.props.roomIdOrUsername !== prevProps.roomIdOrUsername) {
+            this.scrollToBottom();
+            this.messageInput.focus();
+        }
     }
 
     componentDidMount() {
         this.scrollToBottom();
+        this.messageInput.focus();
     }
-
 
     scrollToBottom() {
         this.messageContainer.scrollTop = this.messageContainer.scrollHeight;
+    }
+
+    onMessageConainerScroll = async () => {
+        const { messages } = this.state;
+        const { roomIdOrUsername } = this.props;
+        const { scrollTop } = this.messageContainer;
+
+        if (scrollTop == 0) {
+            this.setState({ isLoading: true });
+            try {
+                const { data: { data: { messages: fetchMessages } } } = await roomServices.getMessages(roomIdOrUsername, 20, messages.length);
+                if (fetchMessages !== null) {
+                    this.setState((prevState) => ({ messages: [...fetchMessages, ...prevState.messages] }));
+                    setTimeout(() => {
+                        this.messageContainer.scrollTop = 10;
+                    }, 500);
+                }
+
+            } catch (e) {
+                console.log("Cannot fetch more message", e);
+            } finally {
+                this.setState({ isLoading: false });
+            }
+        }
     }
 
     onFormSubmit = (e) => {
@@ -64,16 +95,19 @@ class ChatboxContainer extends Component {
                 message[k] = newCreatedMessage[k];
             }
         }
+
+        this.scrollToBottom();
     }
 
     render() {
         const { user, roomIdOrUsername } = this.props;
-        const { messages } = this.state;
+        const { messages, isLoading } = this.state;
 
         return (
             <ContainerContext.Provider value={{ replaceMessage: this.replaceMessage, roomIdOrUsername: roomIdOrUsername }}>
                 <div className="ChatboxContainer">
-                    <div className="ChatboxContainer__MessageContainer" ref={el => this.messageContainer = el}>
+                    <div className="ChatboxContainer__MessageContainer" onScroll={this.onMessageConainerScroll} ref={el => this.messageContainer = el}>
+                        {isLoading && <div className="ChatboxContainer__MessageContainer__Loader"><Loading /></div>}
                         <div style={{ padding: "0.5em" }}>
                             {renderMessages(messages, user.id)}
                         </div>

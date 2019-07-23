@@ -19,7 +19,7 @@ body {
 
 .Fullname {
   font-weight: 700;
-  color: var(--primary-color);
+  color: var(--primary-color) !important;
   font-size: var(--title-font-size);
   cursor: pointer;
 }

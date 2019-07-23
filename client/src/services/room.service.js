@@ -9,5 +9,13 @@ export function getRoom(id) {
 }
 
 export function createMessage(id, content, type) {
-    return requireAuthApi.post(`rooms/${id}/messages`, { content, type });
+    return requireAuthApi.post(`/rooms/${id}/messages`, { content, type });
+}
+
+export function getMessages(id, limit, offset) {
+    if (limit == 0 || offset == 0) {
+        return requireAuthApi.get(`/rooms/${id}/messages`);
+    }
+
+    return requireAuthApi.get(`/rooms/${id}/messages?limit=${limit}&offset=${offset}`);
 }

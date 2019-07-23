@@ -160,7 +160,7 @@ class Comment extends Component {
                             <SemanticComment.Content>
                                 <div className="Comment__ContentContainer">
                                     <span className="Comment__AuthorName">
-                                        <Link to={`/${ownerUsername}`}>{ownerFullname}</Link>
+                                        <Link to={`/${ownerUsername}`} className="Fullname">{ownerFullname}</Link>
                                     </span>
                                     {content}
                                 </div>

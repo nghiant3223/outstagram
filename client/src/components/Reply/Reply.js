@@ -90,7 +90,7 @@ class Reply extends Component {
                             <SemanticReply.Content>
                                 <div className="Comment__ContentContainer">
                                     <span className="Comment__AuthorName">
-                                        <Link to={`/${ownerUsername}`}>{ownerFullname}</Link>
+                                        <Link to={`/${ownerUsername}`} className="Fullname">{ownerFullname}</Link>
                                     </span>
                                     {content}
                                 </div>

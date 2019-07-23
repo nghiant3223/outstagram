@@ -11,6 +11,14 @@
   );
 }
 
+.ChatboxContainer__MessageContainer__Loader {
+  text-align: center;
+  height: 2em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .ChatboxContainer__InputContainer {
   display: flex;
   border-top: 1.25px solid rgba(0, 0, 0, 0.15);

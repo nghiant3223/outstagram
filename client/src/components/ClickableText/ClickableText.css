@@ -2,9 +2,9 @@
   position: relative;
   color: var(--primary-color);
   cursor: pointer;
+  font-size: 0.9em;
 }
 
 .ClickableText:hover {
   color: var(--primary-dark-color);
-  font-weight: bold;
 }

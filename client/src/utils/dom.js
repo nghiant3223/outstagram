@@ -16,13 +16,15 @@ export function renderMessages(messages, currentUserID) {
     container.push(<TimeDivider key={"time_divider_" + 0} time={messages[0].createdAt} />);
 
     for (let i = 1; i < messages.length; i++) {
+        const messageITime = new Date(messages[i].createdAt).getTime();
+        const messageBeforeITime = new Date(messages[i - 1].createdAt).getTime()
+        const shouldDivide = messageITime - messageBeforeITime >= MESSAGE_TIME_DISTANCE;
+
         if (messages[i].authorID !== messages[i - 1].authorID) {
             container.push(<MessageGroup key={"message_group_" + blockMessages[0].id} messages={blockMessages} right={currentUserID == blockMessages[0].authorID} />);
-            if (messages[i].createdAt - messages[i - 1].createdAt >= MESSAGE_TIME_DISTANCE) {
-                container.push(<TimeDivider key={"time_divider_" + i} time={messages[i].createdAt} />);
-            }
+            if (shouldDivide) container.push(<TimeDivider key={"time_divider_" + i} time={messages[i].createdAt} />);
             blockMessages = [];
-        } else if (messages[i].createdAt - messages[i - 1].createdAt >= MESSAGE_TIME_DISTANCE) {
+        } else if (shouldDivide) {
             container.push(<MessageGroup key={"message_group_" + blockMessages[0].id} messages={blockMessages} right={currentUserID == blockMessages[0].authorID} />);
             container.push(<TimeDivider key={"time_divider_" + i} time={messages[i].createdAt} />);
             blockMessages = [];

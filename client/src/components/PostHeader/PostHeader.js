@@ -14,7 +14,7 @@ export default function PostHeader({ userID, fullname, username, createdAt }) {
             </div>
 
             <div className="PostHeader__Info">
-                <UserInfoPopup username={username} trigger={<div className="PostHeader__Info__Fullname"><Link to={`/${username}`}>{fullname}</Link></div>} />
+                <UserInfoPopup username={username} trigger={<div className="PostHeader__Info__Fullname"><Link to={`/${username}`}><div className="Fullname">{fullname}</div></Link></div>} />
                 <div className="PostHeader__Info__CreatedAt">{createdAt}</div>
             </div>
         </div>
