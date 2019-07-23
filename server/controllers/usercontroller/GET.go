@@ -63,7 +63,7 @@ func (uc *Controller) GetUsersInfo(c *gin.Context) {
 
 	audienceUserID, ok := utils.RetrieveUserID(c)
 	if !ok {
-		log.Fatal("This route needs verifyToken middleware")
+		log.Fatal("This route needs VerifyToken middleware")
 	}
 
 	var res userdtos.GetUserResponse
@@ -121,7 +121,7 @@ func (uc *Controller) GetUserStoryBoard(c *gin.Context) {
 func (uc *Controller) GetUserPosts(c *gin.Context) {
 	audienceUserID, ok := utils.RetrieveUserID(c)
 	if !ok {
-		log.Fatal("This route needs verifyToken middleware")
+		log.Fatal("This route needs VerifyToken middleware")
 	}
 
 	userID, err := utils.StringToUint(c.Param("userID"))

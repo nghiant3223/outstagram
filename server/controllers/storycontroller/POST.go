@@ -13,7 +13,7 @@ import (
 func (sc *Controller) CreateStory(c *gin.Context) {
 	userID, ok := utils.RetrieveUserID(c)
 	if !ok {
-		log.Fatal("This route needs verifyToken middleware")
+		log.Fatal("This route needs VerifyToken middleware")
 	}
 
 	var reqBody storydtos.CreateStoryRequest
@@ -84,7 +84,7 @@ func (sc *Controller) CreateStory(c *gin.Context) {
 func (sc *Controller) ViewStory(c *gin.Context) {
 	userID, ok := utils.RetrieveUserID(c)
 	if !ok {
-		log.Fatal("This route needs verifyToken middleware")
+		log.Fatal("This route needs VerifyToken middleware")
 	}
 
 	postID, err := utils.StringToUint(c.Param("storyID"))

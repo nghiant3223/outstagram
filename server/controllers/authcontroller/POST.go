@@ -43,7 +43,7 @@ func (ac *Controller) Login(c *gin.Context) {
 func (ac *Controller) Logout(c *gin.Context) {
 	userID, ok := utils.RetrieveUserID(c)
 	if !ok {
-		log.Fatal("This route needs verifyToken middleware")
+		log.Fatal("This route needs VerifyToken middleware")
 	}
 
 	user, err := ac.userService.FindByID(userID)

@@ -13,7 +13,7 @@ import (
 func (sc *Controller) GetMyStoryBoard(c *gin.Context) {
 	userID, ok := utils.RetrieveUserID(c)
 	if !ok {
-		log.Fatal("This route needs verifyToken middleware")
+		log.Fatal("This route needs VerifyToken middleware")
 	}
 
 	var resBody medtos.GetMyStoryBoard

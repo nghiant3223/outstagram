@@ -15,7 +15,7 @@ import (
 func (cc *Controller) GetComments(c *gin.Context) {
 	userID, ok := utils.RetrieveUserID(c)
 	if !ok {
-		log.Fatal("This route needs verifyToken middleware")
+		log.Fatal("This route needs VerifyToken middleware")
 	}
 
 	var reqBody cmtabledtos.GetPostCommentsRequest
@@ -70,7 +70,7 @@ func (cc *Controller) GetComments(c *gin.Context) {
 func (cc *Controller) GetCommentReplies(c *gin.Context) {
 	userID, ok := utils.RetrieveUserID(c)
 	if !ok {
-		log.Fatal("This route needs verifyToken middleware")
+		log.Fatal("This route needs VerifyToken middleware")
 	}
 
 	var reqBody cmtabledtos.GetCommentRepliesRequest

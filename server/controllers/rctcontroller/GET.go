@@ -11,7 +11,7 @@ import (
 func (rc *Controller) GetReactions(c *gin.Context) {
 	audienceUserID, ok := utils.RetrieveUserID(c)
 	if !ok {
-		log.Fatal("This route needs verifyToken middleware")
+		log.Fatal("This route needs VerifyToken middleware")
 	}
 
 	reactableID, err := utils.StringToUint(c.Param("rctableID"))

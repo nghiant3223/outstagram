@@ -83,7 +83,14 @@ func (r *RoomRepo) FindByPartnerID(userID, partnerID uint) *models.Room {
 }
 
 func (r *RoomRepo) SaveMessage(message *models.Message) error {
-	return r.db.Save(message).Error
+	if err := r.db.Save(message).Error; err != nil {
+		return err
+	}
+
+	var user models.User
+	r.db.Model(message).Related(&user)
+	message.User = user
+	return nil
 }
 
 func (r *RoomRepo) RecentRooms(userID uint) ([]*models.Room, error) {

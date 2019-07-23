@@ -16,7 +16,7 @@ import (
 func (pc *Controller) CreatePost(c *gin.Context) {
 	userID, ok := utils.RetrieveUserID(c)
 	if !ok {
-		log.Fatal("This route needs verifyToken middleware")
+		log.Fatal("This route needs VerifyToken middleware")
 	}
 
 	var reqBody postdtos.CreatePostRequest
@@ -137,7 +137,7 @@ func (pc *Controller) CreatePost(c *gin.Context) {
 func (pc *Controller) ViewPost(c *gin.Context) {
 	userID, ok := utils.RetrieveUserID(c)
 	if !ok {
-		log.Fatal("This route needs verifyToken middleware")
+		log.Fatal("This route needs VerifyToken middleware")
 	}
 
 	postID, err := utils.StringToUint(c.Param("postID"))

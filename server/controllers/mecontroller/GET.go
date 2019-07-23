@@ -19,7 +19,7 @@ import (
 func (mc *Controller) GetMe(c *gin.Context) {
 	userID, ok := utils.RetrieveUserID(c)
 	if !ok {
-		log.Fatal("This route needs verifyToken middleware")
+		log.Fatal("This route needs VerifyToken middleware")
 	}
 
 	user, err := mc.userService.FindByID(userID)
@@ -34,7 +34,7 @@ func (mc *Controller) GetMe(c *gin.Context) {
 func (mc *Controller) GetNewsFeed(c *gin.Context) {
 	userID, ok := utils.RetrieveUserID(c)
 	if !ok {
-		log.Fatal("This route needs verifyToken middleware")
+		log.Fatal("This route needs VerifyToken middleware")
 	}
 
 	var res medtos.GetNewsFeedResponse
@@ -161,7 +161,7 @@ func (mc *Controller) GetNewsFeed(c *gin.Context) {
 func (mc *Controller) GetStoryFeed(c *gin.Context) {
 	userID, ok := utils.RetrieveUserID(c)
 	if !ok {
-		log.Fatal("This route needs verifyToken middleware")
+		log.Fatal("This route needs VerifyToken middleware")
 	}
 
 	var storyBoardResponse storydtos.GetStoryFeedResponse

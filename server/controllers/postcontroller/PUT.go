@@ -24,7 +24,7 @@ func (pc *Controller) UpdatePost(c *gin.Context) {
 
 	audienceUserID, ok := utils.RetrieveUserID(c)
 	if !ok {
-		log.Fatal("This route needs verifyToken middleware")
+		log.Fatal("This route needs VerifyToken middleware")
 	}
 
 	post, err := pc.postService.GetPostByID(postID, audienceUserID)
@@ -62,7 +62,7 @@ func (pc *Controller) UpdatePostImage(c *gin.Context) {
 
 	audienceUserID, ok := utils.RetrieveUserID(c)
 	if !ok {
-		log.Fatal("This route needs verifyToken middleware")
+		log.Fatal("This route needs VerifyToken middleware")
 	}
 
 	postImage, err := pc.postImageService.GetPostImageByID(postID)

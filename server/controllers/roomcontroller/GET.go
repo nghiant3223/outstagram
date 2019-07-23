@@ -10,10 +10,10 @@ import (
 	"outstagram/server/utils"
 )
 
-func (rc *Controller) GetRoom(c *gin.Context) {
+func (rc *Controller) CheckRoomExist(c *gin.Context) {
 	userID, ok := utils.RetrieveUserID(c)
 	if !ok {
-		log.Fatal("This route needs verifyToken middleware")
+		log.Fatal("This route needs VerifyToken middleware")
 	}
 
 	var room *models.Room
@@ -27,20 +27,35 @@ func (rc *Controller) GetRoom(c *gin.Context) {
 	}
 
 	if room == nil {
-		utils.ResponseWithError(c, http.StatusNotFound, "Room not found", nil)
+		utils.AbortRequestWithError(c, http.StatusNotFound, "Room not found", nil)
 		return
 	}
 
 	if err != nil {
 		if gorm.IsRecordNotFoundError(err) {
-			utils.ResponseWithError(c, http.StatusNotFound, "Room not found", err.Error())
+			utils.AbortRequestWithError(c, http.StatusNotFound, "Room not found", err.Error())
 			return
 		}
 
-		utils.ResponseWithError(c, http.StatusInternalServerError, "Error while fetching recent rooms", err.Error())
+		utils.AbortRequestWithError(c, http.StatusInternalServerError, "Error while fetching recent rooms", err.Error())
 		return
 	}
 
+	c.Set("room", room)
+}
+
+func (rc *Controller) GetRoom(c *gin.Context) {
+	userID, ok := utils.RetrieveUserID(c)
+	if !ok {
+		log.Fatal("This route needs VerifyToken middleware")
+	}
+
+	sRoom, ok := c.Get("room")
+	if !ok {
+		log.Fatal("This route needs CheckRoomExist middleware")
+	}
+
+	room, _ := sRoom.(*models.Room)
 	dtoRoom := room.ToDTO(userID)
 	utils.ResponseWithSuccess(c, http.StatusOK, "Fetching recent rooms successfully", dtoRoom)
 }
@@ -48,7 +63,7 @@ func (rc *Controller) GetRoom(c *gin.Context) {
 func (rc *Controller) GetRecentRooms(c *gin.Context) {
 	userID, ok := utils.RetrieveUserID(c)
 	if !ok {
-		log.Fatal("This route needs verifyToken middleware")
+		log.Fatal("This route needs VerifyToken middleware")
 	}
 
 	var res roomdtos.GetRecentRoomResponse
@@ -66,4 +81,8 @@ func (rc *Controller) GetRecentRooms(c *gin.Context) {
 	}
 
 	utils.ResponseWithSuccess(c, http.StatusOK, "Fetching recent rooms successfully", res)
+}
+
+func (rc *Controller) GetMessages(c *gin.Context) {
+
 }
