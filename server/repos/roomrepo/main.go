@@ -119,3 +119,44 @@ func (r *RoomRepo) RecentRooms(userID uint) ([]*models.Room, error) {
 	}
 	return rooms, nil
 }
+
+func (r *RoomRepo) GetRoomMessages(id uint) (*models.Room, error) {
+	var room models.Room
+
+	if err := r.db.First(&room, id).Error; err != nil {
+		return nil, err
+	}
+
+	r.db.Model(&room).Related(&room.Messages)
+	messages := room.Messages
+	for i := 0; i < len(messages); i++ {
+		r.db.Model(&messages[i]).Related(&messages[i].User)
+	}
+
+	return &room, nil
+}
+
+func (r *RoomRepo) GetRoomMessagesWithLimit(id, limit, offset uint) (*models.Room, error) {
+	var room models.Room
+
+	if err := r.db.First(&room, id).Error; err != nil {
+		return nil, err
+	}
+
+	query := `
+	SELECT * 
+		FROM (SELECT * FROM message WHERE room_id = ? ORDER BY created_at DESC LIMIT ? OFFSET ?) AS reversed
+	ORDER BY created_at ASC
+	`
+	if err := r.db.Raw(query, id, limit, offset).Scan(&room.Messages).Error;
+		err != nil {
+		return nil, err
+	}
+
+	messages := room.Messages
+	for i := 0; i < len(messages); i++ {
+		r.db.Model(&messages[i]).Related(&messages[i].User)
+	}
+
+	return &room, nil
+}

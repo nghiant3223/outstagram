@@ -20,6 +20,6 @@ func RoomAPIRouter(router *gin.Engine, routerGroup *gin.RouterGroup) {
 
 	routerGroup.GET("/:idOrUsername", roomController.CheckRoomExist, roomController.GetRoom)
 
-	routerGroup.GET("/:idOrUsername/messages", roomController.CheckRoomExist, roomController.GetMessages)
+	routerGroup.GET("/:idOrUsername/messages", roomController.CheckRoomExist, roomController.GetRoomMessages)
 	routerGroup.POST("/:idOrUsername/messages", roomController.CheckRoomExist, roomController.CreateMessage)
 }

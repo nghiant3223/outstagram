@@ -83,6 +83,39 @@ func (rc *Controller) GetRecentRooms(c *gin.Context) {
 	utils.ResponseWithSuccess(c, http.StatusOK, "Fetching recent rooms successfully", res)
 }
 
-func (rc *Controller) GetMessages(c *gin.Context) {
+func (rc *Controller) GetRoomMessages(c *gin.Context) {
+	sRoom, ok := c.Get("room")
+	if !ok {
+		log.Fatal("This route needs CheckRoomExist middleware")
+	}
 
+	var req roomdtos.GetMessagesRequest
+	var res roomdtos.GetMessageResponse
+
+	var foundRoom *models.Room
+	var err error
+
+	if err := c.ShouldBindQuery(&req); err != nil {
+		utils.ResponseWithError(c, http.StatusBadRequest, "Invalid query parameter", err.Error())
+		return
+	}
+
+	room, _ := sRoom.(*models.Room)
+	// If limit and offset are not specified
+	if req.Offset == 0 && req.Limit == 0 {
+		foundRoom, err = rc.roomService.GetRoomMessages(room.ID)
+	} else {
+		foundRoom, err = rc.roomService.GetRoomMessagesWithLimit(room.ID, req.Limit, req.Offset)
+	}
+
+	if err != nil {
+		utils.ResponseWithError(c, http.StatusInternalServerError, "Error while fetching recent rooms", err.Error())
+		return
+	}
+
+	for _, message := range foundRoom.Messages {
+		res.Messages = append(res.Messages, message.ToDTO())
+	}
+
+	utils.ResponseWithSuccess(c, http.StatusOK, "Fetching recent rooms successfully", res)
 }

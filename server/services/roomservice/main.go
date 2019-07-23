@@ -61,3 +61,11 @@ func (s *RoomService) CreateMessage(roomID uint, message *models.Message) error 
 func (s *RoomService) GetRecentRooms(userID uint) ([]*models.Room, error) {
 	return s.roomRepo.RecentRooms(userID)
 }
+
+func (s *RoomService) GetRoomMessages(roomID uint) (*models.Room, error) {
+	return s.roomRepo.GetRoomMessages(roomID)
+}
+
+func (s *RoomService) GetRoomMessagesWithLimit(roomID uint, limit, offset uint) (*models.Room, error) {
+	return s.roomRepo.GetRoomMessagesWithLimit(roomID, limit, offset)
+}
