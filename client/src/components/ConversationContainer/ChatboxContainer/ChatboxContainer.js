@@ -11,6 +11,7 @@ import * as roomServices from "../../../services/room.service";
 
 import "./ChatboxContainer.css";
 import Loading from '../../Loading/Loading';
+import MessageTyping from './MessageTyping/MessageTyping';
 
 class ChatboxContainer extends Component {
     constructor(props) {
@@ -110,6 +111,8 @@ class ChatboxContainer extends Component {
                         {isLoading && <div className="ChatboxContainer__ChatboxContainer__Loader"><Loading /></div>}
                         <div style={{ padding: "0.5em" }}>
                             {renderMessages(messages, user.id)}
+
+                            <MessageTyping />
                         </div>
                     </div>
 
