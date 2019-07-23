@@ -8,5 +8,5 @@ type GetMessagesRequest struct {
 }
 
 type GetMessageResponse struct {
-	Messages []dtomodels.Message `json:"message"`
+	Messages []dtomodels.Message `json:"messages"`
 }

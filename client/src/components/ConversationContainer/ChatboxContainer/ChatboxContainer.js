@@ -24,15 +24,24 @@ class ChatboxContainer extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
+        // When active room changes
         if (this.props.messages !== nextProps.messages) {
             this.setState({ messages: nextProps.messages });
         }
     }
 
-    componentDidUpdate(prevProps) {
+    componentDidUpdate(prevProps, prevState) {
+        // When active rooms change
         if (this.props.roomIdOrUsername !== prevProps.roomIdOrUsername) {
             this.scrollToBottom();
             this.messageInput.focus();
+        }
+
+        //When active room does not change and more messages are fetched
+        if (this.props.roomIdOrUsername === prevProps.roomIdOrUsername && this.state.messages.length > prevState.messages.length) {
+            // IMPORTANT: Dont remove setTimeout
+            // Set space between message conatiner top and scrollbar
+            setTimeout(() => this.chatboxContainer.scrollTop = 10, 0);
         }
     }
 
@@ -42,13 +51,14 @@ class ChatboxContainer extends Component {
     }
 
     scrollToBottom() {
-        this.ChatboxContainer.scrollTop = this.ChatboxContainer.scrollHeight;
+        this.chatboxContainer.scrollTop = this.chatboxContainer.scrollHeight;
+        this.isAtTop = true;
     }
 
     onMessageConainerScroll = async () => {
         const { messages } = this.state;
         const { roomIdOrUsername } = this.props;
-        const { scrollTop } = this.ChatboxContainer;
+        const { scrollTop } = this.chatboxContainer;
 
         if (scrollTop == 0) {
             this.setState({ isLoading: true });
@@ -56,11 +66,7 @@ class ChatboxContainer extends Component {
                 const { data: { data: { messages: fetchMessages } } } = await roomServices.getMessages(roomIdOrUsername, 20, messages.length);
                 if (fetchMessages !== null) {
                     this.setState((prevState) => ({ messages: [...fetchMessages, ...prevState.messages] }));
-                    setTimeout(() => {
-                        this.ChatboxContainer.scrollTop = 10;
-                    }, 500);
                 }
-
             } catch (e) {
                 console.log("Cannot fetch more message", e);
             } finally {
@@ -107,7 +113,7 @@ class ChatboxContainer extends Component {
         return (
             <ContainerContext.Provider value={{ replaceMessage: this.replaceMessage, roomIdOrUsername: roomIdOrUsername }}>
                 <div className="ChatboxContainer">
-                    <div className="ChatboxContainer__ChatboxContainer" onScroll={this.onMessageConainerScroll} ref={el => this.ChatboxContainer = el}>
+                    <div className="ChatboxContainer__ChatboxContainer" onScroll={this.onMessageConainerScroll} ref={el => this.chatboxContainer = el}>
                         {isLoading && <div className="ChatboxContainer__ChatboxContainer__Loader"><Loading /></div>}
                         <div style={{ padding: "0.5em" }}>
                             {renderMessages(messages, user.id)}
