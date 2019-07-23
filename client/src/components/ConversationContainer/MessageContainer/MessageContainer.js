@@ -4,8 +4,10 @@ import { connect } from 'react-redux';
 import { renderMessages } from '../../../utils/dom';
 import { genUID } from '../../../utils/lang';
 
-import "./MessageContainer.css";
 import { Message } from '../../../models/message';
+import ContainerContext from './ContainerContext';
+
+import "./MessageContainer.css";
 
 class ChatboxContainer extends Component {
     constructor(props) {
@@ -46,25 +48,45 @@ class ChatboxContainer extends Component {
         this.messageInput.value = "";
     }
 
+    // Replace the temporary message by the newly created message
+    replaceMessage = (uid, newCreatedMessage) => {
+        const { messages } = this.state;
+        const message = messages.find(message => message.id === uid);
+
+        if (!message) {
+            throw new Error("Message does not exist");
+        }
+
+        // Copy property from newCreatedMessage to current message in the state;
+        for (var k in newCreatedMessage) {
+            // IMPORTANT: Ignore id field to prevent changing Message's key, which cause a new Message is created
+            if (k !== "id") {
+                message[k] = newCreatedMessage[k];
+            }
+        }
+    }
+
     render() {
-        const { user } = this.props;
+        const { user, roomIdOrUsername } = this.props;
         const { messages } = this.state;
 
         return (
-            <div className="ChatboxContainer">
-                <div className="ChatboxContainer__MessageContainer" ref={el => this.messageContainer = el}>
-                    <div style={{ padding: "0.5em" }}>
-                        {renderMessages(messages, user.id)}
+            <ContainerContext.Provider value={{ replaceMessage: this.replaceMessage, roomIdOrUsername: roomIdOrUsername }}>
+                <div className="ChatboxContainer">
+                    <div className="ChatboxContainer__MessageContainer" ref={el => this.messageContainer = el}>
+                        <div style={{ padding: "0.5em" }}>
+                            {renderMessages(messages, user.id)}
+                        </div>
                     </div>
-                </div>
 
-                <form className="ChatboxContainer__InputContainer" onSubmit={this.onFormSubmit}>
-                    <input className="ChatboxContainer__InputContainer__Input" placeholder="Type message..." ref={el => this.messageInput = el} />
-                    <div className="ChatboxContainer__InputContainer__SendBtn">
-                        <button>SEND</button>
-                    </div>
-                </form>
-            </div>
+                    <form className="ChatboxContainer__InputContainer" onSubmit={this.onFormSubmit}>
+                        <input className="ChatboxContainer__InputContainer__Input" placeholder="Type message..." ref={el => this.messageInput = el} />
+                        <div className="ChatboxContainer__InputContainer__SendBtn">
+                            <button>send</button>
+                        </div>
+                    </form>
+                </div>
+            </ContainerContext.Provider>
         )
     }
 }

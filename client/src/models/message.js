@@ -5,5 +5,6 @@ export class Message {
         this.content = content;
         this.createdAt = new Date();
         this.isNew = !!isNew;
+        this.type = 0;
     }
 }

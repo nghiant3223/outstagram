@@ -111,7 +111,6 @@ class Comment extends Component {
         try {
             const { data: { data: { replies: moreReplies } } } = await commentServices.getReply(commentableID, cmtID, 5, replies.length);
             this.setState((prevState) => ({ replies: [...moreReplies, ...prevState.replies] }));
-            console.log(moreReplies);
         } catch (e) {
             console.log("Fetching more reply failed", e);
         } finally {

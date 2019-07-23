@@ -15,7 +15,7 @@ function MessageGroup(props) {
             </div>}
 
             <div className={["MessageGroup__MessageContainer", right ? "MessageGroup__MessageContainer--Right" : "MessageGroup__MessageContainer--Left"].join(" ")}>
-                {messages.map((message, index) => <Message content={message.content} createdAt={message.createdAt} key={index} />)}
+                {messages.map((message) => <Message key={message.id} {...message} />)}
             </div>
         </div>
     )
