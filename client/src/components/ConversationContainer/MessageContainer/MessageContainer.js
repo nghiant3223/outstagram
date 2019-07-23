@@ -1,11 +1,27 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
-import MessageGroup from './MessageGroup/MessageGroup';
+import { renderMessages } from '../../../utils/dom';
+import { genUID } from '../../../utils/lang';
 
 import "./MessageContainer.css";
-import { renderMessages } from '../../../utils/dom';
+import { Message } from '../../../models/message';
 
 class ChatboxContainer extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            messageContent: '',
+            messages: props.messages
+        }
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (this.props.messages !== nextProps.messages) {
+            this.setState({ messages: nextProps.messages });
+        }
+    }
+
     componentDidUpdate() {
         this.scrollToBottom();
     }
@@ -17,73 +33,33 @@ class ChatboxContainer extends Component {
 
     scrollToBottom() {
         this.messageContainer.scrollTop = this.messageContainer.scrollHeight;
-        console.log('here', this.messageContainer);
+    }
+
+    onFormSubmit = (e) => {
+        e.preventDefault();
+
+        const { user } = this.props;
+        const messageContent = this.messageInput.value;
+        const newMessage = new Message(genUID(), user.id, messageContent, true);
+
+        this.setState((prevState) => ({ messages: [...prevState.messages, newMessage] }));
+        this.messageInput.value = "";
     }
 
     render() {
-        const messages = [{
-            id :0,
-            authorID: 1,
-            content: "123",
-            createdAt: 2
-        }, {
-            id:1,
-            authorID: 1,
-            content: "123",
-            createdAt: 3
-        }, {
-            id:2,
-            authorID: 2,
-            content: "123",
-            createdAt: 10
-        }, {
-            id:3,
-            authorID: 1,
-            content: "123",
-            createdAt: 12
-        }, {
-            id:4,
-            authorID: 1,
-            content: "123",
-            createdAt: 14
-        }, {
-            id:5,
-            authorID: 2,
-            content: "123",
-            createdAt: 20
-        }, {id:6,
-            authorID: 1,
-            content: "123",
-            createdAt: 22
-        }, {id:7,
-            authorID: 1,
-            content: "123",
-            createdAt: 12
-        }, {id:8,
-            authorID: 1,
-            content: "123",
-            createdAt: 14
-        }, {id:9,
-            authorID: 2,
-            content: "123",
-            createdAt: 20
-        }, {id:10,
-            authorID: 1,
-            content: "123",
-            createdAt: 22
-        }]
-
+        const { user } = this.props;
+        const { messages } = this.state;
 
         return (
             <div className="ChatboxContainer">
-                <div className="ChatboxContainer__MessageContainer"  ref={el => this.messageContainer = el}>
+                <div className="ChatboxContainer__MessageContainer" ref={el => this.messageContainer = el}>
                     <div style={{ padding: "0.5em" }}>
-                        {renderMessages(messages, 1)}
+                        {renderMessages(messages, user.id)}
                     </div>
                 </div>
 
-                <form className="ChatboxContainer__InputContainer">
-                    <input className="ChatboxContainer__InputContainer__Input" placeholder="Type message..." />
+                <form className="ChatboxContainer__InputContainer" onSubmit={this.onFormSubmit}>
+                    <input className="ChatboxContainer__InputContainer__Input" placeholder="Type message..." ref={el => this.messageInput = el} />
                     <div className="ChatboxContainer__InputContainer__SendBtn">
                         <button>SEND</button>
                     </div>
@@ -93,4 +69,6 @@ class ChatboxContainer extends Component {
     }
 }
 
-export default ChatboxContainer;
+const mapStateToProps = ({ authReducer: { user } }) => ({ user });
+
+export default connect(mapStateToProps)(ChatboxContainer);
