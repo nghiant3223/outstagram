@@ -43,6 +43,7 @@ func main() {
 		routers.AuthAPIRouter(router, apiRouter.Group("/auth"))
 		routers.UserAPIRouter(router, apiRouter.Group("/users"))
 		routers.PostAPIRouter(router, apiRouter.Group("/posts"))
+		routers.RoomAPIRouter(router, apiRouter.Group("/rooms"))
 		routers.StoryAPIRouter(router, apiRouter.Group("/stories"))
 		routers.FollowAPIRouter(router, apiRouter.Group("/follows"))
 		routers.ReactAPIRouter(router, apiRouter.Group("/reactables"))

@@ -16,6 +16,7 @@ type User struct {
 	Phone         *string `gorm:"unique"`
 	Email         string  `gorm:"unique; not null"`
 	LastLogin     *time.Time
+	LastLogout    *time.Time
 	Gender        bool
 	NotifBoard    NotifBoard `gorm:"association_autoupdate:false"`
 	StoryBoard    StoryBoard `gorm:"association_autoupdate:false"`

@@ -13,5 +13,8 @@ func AuthAPIRouter(router *gin.Engine, routerGroup *gin.RouterGroup) {
 	}
 
 	routerGroup.POST("/register", authController.Register)
+
 	routerGroup.POST("/login", authController.Login)
+
+	routerGroup.POST("/logout", authController.Logout)
 }

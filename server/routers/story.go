@@ -16,7 +16,7 @@ func StoryAPIRouter(router *gin.Engine, routerGroup *gin.RouterGroup) {
 	routerGroup.Use(middlewares.VerifyToken(true))
 
 	routerGroup.GET("", storyController.GetMyStoryBoard)
-
 	routerGroup.POST("", storyController.CreateStory)
+
 	routerGroup.POST("/:storyID/views", storyController.ViewStory)
 }

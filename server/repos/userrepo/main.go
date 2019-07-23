@@ -163,37 +163,36 @@ func (r *UserRepo) CheckFollow(follow, followed uint) (bool, error) {
 func (r *UserRepo) GetPostFeed(userID uint) []models.Post {
 	var posts []models.Post
 	query := `
-SELECT candidate_post.id
-FROM (
-	SELECT p.id
+	SELECT candidate_post.id
 	FROM (
-		SELECT *
-            FROM views
-			INNER JOIN viewable 
-			ON views.viewable_id = viewable.id
-            WHERE user_id = ?
-		) user_views_post
-		INNER JOIN post AS p 
-		ON p.viewable_id = user_views_post.viewable_id
- 	) AS seen_post
-
-	RIGHT JOIN
-
-	(
-	SELECT p.*, f.quality
-	FROM post AS p
-	INNER JOIN follows AS f 
-	ON p.user_id = f.user_followed_id
-  	WHERE f.user_follow_id = ? AND quality IS NOT NULL
-	) AS candidate_post 
-
-	ON seen_post.id = candidate_post.id
-	ORDER BY 
-		CASE WHEN seen_post.id IS NULL
-			 THEN candidate_post.popularity * 0.25 + candidate_post.quality * 0.75 END DESC, candidate_post.created_at DESC, candidate_post.created_at DESC,
-		CASE WHEN seen_post.id IS NOT NULL
-			 THEN candidate_post.popularity * 0.25 + candidate_post.quality * 0.75 END DESC, candidate_post.created_at DESC;`
-
+		SELECT p.id
+		FROM (
+			SELECT *
+				FROM views
+				INNER JOIN viewable 
+				ON views.viewable_id = viewable.id
+				WHERE user_id = ?
+			) AS user_views_post
+			INNER JOIN post AS p 
+			ON p.viewable_id = user_views_post.viewable_id
+		) AS seen_post
+	
+		RIGHT JOIN
+	
+		(
+		SELECT p.*, f.quality
+		FROM post AS p
+		INNER JOIN follows AS f 
+		ON p.user_id = f.user_followed_id
+		WHERE f.user_follow_id = ? AND quality IS NOT NULL
+		) AS candidate_post 
+	
+		ON seen_post.id = candidate_post.id
+		ORDER BY 
+			CASE WHEN seen_post.id IS NULL
+				 THEN candidate_post.popularity * 0.25 + candidate_post.quality * 0.75 END DESC, candidate_post.created_at DESC, candidate_post.created_at DESC,
+			CASE WHEN seen_post.id IS NOT NULL
+				 THEN candidate_post.popularity * 0.25 + candidate_post.quality * 0.75 END DESC, candidate_post.created_at DESC;`
 	r.db.Raw(query, userID, userID).Scan(&posts)
 	return posts
 }

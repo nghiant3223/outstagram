@@ -3,6 +3,7 @@ package authcontroller
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/copier"
+	"log"
 	"net/http"
 	"outstagram/server/dtos/authdtos"
 	"outstagram/server/models"
@@ -37,6 +38,27 @@ func (ac *Controller) Login(c *gin.Context) {
 	}
 
 	utils.ResponseWithSuccess(c, http.StatusOK, "Login successfully", token)
+}
+
+func (ac *Controller) Logout(c *gin.Context) {
+	userID, ok := utils.RetrieveUserID(c)
+	if !ok {
+		log.Fatal("This route needs verifyToken middleware")
+	}
+
+	user, err := ac.userService.FindByID(userID)
+	if err != nil {
+		utils.ResponseWithError(c, http.StatusInternalServerError, "Error while fetching user", err.Error())
+		return
+	}
+
+	user.LastLogin = utils.NewTimePointer(time.Now())
+	if err = ac.userService.Save(user); err != nil {
+		utils.ResponseWithError(c, http.StatusInternalServerError, "Saving user failed", err.Error())
+		return
+	}
+
+	utils.AbortRequestWithSuccess(c, http.StatusOK, "Logout user successfully", nil)
 }
 
 func (ac *Controller) Register(c *gin.Context) {

@@ -15,9 +15,10 @@ func PostAPIRouter(router *gin.Engine, routerGroup *gin.RouterGroup) {
 
 	routerGroup.Use(middlewares.VerifyToken(true))
 
+	routerGroup.POST("", postController.CreatePost)
+
 	routerGroup.GET("/specific/:postID", postController.GetPost)
 	routerGroup.PUT("/specific/:postID", postController.UpdatePost)
-	routerGroup.POST("", postController.CreatePost)
 
 	routerGroup.GET("/images/:postImageID", postController.GetPostImage)
 	routerGroup.PUT("/images/:postImageID", postController.UpdatePostImage)
