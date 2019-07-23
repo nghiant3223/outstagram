@@ -1,6 +1,7 @@
 package managers
 
 import (
+	"github.com/go-redis/redis"
 	"net/http"
 	"time"
 
@@ -37,19 +38,26 @@ const (
 	pingPeriod = (pongWait * 9) / 10
 
 	// Maximum message size allowed from peer.
-	maxMessageSize = 512*1024
+	maxMessageSize = 512 * 1024
 )
 
 var upgrader = websocket.Upgrader{
-	ReadBufferSize:  1024*1024,
-	WriteBufferSize: 1024*1024,
+	ReadBufferSize:  1024 * 1024,
+	WriteBufferSize: 1024 * 1024,
 	CheckOrigin:     func(r *http.Request) bool { return true },
 }
 
 var Hub *hub
 var StoryManager *storyManager
+var pubSubClient *redis.Client
 
 func Init() {
 	Hub = NewHub()
 	StoryManager = NewStoryManager(Hub)
+
+	pubSubClient = redis.NewClient(&redis.Options{
+		Addr:     "cache:6379",
+		Password: "",
+		DB:       0,
+	})
 }

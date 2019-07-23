@@ -1,11 +1,29 @@
 version: '3'
 services:
-  web:
+  web_1:
     build: .
+    environment:
+      PORT: "5001"
     ports:
-      - "3000:3000"
+      - "5000:5000"
     expose:
-      - "3000"
+      - "5000"
+    command: gin -p 5000 -a 5001 run app.go
+    # Comment the two following lines for production
+    volumes:
+      - .:/outstagram
+    links:
+      - db
+      - cache
+  web_2:
+    build: .
+    environment:
+      PORT: "6001"
+    ports:
+      - "6969:6969"
+    expose:
+      - "6969"
+    command: gin -p 6969 -a 6001 run app.go
     # Comment the two following lines for production
     volumes:
       - .:/outstagram

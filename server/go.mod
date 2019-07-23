@@ -3,6 +3,7 @@ module outstagram/server
 go 1.12
 
 require (
+	cloud.google.com/go v0.37.4
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/disintegration/imaging v0.0.0-20190602120407-465faf0892b5
 	github.com/gin-gonic/contrib v0.0.0-20190526021735-7fb7810ed2a0

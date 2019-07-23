@@ -14,7 +14,7 @@ type RedisSupplier struct {
 
 var supplier *RedisSupplier
 
-func 	NewRedisSupplier() (*RedisSupplier, error) {
+func NewRedisSupplier() (*RedisSupplier, error) {
 	if supplier == nil {
 		supplier = &RedisSupplier{}
 		supplier.Client = redis.NewClient(&redis.Options{
@@ -22,7 +22,6 @@ func 	NewRedisSupplier() (*RedisSupplier, error) {
 			Password: "",
 			DB:       0,
 		})
-
 	}
 
 	if _, err := supplier.Client.Ping().Result(); err != nil {

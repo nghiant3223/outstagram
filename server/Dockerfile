@@ -14,7 +14,7 @@ RUN go get github.com/codegangsta/gin
 COPY . .
 
 # Uncomment the following line for production
-# CMD ["go", "run", "app.go"]
+#CMD ["go", "run", "app.go"]
 
 # Comment the following line for production
-CMD ["gin", "run", "app.go"]
+#CMD ["gin", "-p", "5000", "-a", "5001", "run", "app.go"]

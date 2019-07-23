@@ -1,6 +1,8 @@
 package managers
 
-import "fmt"
+import (
+	"fmt"
+)
 
 // hub maintains the set of active Connections and broadcasts WSMessages to the Connections.
 type hub struct {
@@ -35,6 +37,19 @@ func NewHub() *hub {
 
 // Run starts a hub session
 func (h *hub) Run(wsMuxes ...func(from *Connection, clientMessage ClientMessage)) {
+	go func() {
+		pubSub := pubSubClient.Subscribe("story")
+		_, err := pubSub.Receive()
+		if err != nil {
+			panic(err)
+		}
+		ch := pubSub.Channel()
+
+		for msg := range ch {
+			fmt.Println(">>>", msg.Channel, msg.Payload)
+		}
+	}()
+
 	for {
 		select {
 		case s := <-h.Register:
@@ -50,6 +65,12 @@ func (h *hub) Run(wsMuxes ...func(from *Connection, clientMessage ClientMessage)
 		case m := <-h.BroadcastChannel:
 			for _, wsMux := range wsMuxes {
 				wsMux(m.Connection, m.TransmitData)
+			}
+			fmt.Println(m)
+			pubSubClient.Publish("story", m)
+			err := pubSubClient.Publish("story", &m).Err()
+			if err != nil {
+				panic(err)
 			}
 		}
 	}
