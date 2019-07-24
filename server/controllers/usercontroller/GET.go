@@ -37,27 +37,23 @@ func (uc *Controller) SearchUser(c *gin.Context) {
 
 	var dtoUsers []dtomodels.User
 	for _, user := range users {
-		dtoUsers = append(dtoUsers, user.ToUserDTO())
+		dtoUsers = append(dtoUsers, user.ToDTO())
 	}
 
 	utils.ResponseWithSuccess(c, http.StatusOK, "Fetching user successfully", dtoUsers)
 }
 
 func (uc *Controller) GetUsersInfo(c *gin.Context) {
-	username := c.Param("userID")
-	if username == "" {
-		utils.ResponseWithError(c, http.StatusBadRequest, "Username must be provided", nil)
-		return
-	}
+	userIDOrUsername := c.Param("userID")
+	user, err := uc.userService.GetUserByUserIDOrUsername(userIDOrUsername)
 
-	user, err := uc.userService.FindByUsername(username)
 	if err != nil {
-		if gorm.IsRecordNotFoundError(err) {
-			utils.ResponseWithError(c, http.StatusNotFound, "Not found", err.Error())
+		if !gorm.IsRecordNotFoundError(err) {
+			utils.ResponseWithError(c, http.StatusInternalServerError, "Error while retrieving story board", err.Error())
 			return
 		}
 
-		utils.ResponseWithError(c, http.StatusInternalServerError, "Error while retrieving story board", err.Error())
+		utils.ResponseWithError(c, http.StatusInternalServerError, "Error while searching for user", err.Error())
 		return
 	}
 
@@ -67,12 +63,12 @@ func (uc *Controller) GetUsersInfo(c *gin.Context) {
 	}
 
 	var res userdtos.GetUserResponse
-	dtoUser := user.ToUserDTO()
+	dtoUser := user.ToDTO()
 
 	var dtoFollowers []dtomodels.SimpleUser
 	followers := uc.userService.GetFollowers(user.ID)
 	for _, follower := range followers {
-		dtoFollowers = append(dtoFollowers, follower.ToSimpleUser())
+		dtoFollowers = append(dtoFollowers, follower.ToSimpleDTO())
 	}
 	dtoUser.Followers = dtoFollowers
 	dtoUser.FollowerCount = len(dtoFollowers)
@@ -80,11 +76,10 @@ func (uc *Controller) GetUsersInfo(c *gin.Context) {
 	var dtoFollowings []dtomodels.SimpleUser
 	followings := uc.userService.GetFollowers(user.ID)
 	for _, follower := range followings {
-		dtoFollowings = append(dtoFollowings, follower.ToSimpleUser())
+		dtoFollowings = append(dtoFollowings, follower.ToSimpleDTO())
 	}
 	dtoUser.Followings = dtoFollowings
 	dtoUser.FollowingCount = len(dtoFollowings)
-
 
 	posts, _ := uc.postService.GetUserPosts(user.ID)
 	dtoUser.PostCount = len(posts)

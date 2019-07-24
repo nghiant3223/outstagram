@@ -23,7 +23,7 @@ type User struct {
 	AvatarImageID uint
 }
 
-func (u *User) ToUserDTO() dtomodels.User {
+func (u *User) ToDTO() dtomodels.User {
 	return dtomodels.User{
 		ID:       u.ID,
 		Fullname: u.Fullname,
@@ -45,7 +45,7 @@ func (u *User) ToMeDTO() dtomodels.Me {
 	}
 }
 
-func (u *User) ToSimpleUser() dtomodels.SimpleUser {
+func (u *User) ToSimpleDTO() dtomodels.SimpleUser {
 	return dtomodels.SimpleUser{
 		ID:       u.ID,
 		Fullname: u.Fullname,

@@ -1,23 +1,13 @@
 package managers
 
-import (
-	"outstagram/server/db"
-	"outstagram/server/repos/userrepo"
-	"outstagram/server/services/userservice"
-)
-
 // storyManager manages WebSocket events related to Story
 type roomManager struct {
-	Hub         *hub
-	userService *userservice.UserService
+	Hub *hub
 }
 
 // NewStoryManager returns new storyManager
 func NewRoomManager(hub *hub) *roomManager {
-	dbConn, _ := db.New()
-	userRepo := userrepo.New(dbConn)
-	userService := userservice.New(userRepo)
-	return &roomManager{Hub: hub, userService: userService}
+	return &roomManager{Hub: hub}
 }
 
 // WSMux multiplexes WebSocket event to corresponding handler

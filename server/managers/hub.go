@@ -26,6 +26,9 @@ type hub struct {
 
 	// A map of roomID to Connections
 	RoomID2Connection map[uint][]*Connection
+
+	// Api provider
+	APIProvider APIProvider
 }
 
 // NewHub returns new hub instance
@@ -37,6 +40,7 @@ func NewHub() *hub {
 		Connections:       make(map[*Connection]bool),
 		UserID2Connection: make(map[uint][]*Connection),
 		RoomID2Connection: make(map[uint][]*Connection),
+		APIProvider:       NewLocalAPIProvider(),
 	}
 }
 
@@ -58,7 +62,7 @@ func (h *hub) run(wsMuxes ...func(from *SuperConnection, clientMessage Message))
 				userConnections := h.UserID2Connection[us.SuperConn.UserID]
 				for i, conn := range userConnections {
 					if conn == us.SuperConn.Connection {
-						userConnections = append(userConnections[:i], userConnections[i+1])
+						userConnections = append(userConnections[:i], userConnections[i+1:]...)
 					}
 				}
 				// TODO: remove us.SuperConn from rooms in which it joins

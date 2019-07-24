@@ -42,7 +42,7 @@ func (s *ReactableService) GetReactors(reactableID, userID uint, limit, offset i
 func (s *ReactableService) GetReactorDTOs(reactableID, userID uint, limit, offset int) []dtomodels.SimpleUser {
 	var reactors []dtomodels.SimpleUser
 	for _, user := range s.reactableRepo.GetReactorsOrderByQuality(reactableID, userID, limit, offset) {
-		dtoReactor := user.ToSimpleUser()
+		dtoReactor := user.ToSimpleDTO()
 		followed, _ := s.userService.CheckFollow(userID, user.ID)
 		dtoReactor.Followed = utils.NewBoolPointer(followed)
 		reactors = append(reactors, dtoReactor)

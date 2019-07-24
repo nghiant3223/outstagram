@@ -6,6 +6,7 @@ import (
 	"outstagram/server/constants"
 	"outstagram/server/models"
 	"outstagram/server/repos/userrepo"
+	"outstagram/server/utils"
 )
 
 type UserService struct {
@@ -113,4 +114,28 @@ func (s *UserService) GetPostFeed(userID uint) []models.Post {
 
 func (s *UserService) GetFollowingsWithAffinity(userID uint) []*models.User {
 	return s.userRepo.GetFollowingsWithAffinity(userID)
+}
+
+func (s *UserService) GetUserByUserIDOrUsername(userIDOrUsername interface{}) (*models.User, error) {
+	var user *models.User
+	var err error
+
+	if username,ok := userIDOrUsername.(string); ok {
+		id, err := utils.StringToUint(username)
+		if err != nil {
+			user, err = s.FindByUsername(username)
+		} else {
+			user, err = s.FindByID(id)
+		}
+	}
+
+	if id, ok := userIDOrUsername.(uint);ok {
+		user, err = s.FindByID(id)
+	}
+
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
 }

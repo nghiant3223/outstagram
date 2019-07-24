@@ -1,23 +1,13 @@
 package managers
 
-import (
-	"outstagram/server/db"
-	"outstagram/server/repos/userrepo"
-	"outstagram/server/services/userservice"
-)
-
 // storyManager manages WebSocket events related to Story
 type storyManager struct {
-	Hub         *hub
-	userService *userservice.UserService
+	Hub *hub
 }
 
 // NewStoryManager returns new storyManager
 func NewStoryManager(hub *hub) *storyManager {
-	dbConn, _ := db.New()
-	userRepo := userrepo.New(dbConn)
-	userService := userservice.New(userRepo)
-	return &storyManager{Hub: hub, userService: userService}
+	return &storyManager{Hub: hub}
 }
 
 // WSMux multiplexes WebSocket event to corresponding handler
@@ -25,8 +15,8 @@ func (sm *storyManager) WSMux(c *SuperConnection, clientMessage Message) {
 	switch clientMessage.Type {
 	case "STORY.CLIENT.POST_STORY":
 		var followerConnections []*Connection
-		for _, user := range sm.userService.GetFollowers(c.UserID) {
-			if connections, ok := sm.Hub.UserID2Connection[user.ID]; ok {
+		for _, follower := range sm.Hub.APIProvider.GetUserFollowers(c.UserID) {
+			if connections, ok := sm.Hub.UserID2Connection[follower.ID]; ok {
 				followerConnections = append(followerConnections, connections...)
 			}
 		}

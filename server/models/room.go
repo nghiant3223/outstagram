@@ -19,7 +19,7 @@ type Room struct {
 func (r *Room) ToDTO(userID uint) dtomodels.Room {
 	var dtoUsers []*dtomodels.SimpleUser
 	for _, user := range r.Members {
-		dtoUser := user.ToSimpleUser()
+		dtoUser := user.ToSimpleDTO()
 		dtoUsers = append(dtoUsers, &dtoUser)
 	}
 
@@ -44,10 +44,10 @@ func (r *Room) ToDTO(userID uint) dtomodels.Room {
 
 	if !r.Type {
 		if r.Members[0].ID != userID {
-			partner := r.Members[0].ToSimpleUser()
+			partner := r.Members[0].ToSimpleDTO()
 			dtoRoom.Partner = &partner
 		} else {
-			partner := r.Members[1].ToSimpleUser()
+			partner := r.Members[1].ToSimpleDTO()
 			dtoRoom.Partner = &partner
 		}
 		dtoRoom.ImageID = 0
