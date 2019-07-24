@@ -23,7 +23,7 @@ func NewStoryManager(hub *hub) *storyManager {
 }
 
 // WSMux multiplexes WebSocket event to corresponding handler
-func (sm *storyManager) WSMux(c *Connection, clientMessage Message) {
+func (sm *storyManager) WSMux(c *SuperConnection, clientMessage Message) {
 	switch clientMessage.Type {
 	case "STORY.CLIENT.POST_STORY":
 		var followerConnections []*Connection

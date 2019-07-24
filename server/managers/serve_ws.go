@@ -15,17 +15,18 @@ func ServeWs(c *gin.Context) {
 		return
 	}
 
-	var connection *Connection
+	var superConnection *SuperConnection
 	if userID, err := utils.StringToUint(c.Query("userID")); err != nil {
-		connection = &Connection{Send: make(chan ServerMessage), WS: ws, UserID: 0}
+		connection := &Connection{Send: make(chan ServerMessage), WS: ws}
+		superConnection = &SuperConnection{Connection: connection, UserID: 0}
 	} else {
-		connection = &Connection{Send: make(chan ServerMessage), WS: ws, UserID: userID}
+		connection := &Connection{Send: make(chan ServerMessage), WS: ws}
+		superConnection = &SuperConnection{Connection: connection, UserID: userID}
 		Hub.UserID2Connection[userID] = append(Hub.UserID2Connection[userID], connection)
 	}
 
-	subscription := Subscription{connection}
-
-	Hub.Register <- subscription
+	subscription := Subscription{SuperConn: superConnection}
+	Hub.RegisterChannel <- subscription
 
 	go subscription.WritePump()
 	go subscription.ReadPump()

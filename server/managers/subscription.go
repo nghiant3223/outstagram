@@ -10,20 +10,20 @@ import (
 
 // Subscription is the wrapper for socket subscription
 type Subscription struct {
-	Conn *Connection
+	SuperConn *SuperConnection
 }
 
 // ReadPump pumps messages from the websocket Connection to the hub.
 func (s Subscription) ReadPump() {
-	c := s.Conn
+	c := s.SuperConn
 	defer func() {
-		Hub.Unregister <- s
+		Hub.UnregisterChannel <- s
 		c.WS.Close()
 	}()
 
 	c.WS.SetReadLimit(maxMessageSize)
-	c.WS.SetReadDeadline(time.Now().Add(pongWait))
-	c.WS.SetPongHandler(func(string) error { c.WS.SetReadDeadline(time.Now().Add(pongWait)); return nil })
+	_ = c.WS.SetReadDeadline(time.Now().Add(pongWait))
+	c.WS.SetPongHandler(func(string) error { _ = c.WS.SetReadDeadline(time.Now().Add(pongWait)); return nil })
 
 	for {
 		var clientMessage Message
@@ -36,18 +36,18 @@ func (s Subscription) ReadPump() {
 			break
 		}
 
-		m := ClientMessage{Message: clientMessage, Connection: c}
+		m := ClientMessage{Message: clientMessage, SuperConnection: c}
 		Hub.BroadcastChannel <- m
 	}
 }
 
 // WritePump pumps messages from the hub to the websocket Connection.
 func (s *Subscription) WritePump() {
-	c := s.Conn
+	c := s.SuperConn
 	ticker := time.NewTicker(pingPeriod)
 	defer func() {
 		ticker.Stop()
-		c.WS.Close()
+		_ = c.WS.Close()
 	}()
 
 	for {
@@ -68,7 +68,7 @@ func (s *Subscription) WritePump() {
 				log.Println(err.Error())
 				return
 			}
-			
+
 		case <-ticker.C:
 			if err := c.Write(websocket.PingMessage, []byte{}); err != nil {
 				return

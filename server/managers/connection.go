@@ -13,13 +13,19 @@ type Connection struct {
 
 	// Buffered channel of outbound WSMessages.
 	Send chan ServerMessage
-
-	// UserID of who trigger the event
-	UserID uint
 }
 
 // Write writes a message with the given message type and payload.
 func (c *Connection) Write(mt int, payload []byte) error {
-	c.WS.SetWriteDeadline(time.Now().Add(writeWait))
+	_ = c.WS.SetWriteDeadline(time.Now().Add(writeWait))
 	return c.WS.WriteMessage(mt, payload)
+}
+
+// SuperConnection is wrapper struct of Connection
+// It's used to add UserID to the Connection
+// If SuperConnection's Connection is nil, the Connection is between servers
+// Otherwise, the Connection is between client and server
+type SuperConnection struct {
+	*Connection
+	UserID uint
 }

@@ -17,7 +17,7 @@ type Message struct {
 // ClientMessage is wrapper for data transmitted from client to server
 type ClientMessage struct {
 	Message
-	Connection *Connection
+	*SuperConnection
 }
 
 // TransmitDataDTO is transmitted from server to client
