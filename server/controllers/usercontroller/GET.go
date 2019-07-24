@@ -67,16 +67,27 @@ func (uc *Controller) GetUsersInfo(c *gin.Context) {
 	}
 
 	var res userdtos.GetUserResponse
+	dtoUser := user.ToUserDTO()
 
-	res.ID = user.ID
-	res.CreatedAt = user.CreatedAt
-	res.Fullname = user.Fullname
-	res.Username = user.Username
-	res.FollowerCount = len(uc.userService.GetFollowers(user.ID))
-	res.FollowingCount = len(uc.userService.GetFollowings(user.ID))
+	var dtoFollowers []dtomodels.SimpleUser
+	followers := uc.userService.GetFollowers(user.ID)
+	for _, follower := range followers {
+		dtoFollowers = append(dtoFollowers, follower.ToSimpleUser())
+	}
+	dtoUser.Followers = dtoFollowers
+	dtoUser.FollowerCount = len(dtoFollowers)
+
+	var dtoFollowings []dtomodels.SimpleUser
+	followings := uc.userService.GetFollowers(user.ID)
+	for _, follower := range followings {
+		dtoFollowings = append(dtoFollowings, follower.ToSimpleUser())
+	}
+	dtoUser.Followings = dtoFollowings
+	dtoUser.FollowingCount = len(dtoFollowings)
+
 
 	posts, _ := uc.postService.GetUserPosts(user.ID)
-	res.PostCount = len(posts)
+	dtoUser.PostCount = len(posts)
 
 	isMe := audienceUserID == user.ID
 	if !isMe {
@@ -85,11 +96,11 @@ func (uc *Controller) GetUsersInfo(c *gin.Context) {
 			utils.ResponseWithError(c, http.StatusOK, "Error while retrieving user", err.Error())
 			return
 		}
-
-		res.Followed = utils.NewBoolPointer(ok)
+		dtoUser.Followed = utils.NewBoolPointer(ok)
 	}
 
-	res.IsMe = isMe
+	dtoUser.IsMe = isMe
+	res.User = dtoUser
 	utils.ResponseWithSuccess(c, http.StatusOK, "Retrieve user's info successfully", res)
 }
 
