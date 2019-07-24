@@ -28,25 +28,25 @@ func (sm *storyManager) WSMux(c *Connection, clientMessage ClientMessage) {
 	case "STORY.CLIENT.POST_STORY":
 		var followerConnections []*Connection
 		for _, user := range sm.userService.GetFollowers(c.UserID) {
-			if connection, ok := sm.Hub.UserID2Connection[user.ID]; ok {
-				followerConnections = append(followerConnections, connection)
+			if connections, ok := sm.Hub.UserID2Connection[user.ID]; ok {
+				followerConnections = append(followerConnections, connections...)
 			}
 		}
 
-		message := ServerMessage{Data: clientMessage.Data, Type: "STORY.SERVER.POST_STORY", ActorID: &c.UserID}
-		sm.Hub.BroadcastSelective(c, message, followerConnections)
+		message := ServerMessage{Data: clientMessage.Data, Type: "STORY.SERVER.POST_STORY", ActorID: c.UserID}
+		sm.Hub.BroadcastSelective(c, message, followerConnections...)
 
 	case "STORY.CLIENT.REACT_STORY":
 		targetUserID := uint(clientMessage.Data.(map[string]interface{})["targetUserID"].(float64))
-		message := ServerMessage{Data: clientMessage.Data, Type: "STORY.SERVER.REACT_STORY", ActorID: &c.UserID}
-		sm.Hub.BroadcastSelective(c, message, []*Connection{sm.Hub.UserID2Connection[targetUserID]})
+		message := ServerMessage{Data: clientMessage.Data, Type: "STORY.SERVER.REACT_STORY", ActorID: c.UserID}
+		sm.Hub.BroadcastSelective(c, message, sm.Hub.UserID2Connection[targetUserID]...)
 
 	case "STORY.CLIENT.UNREACT_STORY":
 		targetUserID := uint(clientMessage.Data.(map[string]interface{})["targetUserID"].(float64))
-		message := ServerMessage{Data: clientMessage.Data, Type: "STORY.SERVER.UNREACT_STORY", ActorID: &c.UserID}
-		sm.Hub.BroadcastSelective(c, message, []*Connection{sm.Hub.UserID2Connection[targetUserID]})
+		message := ServerMessage{Data: clientMessage.Data, Type: "STORY.SERVER.UNREACT_STORY", ActorID: c.UserID}
+		sm.Hub.BroadcastSelective(c, message, sm.Hub.UserID2Connection[targetUserID]...)
 
 	default:
-		log.Fatal("Event not supported")
+		log.Println("Event not supported")
 	}
 }

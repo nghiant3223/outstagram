@@ -3,12 +3,12 @@ services:
   web_1:
     build: .
     environment:
-      PORT: "5001"
+      PORT: "3001"
     ports:
-      - "5000:5000"
+      - "3000:3000"
     expose:
-      - "5000"
-    command: gin -p 5000 -a 5001 run app.go
+      - "3000"
+    command: gin -p 3000 -a 3001 run app.go
     # Comment the two following lines for production
     volumes:
       - .:/outstagram
@@ -18,12 +18,12 @@ services:
   web_2:
     build: .
     environment:
-      PORT: "6001"
+      PORT: "4001"
     ports:
-      - "6969:6969"
+      - "4000:4000"
     expose:
-      - "6969"
-    command: gin -p 6969 -a 6001 run app.go
+      - "4000"
+    command: gin -p 4000 -a 4001 run app.go
     # Comment the two following lines for production
     volumes:
       - .:/outstagram

@@ -20,7 +20,7 @@ func ServeWs(c *gin.Context) {
 		connection = &Connection{Send: make(chan ServerMessage), WS: ws, UserID: 0}
 	} else {
 		connection = &Connection{Send: make(chan ServerMessage), WS: ws, UserID: userID}
-		Hub.UserID2Connection[userID] = connection
+		Hub.UserID2Connection[userID] = append(Hub.UserID2Connection[userID], connection)
 	}
 
 	subscription := Subscription{connection}

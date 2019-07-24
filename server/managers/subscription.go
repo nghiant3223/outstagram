@@ -36,7 +36,7 @@ func (s Subscription) ReadPump() {
 			break
 		}
 
-		m := ClientMessageWrapper{TransmitData: clientMessage, Connection: c}
+		m := ClientMessageWrapper{ClientMessage: clientMessage, Connection: c}
 		Hub.BroadcastChannel <- m
 	}
 }

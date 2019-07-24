@@ -16,15 +16,15 @@ type ClientMessage struct {
 
 // ClientMessageWrapper is wrapper for data transmitted from client to server
 type ClientMessageWrapper struct {
-	TransmitData ClientMessage
-	Connection   *Connection
+	ClientMessage
+	Connection *Connection
 }
 
 // TransmitDataDTO is transmitted from server to client
 type ServerMessage struct {
 	Data    interface{} `json:"data"`
 	Type    string      `json:"type"`
-	ActorID *uint       `json:"actorID"`
+	ActorID uint        `json:"actorID,omitempty"`
 }
 
 const (

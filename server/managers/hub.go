@@ -2,12 +2,13 @@ package managers
 
 import (
 	"fmt"
+	"log"
 )
 
 // hub maintains the set of active Connections and broadcasts WSMessages to the Connections.
 type hub struct {
 	// Registered Connections.
-	Rooms map[string]map[*Connection]bool
+	RoomID2Connection map[string]map[*Connection]bool
 
 	Connections map[*Connection]bool
 
@@ -20,7 +21,7 @@ type hub struct {
 	// Unregister requests from Connections.
 	Unregister chan Subscription
 
-	UserID2Connection map[uint]*Connection
+	UserID2Connection map[uint][]*Connection
 }
 
 // NewHub returns new hub instance
@@ -29,22 +30,18 @@ func NewHub() *hub {
 		BroadcastChannel:  make(chan ClientMessageWrapper),
 		Register:          make(chan Subscription),
 		Unregister:        make(chan Subscription),
-		Rooms:             make(map[string]map[*Connection]bool),
+		RoomID2Connection: make(map[string]map[*Connection]bool),
 		Connections:       make(map[*Connection]bool),
-		UserID2Connection: make(map[uint]*Connection),
+		UserID2Connection: make(map[uint][]*Connection),
 	}
 }
 
 // Run starts a hub session
 func (h *hub) Run(wsMuxes ...func(from *Connection, clientMessage ClientMessage)) {
-	go func() {
-		pubSub := pubSubClient.Subscribe("story")
-		_, err := pubSub.Receive()
-		if err != nil {
-			panic(err)
-		}
-		ch := pubSub.Channel()
+	pubSub := pubSubClient.Subscribe("story")
+	ch := pubSub.Channel()
 
+	go func() {
 		for msg := range ch {
 			fmt.Println(">>>", msg.Channel, msg.Payload)
 		}
@@ -64,14 +61,17 @@ func (h *hub) Run(wsMuxes ...func(from *Connection, clientMessage ClientMessage)
 			}
 		case m := <-h.BroadcastChannel:
 			for _, wsMux := range wsMuxes {
-				wsMux(m.Connection, m.TransmitData)
+				wsMux(m.Connection, m.ClientMessage)
 			}
-			fmt.Println(m)
-			pubSubClient.Publish("story", m)
-			err := pubSubClient.Publish("story", &m).Err()
+
+			serverTransferMessage := ServerMessage{Data: m.Data, Type: m.Type, ActorID: m.Connection.UserID}
+			err := pubSubClient.Publish("story", &serverTransferMessage).Err()
 			if err != nil {
-				panic(err)
+				log.Println("Cannot publish message", err.Error())
 			}
+
+			//case m := <-ch:
+
 		}
 	}
 }
@@ -87,7 +87,7 @@ func (h *hub) Emit(transmitMessage ServerMessage) {
 
 // EmitTo emits ClientMessage `m` to all sockets in room `room`
 func (h *hub) EmitTo(transmitMessage ServerMessage, room string) {
-	connections := h.Rooms[room]
+	connections := h.RoomID2Connection[room]
 	for c := range connections {
 		c.Send <- transmitMessage
 	}
@@ -104,7 +104,7 @@ func (h *hub) Broadcast(conn *Connection, transmitMessage ServerMessage) {
 
 // BroadcastTo broadcasts ClientMessageWrapper `m` to all sockets in room `room` other than `conn` Connection
 func (h *hub) BroadcastTo(conn *Connection, transmitMessage ServerMessage, room string) {
-	for c := range h.Rooms[room] {
+	for c := range h.RoomID2Connection[room] {
 		if c != conn {
 			c.Send <- transmitMessage
 		}
@@ -112,7 +112,7 @@ func (h *hub) BroadcastTo(conn *Connection, transmitMessage ServerMessage, room 
 }
 
 // BroadcastSelective broadcasts to specific connections collection
-func (h *hub) BroadcastSelective(conn *Connection, transmitMessage ServerMessage, connections []*Connection) {
+func (h *hub) BroadcastSelective(conn *Connection, transmitMessage ServerMessage, connections ...*Connection) {
 	for _, c := range connections {
 		if c != conn {
 			c.Send <- transmitMessage
