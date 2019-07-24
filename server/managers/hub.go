@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"strings"
 )
 
 // hub maintains the set of active Connections and broadcasts WSMessages to the Connections.
@@ -40,8 +41,8 @@ func NewHub() *hub {
 }
 
 // Run starts a hub session
-func (h *hub) Run(wsMuxes ...func(from *SuperConnection, clientMessage Message)) {
-	pubSub := pubSubClient.Subscribe("story")
+func (h *hub) run(wsMuxes ...func(from *SuperConnection, clientMessage Message)) {
+	pubSub := pubSubClient.Subscribe("STORY", "MESSAGE")
 	pubSubCh := pubSub.Channel()
 
 	for {
@@ -76,7 +77,9 @@ func (h *hub) Run(wsMuxes ...func(from *SuperConnection, clientMessage Message))
 				log.Println("Cannot marshal message: ", err.Error())
 				break
 			}
-			if err := pubSubClient.Publish("story", sServerMessage).Err(); err != nil {
+
+			channel := strings.Split(serverMessage.Type, ".")[0]
+			if err := pubSubClient.Publish(channel, sServerMessage).Err(); err != nil {
 				log.Println("Cannot publish message: ", err.Error())
 				break
 			}
@@ -137,6 +140,8 @@ func (h *hub) BroadcastSelective(conn *SuperConnection, serverMessage ServerMess
 	for _, c := range connections {
 		if c != conn.Connection {
 			c.Send <- serverMessage
+		} else {
+			fmt.Println("Duplicate")
 		}
 	}
 }

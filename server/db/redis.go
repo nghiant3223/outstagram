@@ -17,11 +17,7 @@ var supplier *RedisSupplier
 func NewRedisSupplier() (*RedisSupplier, error) {
 	if supplier == nil {
 		supplier = &RedisSupplier{}
-		supplier.Client = redis.NewClient(&redis.Options{
-			Addr:     "cache:6379",
-			Password: "",
-			DB:       0,
-		})
+		supplier.Client = NewRedisClient()
 	}
 
 	if _, err := supplier.Client.Ping().Result(); err != nil {
@@ -29,6 +25,14 @@ func NewRedisSupplier() (*RedisSupplier, error) {
 	}
 
 	return supplier, nil
+}
+
+func NewRedisClient() *redis.Client {
+	return redis.NewClient(&redis.Options{
+		Addr:     "cache:6379",
+		Password: "",
+		DB:       0,
+	})
 }
 
 func (s *RedisSupplier) Get(key string) *redis.StringCmd {

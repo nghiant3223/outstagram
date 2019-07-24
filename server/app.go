@@ -18,7 +18,7 @@ func main() {
 	}
 
 	managers.Init()
-	go managers.Hub.Run(managers.StoryManager.WSMux)
+	go managers.Hub.Run()
 
 	router := gin.Default()
 	router.GET("/ws", managers.ServeWs)

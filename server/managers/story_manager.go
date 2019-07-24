@@ -1,7 +1,6 @@
 package managers
 
 import (
-	"log"
 	"outstagram/server/db"
 	"outstagram/server/repos/userrepo"
 	"outstagram/server/services/userservice"
@@ -18,7 +17,6 @@ func NewStoryManager(hub *hub) *storyManager {
 	dbConn, _ := db.New()
 	userRepo := userrepo.New(dbConn)
 	userService := userservice.New(userRepo)
-
 	return &storyManager{Hub: hub, userService: userService}
 }
 
@@ -33,9 +31,10 @@ func (sm *storyManager) WSMux(c *SuperConnection, clientMessage Message) {
 			}
 		}
 
+		userConnections := sm.Hub.UserID2Connection[c.UserID]
 		message := Message{Data: clientMessage.Data, Type: "STORY.SERVER.POST_STORY"}
 		serverMessage := ServerMessage{Message: message, ActorID: c.UserID}
-		sm.Hub.BroadcastSelective(c, serverMessage, followerConnections...)
+		sm.Hub.BroadcastSelective(c, serverMessage, append(userConnections, followerConnections...)...)
 
 	case "STORY.CLIENT.REACT_STORY":
 		targetUserID := uint(clientMessage.Data.(map[string]interface{})["targetUserID"].(float64))
@@ -48,8 +47,5 @@ func (sm *storyManager) WSMux(c *SuperConnection, clientMessage Message) {
 		message := Message{Data: clientMessage.Data, Type: "STORY.SERVER.UNREACT_STORY"}
 		serverMessage := ServerMessage{Message: message, ActorID: c.UserID}
 		sm.Hub.BroadcastSelective(c, serverMessage, sm.Hub.UserID2Connection[targetUserID]...)
-
-	default:
-		log.Println("Event not supported")
 	}
 }

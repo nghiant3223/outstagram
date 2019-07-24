@@ -3,6 +3,7 @@ package managers
 import (
 	"github.com/go-redis/redis"
 	"net/http"
+	"outstagram/server/db"
 	"time"
 
 	"github.com/gorilla/websocket"
@@ -48,15 +49,16 @@ var upgrader = websocket.Upgrader{
 
 var Hub *hub
 var StoryManager *storyManager
+var RoomManager *roomManager
 var pubSubClient *redis.Client
 
 func Init() {
 	Hub = NewHub()
 	StoryManager = NewStoryManager(Hub)
+	RoomManager = NewRoomManager(Hub)
+	pubSubClient = db.NewRedisClient()
+}
 
-	pubSubClient = redis.NewClient(&redis.Options{
-		Addr:     "cache:6379",
-		Password: "",
-		DB:       0,
-	})
+func (h *hub) Run() {
+	h.run(StoryManager.WSMux, RoomManager.WSMux)
 }
