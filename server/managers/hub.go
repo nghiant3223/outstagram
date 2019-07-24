@@ -13,7 +13,7 @@ type hub struct {
 	Connections map[*Connection]bool
 
 	// Inbound WSMessages from the Connections.
-	BroadcastChannel chan ClientMessageWrapper
+	BroadcastChannel chan ClientMessage
 
 	// Register requests from the Connections.
 	Register chan Subscription
@@ -27,7 +27,7 @@ type hub struct {
 // NewHub returns new hub instance
 func NewHub() *hub {
 	return &hub{
-		BroadcastChannel:  make(chan ClientMessageWrapper),
+		BroadcastChannel:  make(chan ClientMessage),
 		Register:          make(chan Subscription),
 		Unregister:        make(chan Subscription),
 		RoomID2Connection: make(map[string]map[*Connection]bool),
@@ -37,7 +37,7 @@ func NewHub() *hub {
 }
 
 // Run starts a hub session
-func (h *hub) Run(wsMuxes ...func(from *Connection, clientMessage ClientMessage)) {
+func (h *hub) Run(wsMuxes ...func(from *Connection, clientMessage Message)) {
 	pubSub := pubSubClient.Subscribe("story")
 	ch := pubSub.Channel()
 
@@ -52,31 +52,33 @@ func (h *hub) Run(wsMuxes ...func(from *Connection, clientMessage ClientMessage)
 		case s := <-h.Register:
 			fmt.Println("A client connected to server")
 			h.Connections[s.Conn] = true
-		case s := <-h.Unregister:
-			if _, ok := h.Connections[s.Conn]; ok {
+
+		case us := <-h.Unregister:
+			if _, ok := h.Connections[us.Conn]; ok {
 				fmt.Println("A client disconnected from server")
-				delete(h.Connections, s.Conn)
-				delete(h.UserID2Connection, s.Conn.UserID)
-				// TODO: remove s.Conn from rooms in which it joins
-			}
-		case m := <-h.BroadcastChannel:
-			for _, wsMux := range wsMuxes {
-				wsMux(m.Connection, m.ClientMessage)
+				delete(h.Connections, us.Conn)
+				delete(h.UserID2Connection, us.Conn.UserID)
+				// TODO: remove us.Conn from rooms in which it joins
 			}
 
-			serverTransferMessage := ServerMessage{Data: m.Data, Type: m.Type, ActorID: m.Connection.UserID}
+		case cm := <-h.BroadcastChannel:
+			for _, wsMux := range wsMuxes {
+				wsMux(cm.Connection, cm.Message)
+			}
+
+			serverTransferMessage := ServerMessage{Message: cm.Message, ActorID: cm.Connection.UserID}
 			err := pubSubClient.Publish("story", &serverTransferMessage).Err()
 			if err != nil {
 				log.Println("Cannot publish message", err.Error())
 			}
 
-			//case m := <-ch:
+			//case cm := <-ch:
 
 		}
 	}
 }
 
-// Emit emits ClientMessage `m` to all sockets
+// Emit emits Message `m` to all sockets
 func (h *hub) Emit(transmitMessage ServerMessage) {
 	connections := h.Connections
 
@@ -85,7 +87,7 @@ func (h *hub) Emit(transmitMessage ServerMessage) {
 	}
 }
 
-// EmitTo emits ClientMessage `m` to all sockets in room `room`
+// EmitTo emits Message `m` to all sockets in room `room`
 func (h *hub) EmitTo(transmitMessage ServerMessage, room string) {
 	connections := h.RoomID2Connection[room]
 	for c := range connections {
@@ -93,7 +95,7 @@ func (h *hub) EmitTo(transmitMessage ServerMessage, room string) {
 	}
 }
 
-// Broadcast broadcasts ClientMessageWrapper `m` to all sockets other than `conn` Connection
+// Broadcast broadcasts ClientMessage `m` to all sockets other than `conn` Connection
 func (h *hub) Broadcast(conn *Connection, transmitMessage ServerMessage) {
 	for c := range h.Connections {
 		if c != conn {
@@ -102,7 +104,7 @@ func (h *hub) Broadcast(conn *Connection, transmitMessage ServerMessage) {
 	}
 }
 
-// BroadcastTo broadcasts ClientMessageWrapper `m` to all sockets in room `room` other than `conn` Connection
+// BroadcastTo broadcasts ClientMessage `m` to all sockets in room `room` other than `conn` Connection
 func (h *hub) BroadcastTo(conn *Connection, transmitMessage ServerMessage, room string) {
 	for c := range h.RoomID2Connection[room] {
 		if c != conn {
@@ -121,7 +123,7 @@ func (h *hub) BroadcastSelective(conn *Connection, transmitMessage ServerMessage
 }
 
 // WSMessageMultiplexer multiplexes message type and its corresponding handler
-func (h *hub) WSMessageMultiplexer(c *Connection, transmitData ClientMessage) {
+func (h *hub) WSMessageMultiplexer(c *Connection, transmitData Message) {
 	switch transmitData.Type {
 
 	}

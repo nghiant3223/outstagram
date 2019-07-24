@@ -8,23 +8,22 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-// ClientMessage is data transmitted between peers
-type ClientMessage struct {
+// Message is data transmitted between peers
+type Message struct {
 	Data interface{} `json:"data"`
 	Type string      `json:"type"`
 }
 
-// ClientMessageWrapper is wrapper for data transmitted from client to server
-type ClientMessageWrapper struct {
-	ClientMessage
+// ClientMessage is wrapper for data transmitted from client to server
+type ClientMessage struct {
+	Message
 	Connection *Connection
 }
 
 // TransmitDataDTO is transmitted from server to client
 type ServerMessage struct {
-	Data    interface{} `json:"data"`
-	Type    string      `json:"type"`
-	ActorID uint        `json:"actorID,omitempty"`
+	Message
+	ActorID uint `json:"actorID,omitempty"`
 }
 
 const (
