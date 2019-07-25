@@ -37,7 +37,7 @@ class ProfilePage extends Component {
     async getUser(username) {
         try {
             this.setState({ isLoading: true });
-            const { data: { data: user } } = await userServices.getUser(username);
+            const { data: { data: { user } } } = await userServices.getUser(username);
             const { data: { data: { posts } } } = await postServices.getPosts(user.id, 100, 0);
             this.setState({ user, posts: posts || [] });
         } catch (e) {

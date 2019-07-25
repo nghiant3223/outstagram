@@ -8,7 +8,7 @@ import * as creatorActions from '../../actions/creator.action';
 import * as postServices from '../../services/post.service';
 
 import StoryFeedManager from '../../StoryFeedManager';
-import socket from '../../Socket';
+import Socket from '../../Socket';
 
 import "./CreatorModal.css";
 import { isImageUrl } from '../../utils/image';
@@ -46,7 +46,7 @@ class CreatorModal extends Component {
                     const { data: { data: { stories } } } = await storyServices.createStory(uploadImages.map(image => image.file), uploadUrls.map(url => url.file));
 
                     stories.forEach((story) => storyFeedManager.prependStory(story));
-                    socket.emit("STORY.CLIENT.POST_STORY", stories);
+                    Socket.emit("STORY.CLIENT.POST_STORY", stories);
                     updateStoryFeed();
                     break;
 

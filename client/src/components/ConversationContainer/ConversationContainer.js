@@ -45,12 +45,12 @@ class ConversationContainer extends Component {
         }
 
         const { roomIdOrUsername } = this.props.match.params;
-        const { partner, members, messages, type: isGroupChat } = room;
+        const { partner, members, messages, id, type: isGroupChat } = room;
 
         return (
             <div className="MessageInfoContainer">
                 <ContactInfo isGroupChat={isGroupChat} partner={partner} members={members} />
-                <ChatboxContainer messages={messages} roomIdOrUsername={roomIdOrUsername} />
+                <ChatboxContainer messages={messages} roomID={id} roomIdOrUsername={roomIdOrUsername} />
             </div>
         )
     }

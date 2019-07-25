@@ -8,7 +8,7 @@ import './StoryBoard.css';
 import Avatar from '../../Avatar/Avatar';
 import TimeSlicer from './TimeSlicer/TimeSlicer';
 import { getDiffFromPast } from '../../../utils/time';
-import socket from '../../../Socket';
+import Socket from '../../../Socket';
 
 import * as storyActions from '../../../actions/story.action';
 import * as uiActions from '../../../actions/ui.action';
@@ -130,7 +130,7 @@ class StoryBoard extends Component {
         if (reacted) {
             activeStory.reacted = false;
             storyServices.unreactStory(activeStory.reactableID)
-                .then(() => socket.emit(
+                .then(() => Socket.emit(
                     "STORY.CLIENT.UNREACT_STORY",
                     {
                         reactor: { ..._.pick(user, ["id", "username", "fullname"]) },
@@ -142,7 +142,7 @@ class StoryBoard extends Component {
         } else {
             activeStory.reacted = true;
             storyServices.reactStory(activeStory.reactableID)
-                .then(() => socket.emit(
+                .then(() => Socket.emit(
                     "STORY.CLIENT.REACT_STORY",
                     {
                         reactor: { ..._.pick(user, ["id", "username", "fullname"]) },

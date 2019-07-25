@@ -2,7 +2,7 @@ import * as actionTypes from '../constants/actionTypes';
 import { setToken } from '../sessionStorage';
 import * as authServices from '../services/auth.service';
 
-import socket from '../Socket';
+import Socket from '../Socket';
 
 export const loginUser = (username, password) =>
     async (dispatch) => {
@@ -10,7 +10,7 @@ export const loginUser = (username, password) =>
             const { data: { data: token } } = await authServices.loginUser(username, password)
             setToken(token)
             const { data: { data: user } } = await authServices.getMe();
-            socket.open({ userID: user.id });
+            Socket.open({ userID: user.id });
             dispatch({ type: actionTypes.AUTH_SUCCESS, payload: user });
         } catch (e) {
             alert(e);
@@ -20,7 +20,7 @@ export const loginUser = (username, password) =>
 
 export const logoutUser = () => {
     sessionStorage.clear();
-    socket.close();
+    Socket.close();
     return { type: actionTypes.LOGOUT };
 }
 
@@ -28,7 +28,7 @@ export const getMe = () =>
     async (dispatch) => {
         try {
             const { data: { data: user } } = await authServices.getMe();
-            socket.open({ userID: user.id });
+            Socket.open({ userID: user.id });
             dispatch({ type: actionTypes.AUTH_SUCCESS, payload: user });
         } catch (e) {
             dispatch({ type: actionTypes.AUTH_FAIL });

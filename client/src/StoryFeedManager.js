@@ -41,6 +41,13 @@ class StoryFeedManager {
 
     // Prepend story to specific storyboard
     async prependUserStory(userID, ...stories) {
+        // If userID == current logged in user's id
+        if (this._head.getValue().userID === userID) {
+            const storyBoard = this._head.getValue();
+            stories.forEach((story) => storyBoard.stories.unshift(story)); 
+            return;
+        }
+
         const sbNode = this._ll.find({ callback: (nodeValue) => nodeValue.userID === userID });
 
         // In case user's storyboard does not appear in current logged in user's story feed (the former user is the user who has id equals `userID`)

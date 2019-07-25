@@ -5,6 +5,8 @@ import { Popup } from 'semantic-ui-react';
 import ContainerContext from '../../ContainerContext';
 import * as roomServices from "../../../../../services/room.service";
 
+import Socket from '../../../../../Socket';
+
 import "./Message.css";
 
 class Message extends Component {
@@ -19,9 +21,10 @@ class Message extends Component {
 
         if (isNew) {
             try {
-                const { roomIdOrUsername, replaceMessage } = this.context;
+                const { roomIdOrUsername, replaceMessage, roomID } = this.context;
                 const { data: { data: { message } } } = await roomServices.createMessage(roomIdOrUsername, content, type);
                 replaceMessage(id, message);
+                Socket.emit("ROOM.CLIENT.SEND_MESSAGE", { ...message, targetRoomID: roomID });
             } catch (e) {
                 this.setState({ error: true });
                 console.log("Cannot create message", e);

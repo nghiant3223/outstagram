@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import socket from '../../Socket';
+import Socket from '../../Socket';
 import * as storyServices from '../../services/story.service';
 import * as userServices from '../../services/user.service';
 
@@ -37,14 +37,14 @@ class HomePage extends Component {
             this.setState({ posts: posts || [], sinceID: nextSinceID });
             StoryFeedManager.initialize(storyBoards);
 
-            socket.on("STORY.SERVER.POST_STORY", (message) => {
+            Socket.on("STORY.SERVER.POST_STORY", (message) => {
                 const manager = StoryFeedManager.getInstance();
                 manager.prependUserStory(message.actorID, ...message.data)
                     .then(this.updateStoryFeed)
                     .catch((e) => console.log(e));
             });
 
-            socket.on("STORY.SERVER.REACT_STORY", (message) => {
+            Socket.on("STORY.SERVER.REACT_STORY", (message) => {
                 const manager = StoryFeedManager.getInstance();
                 const { storyID, reactor } = message.data;
                 const story = manager.getStory(storyID)
@@ -58,7 +58,7 @@ class HomePage extends Component {
                 }
             });
 
-            socket.on("STORY.SERVER.UNREACT_STORY", (message) => {
+            Socket.on("STORY.SERVER.UNREACT_STORY", (message) => {
                 const manager = StoryFeedManager.getInstance();
                 const { storyID, reactor } = message.data;
                 const story = manager.getStory(storyID);

@@ -9,9 +9,11 @@ import ContainerContext from './ContainerContext';
 
 import * as roomServices from "../../../services/room.service";
 
-import "./ChatboxContainer.css";
 import Loading from '../../Loading/Loading';
 import MessageTyping from './MessageTyping/MessageTyping';
+import "./ChatboxContainer.css";
+
+import Socket from '../../../Socket';
 
 class ChatboxContainer extends Component {
     constructor(props) {
@@ -19,14 +21,18 @@ class ChatboxContainer extends Component {
         this.state = {
             isLoading: false,
             messageContent: '',
-            messages: props.messages
+            messages: props.messages,
+            roomID: props.roomID
         }
     }
+
+    shouldScrollTop = false;
+    shouldScrollBottom = true;
 
     componentWillReceiveProps(nextProps) {
         // When active room changes
         if (this.props.messages !== nextProps.messages) {
-            this.setState({ messages: nextProps.messages });
+            this.setState({ messages: nextProps.messages, roomID: nextProps.roomID });
         }
     }
 
@@ -41,18 +47,39 @@ class ChatboxContainer extends Component {
         if (this.props.roomIdOrUsername === prevProps.roomIdOrUsername && this.state.messages.length > prevState.messages.length) {
             // IMPORTANT: Dont remove setTimeout
             // Set space between message conatiner top and scrollbar
-            setTimeout(() => this.chatboxContainer.scrollTop = 10, 0);
+            if (this.shouldScrollTop) {
+                setTimeout(this.scrollToTop, 0);
+            }
+
+            if (this.shouldScrollBottom) {
+                this.scrollToBottom();
+            }
         }
     }
 
     componentDidMount() {
         this.scrollToBottom();
         this.messageInput.focus();
+        Socket.on("ROOM.SERVER.SEND_MESSAGE", this.onMessageReceive);
+    }
+
+    componentWillUnmount() {
+        Socket.removeListener("ROOM.SERVER.SEND_MESSAGE", this.onMessageReceive);
+    }
+
+    onMessageReceive = (message) => {
+        const { roomID } = this.state;
+        const { data } = message;
+
+        if (roomID != data.targetRoomID) return;
+
+        const receivedMessage = new Message(genUID(), data.authorID, data.content);
+        this.setState((prevState) => ({ messages: [...prevState.messages, receivedMessage] }));
+        this.shouldScrollBottom = true;
     }
 
     scrollToBottom() {
         this.chatboxContainer.scrollTop = this.chatboxContainer.scrollHeight;
-        this.isAtTop = true;
     }
 
     onMessageConainerScroll = async () => {
@@ -63,9 +90,10 @@ class ChatboxContainer extends Component {
         if (scrollTop == 0) {
             this.setState({ isLoading: true });
             try {
-                const { data: { data: { messages: fetchMessages } } } = await roomServices.getMessages(roomIdOrUsername, 20, messages.length);
+                const { data: { data: { messages: fetchMessages, roomID } } } = await roomServices.getMessages(roomIdOrUsername, 20, messages.length);
                 if (fetchMessages !== null) {
-                    this.setState((prevState) => ({ messages: [...fetchMessages, ...prevState.messages] }));
+                    this.shouldScrollTop = true;
+                    this.setState((prevState) => ({ messages: [...fetchMessages, ...prevState.messages], roomID }));
                 }
             } catch (e) {
                 console.log("Cannot fetch more message", e);
@@ -106,12 +134,17 @@ class ChatboxContainer extends Component {
         this.scrollToBottom();
     }
 
+    scrollToTop = () => {
+        this.chatboxContainer.scrollTop = 10;
+        this.shouldScrollTop = false;
+    }
+
     render() {
         const { user, roomIdOrUsername } = this.props;
-        const { messages, isLoading } = this.state;
+        const { messages, isLoading, roomID } = this.state;
 
         return (
-            <ContainerContext.Provider value={{ replaceMessage: this.replaceMessage, roomIdOrUsername: roomIdOrUsername }}>
+            <ContainerContext.Provider value={{ replaceMessage: this.replaceMessage, roomIdOrUsername: roomIdOrUsername, roomID }}>
                 <div className="ChatboxContainer">
                     <div className="ChatboxContainer__ChatboxContainer" onScroll={this.onMessageConainerScroll} ref={el => this.chatboxContainer = el}>
                         {isLoading && <div className="ChatboxContainer__ChatboxContainer__Loader"><Loading /></div>}
