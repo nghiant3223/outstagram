@@ -1,31 +1,57 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 
 import { Popup } from 'semantic-ui-react';
 import Avatar from "../../../Avatar/Avatar";
 import Typing from '../../../Typing/Typing';
+import Socket from '../../../../Socket';
 
 class MessageTyping extends Component {
     state = {
-        isTyping: false
+        typingIDs: [] // Should be 
+    }
+
+    componentDidMount() {
+        Socket.on("ROOM.SERVER.TYPING", this.onSomeoneTyping);
+        Socket.on("ROOM.SERVER.STOP_TYPING", this.onSomeoneStopTyping);
+    }
+
+    componentWillUnmount() {
+        Socket.removeListener("ROOM.SERVER.TYPING", this.onSomeoneTyping);
+        Socket.removeListener("ROOM.SERVER.STOP_TYPING", this.onSomeoneStopTyping);
+    }
+
+    onSomeoneTyping = (message) => {
+        const { roomID } = this.props;
+        const { actorID, data } = message;
+        if (data.targetRoomID === roomID) {
+            this.setState((prevState) => ({ typingIDs: [...prevState.typingIDs, actorID] }));
+        }
+    }
+
+    onSomeoneStopTyping = (message) => {
+        const { roomID } = this.props;
+        const { actorID, data } = message;
+        if (data.targetRoomID === roomID) {
+            this.setState((prevState) => ({ typingIDs: prevState.typingIDs.filter((id) => id !== actorID) }));
+        }
     }
 
     render() {
-        const { userID, fullname } = this.props;
-        const { isTyping } = this.state
-
-        if (!isTyping) return null;
+        const { typingIDs } = this.state;
 
         return (
-            <div className={["MessageGroup", "MessageGroup--Left"].join(" ")}>
-                <div className="MessageGroup__Avatar"><Avatar userID={userID} /> </div>
-
-                <div className={["MessageGroup__ChatboxContainer", "MessageGroup__ChatboxContainer--Left"].join(" ")}>
-                    <div className="Message">
-                        <Popup content={`${fullname} is typing`} size="mini" position="right center" inverted
-                            trigger={<div className="Message__Content"><Typing /></div>} style={{ padding: "0.75em" }} />
-                    </div>
-                </div>
-            </div>
+            <Fragment>
+                {typingIDs.map((id) =>
+                    <div className={["MessageGroup", "MessageGroup--Left"].join(" ")}>
+                        <div className="MessageGroup__Avatar"><Avatar userID={id} /> </div>
+                        <div className={["MessageGroup__ChatboxContainer", "MessageGroup__ChatboxContainer--Left"].join(" ")}>
+                            <div className="Message">
+                                <Popup content={`Someone is typing`} size="mini" position="right center" inverted
+                                    trigger={<div className="Message__Content"><Typing /></div>} style={{ padding: "0.75em" }} />
+                            </div>
+                        </div>
+                    </div>)}
+            </Fragment>
         );
     }
 }
