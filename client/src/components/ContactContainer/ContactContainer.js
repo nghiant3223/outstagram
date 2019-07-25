@@ -12,6 +12,8 @@ class ContactContainer extends Component {
         isLoading: false
     }
 
+    contactRefs = {};
+
     componentDidMount() {
         Socket.on("ROOM.SERVER.SEND_MESSAGE", this.onMessageReceive);
         this.fetchMessages();
@@ -23,11 +25,21 @@ class ContactContainer extends Component {
 
     onMessageReceive = (message) => {
         const { targetRoomID } = message.data;
+        this.hoistContact(targetRoomID);
+    }
 
+    // Update last message of suitable contact when user submits message input
+    updateContact = (roomID, message) => {
+        this.contactRefs[roomID].update(message);
+        this.hoistContact(roomID);
+    }
+
+    // Hoist contact to the top of the ContactConatainer
+    hoistContact = (roomID) => {
         this.setState((prevState) => {
             let candidateRoom;
             const restRooms = prevState.rooms.filter(room => {
-                const match = room.id == targetRoomID;
+                const match = room.id == roomID;
                 if (match) candidateRoom = room;
                 return !match;
             });
@@ -41,7 +53,7 @@ class ContactContainer extends Component {
             const { data: { data: { rooms } } } = await roomServices.getRecentRooms();
             this.setState({ rooms: rooms || [] });
         } catch (e) {
-            console.log("Error while fetching rooms", e);
+            console.warn("Error while fetching rooms", e);
         } finally {
             this.setState({ isLoading: false });
         }
@@ -56,7 +68,7 @@ class ContactContainer extends Component {
                     <ContactSearch onContactClick={this.onContactClick} />
                 </div>
                 <div className="ContactContainer__ContactItemContainer">
-                    {rooms.map((contact) => <Contact {...contact} key={contact.id} />)}
+                    {rooms.map((contact) => <Contact key={contact.id} ref={(el) => this.contactRefs[contact.id] = el} {...contact} />)}
                 </div>
             </div>
         )

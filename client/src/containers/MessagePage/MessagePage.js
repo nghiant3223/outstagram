@@ -7,12 +7,17 @@ import ContactContainer from '../../components/ContactContainer/ContactContainer
 import ConversationContainer from '../../components/ConversationContainer/ConversationContainer';
 
 class MessagePage extends Component {
+    // Update ContactContainer when user submits message
+    updateLastMessage = (roomID, lastMessage) => {
+        this.contactContainer.updateContact(roomID, lastMessage);
+    }
+
     render() {
         return (
             <Container>
                 <div className="MessagePage">
-                    <ContactContainer />
-                    <ConversationContainer />
+                    <ContactContainer ref={el => this.contactContainer = el} />
+                    <ConversationContainer updateLastMessage={this.updateLastMessage} />
                 </div>
             </Container>
         )

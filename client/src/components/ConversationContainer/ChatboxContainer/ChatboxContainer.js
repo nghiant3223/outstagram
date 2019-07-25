@@ -119,12 +119,14 @@ class ChatboxContainer extends Component {
     onFormSubmit = (e) => {
         e.preventDefault();
 
-        const { user } = this.props;
+        const { roomID } = this.state;
+        const { user, updateLastMessage } = this.props;
         const messageContent = this.messageInput.value;
         const newMessage = new Message(genUID(), user.id, messageContent, true);
 
         this.setState((prevState) => ({ messages: [...prevState.messages, newMessage] }));
         this.messageInput.value = "";
+        updateLastMessage(roomID, newMessage);
     }
 
     // Replace the temporary message by the newly created message

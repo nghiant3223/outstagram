@@ -1,7 +1,6 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 import { Link } from 'react-router-dom';
 
 import Avatar from '../../Avatar/Avatar';
@@ -11,6 +10,7 @@ import { groupChatName } from '../../../utils/api';
 import "./Contact.css";
 import Socket from '../../../Socket';
 import { Message } from '../../../models/message';
+import { withRouterInnerRef } from '../../../hocs/withRouter';
 
 class Contact extends Component {
     constructor(props) {
@@ -58,6 +58,11 @@ class Contact extends Component {
         }
     }
 
+    // Update last message
+    update = (message) => {
+        this.setState({ lastMessage: message });
+    }
+
     render() {
         const { newMessage, lastMessage } = this.state;
         const { partner, type, user, id, members } = this.props;
@@ -87,4 +92,4 @@ class Contact extends Component {
 
 const mapStateToProps = ({ authReducer: { user } }) => ({ user });
 
-export default withRouter(connect(mapStateToProps)(Contact));
+export default withRouterInnerRef(connect(mapStateToProps, null, null, { forwardRef: true })(Contact));
