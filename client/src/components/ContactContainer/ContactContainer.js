@@ -4,6 +4,7 @@ import ContactSearch from './Search/ContactSearch';
 import "./ContactContainer.css";
 import Contact from './Contact/Contact';
 import * as roomServices from "../../services/room.service";
+import Socket from '../../Socket';
 
 class ContactContainer extends Component {
     state = {
@@ -11,7 +12,30 @@ class ContactContainer extends Component {
         isLoading: false
     }
 
-    async componentDidMount() {
+    componentDidMount() {
+        Socket.on("ROOM.SERVER.SEND_MESSAGE", this.onMessageReceive);
+        this.fetchMessages();
+    }
+
+    componentWillUnmount() {
+        Socket.removeListener("ROOM.SERVER.SEND_MESSAGE", this.onMessageReceive);
+    }
+
+    onMessageReceive = (message) => {
+        const { targetRoomID } = message.data;
+
+        this.setState((prevState) => {
+            let candidateRoom;
+            const restRooms = prevState.rooms.filter(room => {
+                const match = room.id == targetRoomID;
+                if (match) candidateRoom = room;
+                return !match;
+            });
+            return { rooms: [candidateRoom, ...restRooms] };
+        });
+    }
+
+    async fetchMessages() {
         this.setState({ isLoading: true });
         try {
             const { data: { data: { rooms } } } = await roomServices.getRecentRooms();
@@ -22,7 +46,6 @@ class ContactContainer extends Component {
             this.setState({ isLoading: false });
         }
     }
-
 
     render() {
         const { rooms } = this.state;

@@ -36,6 +36,7 @@ class Contact extends Component {
     }
 
     componentDidMount() {
+        console.log("mount")
         Socket.on("ROOM.SERVER.SEND_MESSAGE", this.onMessageReceive);
     }
 
