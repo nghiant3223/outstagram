@@ -10,13 +10,15 @@ import { groupChatName } from '../../../utils/api';
 
 import "./Contact.css";
 import Socket from '../../../Socket';
+import { Message } from '../../../models/message';
 
 class Contact extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            newMessage: false
+            newMessage: false,
+            lastMessage: props.lastMessage
         }
     }
 
@@ -36,7 +38,6 @@ class Contact extends Component {
     }
 
     componentDidMount() {
-        console.log("mount")
         Socket.on("ROOM.SERVER.SEND_MESSAGE", this.onMessageReceive);
     }
 
@@ -50,14 +51,16 @@ class Contact extends Component {
 
         if (data.targetRoomID !== id) return;
 
+        this.setState({ lastMessage: new Message(data.id, data.authorID, data.content) });
+
         if (!this.roomMatch(this.props)) {
             this.setState({ newMessage: true });
         }
     }
 
     render() {
-        const { newMessage } = this.state;
-        const { partner, lastMessage, type, user, id, members } = this.props;
+        const { newMessage, lastMessage } = this.state;
+        const { partner, type, user, id, members } = this.props;
         const isGroupChat = type;
 
         let className = "ContactItemContainer__ContactItem";
