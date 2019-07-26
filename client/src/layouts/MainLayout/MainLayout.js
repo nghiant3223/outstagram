@@ -10,7 +10,11 @@ import ThreaterModal from '../../components/ThreaterModal/ThreaterModal';
 const MainLayout = (props) => (
     <div>
         <Header />
-        {props.children}
+
+        <div style={{ margin: "1em auto" }}>
+            {props.children}
+        </div>
+
         <Footer />
 
         <ThreaterModal />

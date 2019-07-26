@@ -1,41 +1,58 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { Dropdown } from 'semantic-ui-react';
+import { Link, NavLink } from 'react-router-dom';
+import { Dropdown, Icon } from 'semantic-ui-react';
 
 import Container from '../Container/Container';
 
 import * as authActions from '../../actions/auth.action';
 
 import './Header.css';
-import defaultAvatar from '../../images/x.png';
 import Avatar from '../Avatar/Avatar';
+import logo from '../../images/logo.jpg';
 
 const Header = (props) => {
     const { user } = props;
     return (
-        <Container className="Header">
-            <Link to="/"><div className="Header__Left">
-                Outstagram
-                </div>
-            </Link>
-
-            <div className="Header__Right">
-                <Link to={`/${user.username}`}>
-                    <div className="Header__Right__Info">
-                        <div className="Header__Right__Info__Avatar" >
-                            <Avatar userID={user.id} />
-                        </div>
-                        <div>{user.fullname}</div>
-                    </div>
+        <div className="HeaderContainer">
+            <Container className="Header" center={false} white={false}>
+                <Link to="/">
+                    <div className="Header__Left">
+                        Outstagram
+                     </div>
                 </Link>
-                <Dropdown direction='left'>
-                    <Dropdown.Menu>
-                        <Dropdown.Item onClick={props.logoutUser} text="Logout" />
-                    </Dropdown.Menu>
-                </Dropdown>
-            </div>
-        </Container>
+
+                <ul className="Header__Right">
+                    <li className="Header__Right__Item">
+                        <Link to={`/${user.username}`}>
+                            <div className="Header__Right__Info">
+                                <div className="Header__Right__Info__Avatar" >
+                                    <Avatar userID={user.id} width="2em" />
+                                </div>
+                                <div>{user.fullname}</div>
+                            </div>
+                        </Link>
+                    </li>
+
+                    <li className="Header__Right__Item">
+                        <Link to="/messages">
+                            <Icon name="alarm" size="large" color="grey" />
+                        </Link>
+                        <NavLink to="/messages" activeStyle={{ color: "blue" }} style={{ color: "grey" }}>
+                            <Icon name="facebook messenger" size="large" />
+                        </NavLink>
+                    </li>
+
+                    <li className="Header__Right__Item">
+                        <Dropdown direction='left'>
+                            <Dropdown.Menu>
+                                <Dropdown.Item onClick={props.logoutUser} text="Logout" />
+                            </Dropdown.Menu>
+                        </Dropdown>
+                    </li>
+                </ul>
+            </Container>
+        </div>
     );
 }
 const mapStateToProps = ({ authReducer: { user } }) => ({ user });

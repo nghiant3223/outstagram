@@ -11,9 +11,8 @@ import "./ProfilePage.css";
 import ProfileImage from './ProfileImage/ProfileImage';
 import CoverImage from './CoverImage/CoverImage';
 import Post from '../../components/Post/Post';
-import PostPlaceholder from '../../components/Post/PostPlaceholder';
-import Avatar from '../../components/Avatar/Avatar';
-import ProfilePagePlaceholder from './ProfilePagePlaceholder';
+import ProfilePagePlaceholder from './Placeholder';
+
 class ProfilePage extends Component {
     state = {
         user: undefined,
@@ -75,8 +74,14 @@ class ProfilePage extends Component {
                     <UserInfo user={user} />
                 </Container>
 
-                <Container className="ProfileBodyContainer" white={false}>
-                    {posts.map((post) => <Post {...post} key={post.id} showImageGrid={true} />)}
+                <Container className="ProfileBodyContainer" white={false} >
+                    <div className="ProfileBodyContainer__PostContainer">
+                        {posts.map((post) => <div className="ProfileBodyContainer__PostContainer__Post"><Post {...post} key={post.id} showImageGrid={true} /></div>)}
+                    </div>
+
+                    <div className="ProfileBodyContainer__BiographyContainer">
+
+                    </div>
                 </Container>
             </div>
         )

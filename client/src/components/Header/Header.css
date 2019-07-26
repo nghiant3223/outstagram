@@ -1,25 +1,70 @@
+.HeaderContainer {
+  display: flex;
+  justify-content: center;
+  background: white;
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  opacity: 0.95;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.075), 0 3px 6px rgba(0, 0, 0, 0.035);
+}
+
 .Header {
   height: 60px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem !important;
   background-color: white;
-  padding: 1.5em;
+  padding: 0.5em 0;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
 }
 
 .Header__Left {
-  font-family: "Satisfy", cursive;
+  font-family: "Acme", sans-serif;
   cursor: pointer;
   font-size: 2em;
   color: #3f3f3f;
+  display: flex;
+}
+
+.Header__Left__LogoContainer {
+  height: 40px;
+}
+
+.Header__Left__LogoContainer > img {
+  height: 100%;
+  width: auto;
 }
 
 .Header__Right {
   display: flex;
   align-items: center;
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.Header__Right > .Header__Right__Item {
+  display: flex;
+  align-items: center;
+  position: relative;
+  margin-left: 0.75em;
+  margin-right: 0.75em;
+}
+
+.Header__Right__Item > a {
+  margin-left: 0.25em;
+  margin-right: 0.25em;
+}
+
+.Header__Right > .Header__Right__Item:first-child {
+  margin-left: 0;
+}
+
+.Header__Right > .Header__Right__Itemi:last-child {
+  margin-right: 0;
 }
 
 .Header__Right__Info {

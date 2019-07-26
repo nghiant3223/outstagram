@@ -41,8 +41,10 @@ export default function ProfilePagePlaceholder() {
                 </div>
             </Container>
 
-            <Container className="ProfileBodyContainer" white={false}>
-                {Array(3).fill(0).map((_, index) => <PostPlaceholder key={index} />)}
+            <Container className="ProfileBodyContainer" white={false} >
+                <div className="ProfileBodyContainer__PostContainer" style={{ marginTop: "1.5em" }}>
+                    {Array(3).fill(0).map((_, index) => <PostPlaceholder key={index} />)}
+                </div>
             </Container>
         </div>
     );

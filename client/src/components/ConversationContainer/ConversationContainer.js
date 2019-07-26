@@ -5,6 +5,7 @@ import ContactInfo from './ContactInfo/ContactInfo';
 import ChatboxContainer from './ChatboxContainer/ChatboxContainer';
 
 import * as roomServices from "../../services/room.service";
+import ConversationPlaceholder from './Placeholder';
 
 class ConversationContainer extends Component {
     state = {
@@ -40,9 +41,9 @@ class ConversationContainer extends Component {
     render() {
         const { room, isLoading } = this.state
 
-        if (!room || isLoading) {
-            return null;
-        }
+        if (isLoading) return <ConversationPlaceholder />;
+
+        if (!room && !isLoading) return <div className="MessageInfoContainer"></div>
 
         const { updateLastMessage } = this.props;
         const { roomIdOrUsername } = this.props.match.params;

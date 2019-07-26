@@ -5,6 +5,7 @@ import "./ContactContainer.css";
 import Contact from './Contact/Contact';
 import * as roomServices from "../../services/room.service";
 import Socket from '../../Socket';
+import ContactContainerPlaceHolder from './Placeholder';
 
 class ContactContainer extends Component {
     state = {
@@ -60,7 +61,9 @@ class ContactContainer extends Component {
     }
 
     render() {
-        const { rooms } = this.state;
+        const { rooms, isLoading } = this.state;
+
+        if (isLoading) return <ContactContainerPlaceHolder />;
 
         return (
             <div className="ContactContainer">

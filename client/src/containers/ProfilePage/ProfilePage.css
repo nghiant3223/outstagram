@@ -4,6 +4,25 @@
 
 .ProfileSummaryContainer {
   margin-bottom: 2rem;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.15);
+}
+
+.ProfileBodyContainer {
+  display: flex;
+}
+
+.ProfileBodyContainer__PostContainer {
+  flex-basis: var(--post-width);
+}
+
+.ProfileBodyContainer__BiographyContainer {
+  flex-grow: 1fr;
+}
+
+.ProfileBodyContainer__PostContainer__Post {
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.15);
 }
 
 .InfoItem .line.square {
@@ -11,9 +30,9 @@
 }
 
 .line.medium-height {
-  margin-bottom: 1.5em !important
+  margin-bottom: 1.5em !important;
 }
 
 .line.big-height {
-  margin-bottom: 2em !important
+  margin-bottom: 2em !important;
 }

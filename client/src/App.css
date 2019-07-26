@@ -15,6 +15,8 @@ body {
   --message-page-height: 500px;
   --message-page-search: 66px;
   --message-page-input: 3em;
+
+  --post-width: 614px;
 }
 
 .Fullname {
@@ -30,4 +32,8 @@ a {
 
 a:hover {
   color: black;
+}
+
+.dropdown.icon {
+  margin-left: 0px !important;
 }
