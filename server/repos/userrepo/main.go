@@ -234,3 +234,17 @@ func (r *UserRepo) Search(text string, options ...map[string]interface{}) ([]*mo
 
 	return users, nil
 }
+
+func (r *UserRepo) GetUserRoomIDs(userID uint) ([]uint, error) {
+	user, err := r.FindByID(userID)
+	if err != nil {
+		return nil, err
+	}
+
+	var roomIDs []uint
+	r.db.Model(&user).Association("Rooms").Find(&user.Rooms)
+	for _, room := range user.Rooms {
+		roomIDs = append(roomIDs, room.ID)
+	}
+	return roomIDs, nil
+}

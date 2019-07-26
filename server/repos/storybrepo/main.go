@@ -50,7 +50,7 @@ func (r *StoryBoardRepo) GetStories(storyBoardID uint) ([]models.Story, error) {
 func (r *StoryBoardRepo) FindStoryByID(storyID uint) (*models.Story, error) {
 	var story models.Story
 
-	if err := r.db.First(&story, storyID).Error;err != nil {
+	if err := r.db.First(&story, storyID).Error; err != nil {
 		return nil, err
 	}
 
@@ -60,13 +60,15 @@ func (r *StoryBoardRepo) FindStoryByID(storyID uint) (*models.Story, error) {
 
 // Check if user has viewed the story
 func (r *StoryBoardRepo) CheckUserViewedStory(userID, storyID uint) (bool, error) {
-	var count int
 	var story models.Story
 
 	if err := r.db.First(&story, storyID).Error; err != nil {
 		return false, err
 	}
 
-	r.db.Raw("SELECT 1 FROM views WHERE user_id = ? AND viewable_id = ?", userID, story.ViewableID).Count(&count)
-	return count > 0, nil
+	rows, err := r.db.Raw("SELECT 1 FROM views WHERE user_id = ? AND viewable_id = ?", userID, story.ViewableID).Rows()
+	if err != nil {
+		return false, err
+	}
+	return rows.Next(), nil
 }

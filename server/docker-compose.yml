@@ -15,21 +15,21 @@ services:
     links:
       - db
       - cache
-  web_2:
-    build: .
-    environment:
-      PORT: "4001"
-    ports:
-      - "4000:4000"
-    expose:
-      - "4000"
-    command: gin -p 4000 -a 4001 run app.go
-    # Comment the two following lines for production
-    volumes:
-      - .:/outstagram
-    links:
-      - db
-      - cache
+#  web_2:
+#    build: .
+#    environment:
+#      PORT: "4001"
+#    ports:
+#      - "4000:4000"
+#    expose:
+#      - "4000"
+#    command: gin -p 4000 -a 4001 run app.go
+#    # Comment the two following lines for production
+#    volumes:
+#      - .:/outstagram
+#    links:
+#      - db
+#      - cache
   db:
     image: mysql
     environment:

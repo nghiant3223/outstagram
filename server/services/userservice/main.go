@@ -139,3 +139,8 @@ func (s *UserService) GetUserByUserIDOrUsername(userIDOrUsername interface{}) (*
 
 	return user, nil
 }
+
+
+func (s *UserService) GetUserRoomIDs(userID uint) ([]uint, error) {
+	return s.userRepo.GetUserRoomIDs(userID)
+}

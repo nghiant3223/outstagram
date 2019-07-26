@@ -117,5 +117,6 @@ func (rc *Controller) GetRoomMessages(c *gin.Context) {
 		res.Messages = append(res.Messages, message.ToDTO())
 	}
 
+	res.RoomID = foundRoom.ID
 	utils.ResponseWithSuccess(c, http.StatusOK, "Fetching recent rooms successfully", res)
 }

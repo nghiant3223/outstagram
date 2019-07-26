@@ -18,6 +18,7 @@ type User struct {
 	LastLogin     *time.Time
 	LastLogout    *time.Time
 	Gender        bool
+	Rooms         []*Room    `gorm:"many2many:joins"`
 	NotifBoard    NotifBoard `gorm:"association_autoupdate:false"`
 	StoryBoard    StoryBoard `gorm:"association_autoupdate:false"`
 	AvatarImageID uint

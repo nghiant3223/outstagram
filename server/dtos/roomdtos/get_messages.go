@@ -9,4 +9,5 @@ type GetMessagesRequest struct {
 
 type GetMessageResponse struct {
 	Messages []dtomodels.Message `json:"messages"`
+	RoomID   uint                `json:"roomID"`
 }

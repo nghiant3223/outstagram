@@ -24,7 +24,8 @@ type ClientMessage struct {
 // TransmitDataDTO is transmitted from server to client
 type ServerMessage struct {
 	Message
-	ActorID uint `json:"actorID,omitempty"`
+	ServerUID string `json:"serverUID,omitempty"`
+	ActorID   uint   `json:"actorID,omitempty"`
 }
 
 const (

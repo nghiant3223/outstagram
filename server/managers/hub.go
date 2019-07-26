@@ -3,6 +3,7 @@ package managers
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/segmentio/ksuid"
 	"log"
 	"strings"
 )
@@ -29,6 +30,9 @@ type hub struct {
 
 	// Api provider
 	APIProvider APIProvider
+
+	// UID used for Pub/Sub
+	UID string
 }
 
 // NewHub returns new hub instance
@@ -41,41 +45,58 @@ func NewHub() *hub {
 		UserID2Connection: make(map[uint][]*Connection),
 		RoomID2Connection: make(map[uint][]*Connection),
 		APIProvider:       NewLocalAPIProvider(),
+		UID:               ksuid.New().String(),
 	}
 }
 
 // Run starts a hub session
 func (h *hub) run(wsMuxes ...func(from *SuperConnection, clientMessage Message)) {
-	pubSub := pubSubClient.Subscribe("STORY", "MESSAGE")
+	pubSub := pubSubClient.Subscribe("STORY", "ROOM")
 	pubSubCh := pubSub.Channel()
 
 	for {
 		select {
 		case s := <-h.RegisterChannel:
 			h.Connections[s.SuperConn.Connection] = true
-			fmt.Println("A client connected to server")
+			roomIDs := h.APIProvider.GetUserRoomIDs(s.SuperConn.UserID)
+			for _, roomID := range roomIDs {
+				h.RoomID2Connection[roomID] = append(h.RoomID2Connection[roomID], s.SuperConn.Connection)
+				log.Printf("User %v joins room %v", s.SuperConn.UserID, roomID)
+			}
 
-		case us := <-h.UnregisterChannel:
-			if _, ok := h.Connections[us.SuperConn.Connection]; ok {
-				delete(h.Connections, us.SuperConn.Connection)
+			log.Println("A client connected to server")
 
-				userConnections := h.UserID2Connection[us.SuperConn.UserID]
+		case s := <-h.UnregisterChannel:
+			if _, ok := h.Connections[s.SuperConn.Connection]; ok {
+				delete(h.Connections, s.SuperConn.Connection)
+
+				userConnections := h.UserID2Connection[s.SuperConn.UserID]
 				for i, conn := range userConnections {
-					if conn == us.SuperConn.Connection {
+					if conn == s.SuperConn.Connection {
 						userConnections = append(userConnections[:i], userConnections[i+1:]...)
 					}
 				}
-				// TODO: remove us.SuperConn from rooms in which it joins
-				fmt.Println("A client disconnected from server")
+
+				roomIDs := h.APIProvider.GetUserRoomIDs(s.SuperConn.UserID)
+				for _, id := range roomIDs {
+					for i, conn := range h.RoomID2Connection[id] {
+						if conn == s.SuperConn.Connection {
+							h.RoomID2Connection[id] = append(h.RoomID2Connection[id][:i], h.RoomID2Connection[id][i+1:]...)
+							log.Printf("User %v leaves room %v\n", s.SuperConn.UserID, id)
+						}
+					}
+				}
+
+				log.Println("A client disconnected from server")
 			}
 
 		case cm := <-h.BroadcastChannel:
 			for _, wsMux := range wsMuxes {
-				fmt.Println("I handle message client sent to me")
+				log.Println("I handle message client sent to me")
 				wsMux(cm.SuperConnection, cm.Message)
 			}
 
-			serverMessage := ServerMessage{Message: cm.Message, ActorID: cm.UserID}
+			serverMessage := ServerMessage{Message: cm.Message, ActorID: cm.UserID, ServerUID: h.UID}
 			sServerMessage, err := json.Marshal(&serverMessage)
 			if err != nil {
 				log.Println("Cannot marshal message: ", err.Error())
@@ -87,7 +108,6 @@ func (h *hub) run(wsMuxes ...func(from *SuperConnection, clientMessage Message))
 				log.Println("Cannot publish message: ", err.Error())
 				break
 			}
-			fmt.Println("I published message from PubSubChannel")
 
 		case sm := <-pubSubCh:
 			var serverMessage ServerMessage
@@ -95,9 +115,13 @@ func (h *hub) run(wsMuxes ...func(from *SuperConnection, clientMessage Message))
 				log.Println(err.Error())
 				break
 			}
-			fmt.Println("I received message from PubSubChannel")
+
+			// If message comes from the same source, do nothing
+			if serverMessage.ServerUID == h.UID {
+				break
+			}
+
 			for _, wsMux := range wsMuxes {
-				fmt.Println("I handle message received from PubSubChannel")
 				wsMux(&SuperConnection{UserID: serverMessage.ActorID}, serverMessage.Message)
 			}
 		}
@@ -141,11 +165,12 @@ func (h *hub) BroadcastTo(conn *SuperConnection, serverMessage ServerMessage, ro
 
 // BroadcastSelective broadcasts to specific connections collection
 func (h *hub) BroadcastSelective(conn *SuperConnection, serverMessage ServerMessage, connections ...*Connection) {
-	for _, c := range connections {
+	for i, c := range connections {
 		if c != conn.Connection {
 			c.Send <- serverMessage
+			fmt.Println(i, "Send message", serverMessage)
 		} else {
-			fmt.Println("Duplicate")
+			fmt.Println("Do not send")
 		}
 	}
 }

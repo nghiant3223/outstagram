@@ -9,6 +9,7 @@ import (
 
 type APIProvider interface {
 	GetUserFollowers(uint) []*dtomodels.SimpleUser
+	GetUserRoomIDs(uint) []uint
 }
 
 type LocalAPIProvider struct {
@@ -32,4 +33,12 @@ func (l *LocalAPIProvider) GetUserFollowers(userID uint) []*dtomodels.SimpleUser
 	}
 
 	return dtoFollowers
+}
+
+func (l *LocalAPIProvider) GetUserRoomIDs(userID uint) []uint {
+	roomIDs, err := l.userService.GetUserRoomIDs(userID)
+	if err != nil {
+		return nil
+	}
+	return roomIDs
 }
