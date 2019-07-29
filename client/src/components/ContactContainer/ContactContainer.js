@@ -56,6 +56,7 @@ class ContactContainer extends Component {
     }
 
     async fetchMessages() {
+        alert("fake rom")
         this.setState({ isLoading: true });
         try {
             const { data: { data: { rooms } } } = await roomServices.getRecentRooms();
@@ -89,8 +90,6 @@ class ContactContainer extends Component {
         const { rooms, isLoading } = this.state;
 
         if (isLoading) return <ContactContainerPlaceHolder />;
-
-        console.log(rooms.length);
 
         return (
             <div className="ContactContainer">

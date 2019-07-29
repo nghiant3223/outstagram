@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router';
+import { connect } from 'react-redux';
 
 import ContactInfo from './ContactInfo/ContactInfo';
 import ChatboxContainer from './ChatboxContainer/ChatboxContainer';
@@ -28,8 +29,10 @@ class ConversationContainer extends Component {
 
     async fetchRoom(shouldAddFakeRoom) {
         const { roomIdOrUsername } = this.props.match.params;
-
         if (!roomIdOrUsername) return;
+
+        const { user } = this.props;
+        if (roomIdOrUsername === user.username) return;
 
         try {
             const { data: { data: room } } = await roomServices.getRoom(roomIdOrUsername);
@@ -61,13 +64,14 @@ class ConversationContainer extends Component {
 
     render() {
         const { room, isLoading } = this.state
-
         if (isLoading) return <ConversationPlaceholder />;
+        if (!room) return <div className="MessageInfoContainer" />;
 
-        if (!room) return <div className="MessageInfoContainer"></div>
-
-        const { updateLastMessage, replaceFakeRoom } = this.props;
+        const { user } = this.props;
         const { roomIdOrUsername } = this.props.match.params;
+        if (roomIdOrUsername == user.username) return <div className="MessageInfoContainer" />;
+
+        const { updateLastMessage } = this.props;
         const { partner, members, messages, id, type: isGroupChat, isNew } = room;
 
         return (
@@ -79,4 +83,6 @@ class ConversationContainer extends Component {
     }
 }
 
-export default withRouter(ConversationContainer);
+const mapStateToProps = ({ authReducer: { user } }) => ({ user });
+
+export default withRouter(connect(mapStateToProps)(ConversationContainer));
