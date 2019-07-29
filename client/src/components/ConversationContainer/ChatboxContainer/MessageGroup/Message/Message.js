@@ -21,7 +21,7 @@ class Message extends Component {
 
         if (isNew) {
             try {
-                const { roomIdOrUsername, replaceMessage, roomID, isNewRoom, partner, onNewRoomCreated } = this.context;
+                const { roomIdOrUsername, replaceMessage, roomID, isNewRoom, partner, onNewRoomCreated, user } = this.context;
 
                 if (!isNewRoom) {
                     const { data: { data: { message } } } = await roomServices.createMessage(roomIdOrUsername, content, type);
@@ -30,10 +30,12 @@ class Message extends Component {
                     return;
                 }
 
-                const otherMembers = [partner.id];
-                const { data: { data: { room } } } = await roomServices.createRoom(otherMembers, { content: content, type: 0 });
+                const { data: { data: { room } } } = await roomServices.createRoom([partner.id], { content: content, type: 0 });
                 onNewRoomCreated(roomID, room);
-                // Socket.emit("ROOM.CLIENT.CREATE_ROOM", { targetRoomID: room.id, otherMembers });
+                
+                const newRoom = JSON.parse(JSON.stringify(room));
+                newRoom.partner = user;
+                Socket.emit("ROOM.CLIENT.CREATE_ROOM", { targetRoomID: room.id, anotherMemberID: partner.id, newRoom });
             } catch (e) {
                 this.setState({ error: true });
                 console.log("Cannot create message", e);

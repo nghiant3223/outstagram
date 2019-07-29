@@ -17,7 +17,7 @@ class Contact extends Component {
         super(props);
 
         this.state = {
-            newMessage: false,
+            newMessage: Boolean(props.newMessage),
             lastMessage: props.lastMessage
         }
     }

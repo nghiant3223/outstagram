@@ -21,7 +21,7 @@ class ChatboxContainer extends Component {
         this.state = {
             isLoading: false,
             messageContent: '',
-            messages: props.messages,
+            messages: props.messages || [],
             roomID: props.roomID
         }
     }
@@ -83,6 +83,7 @@ class ChatboxContainer extends Component {
 
     // Scroll to bottom if someone's typing
     onSomeoneTyping = () => {
+        console.log("someone typing")
         const { scrollTop, scrollHeight, offsetHeight } = this.chatboxContainer;
 
         if (scrollTop + offsetHeight >= scrollHeight - 200) {
@@ -167,8 +168,11 @@ class ChatboxContainer extends Component {
             return;
         }
 
+
         const { roomID } = this.state
         const { value: content } = e.target;
+
+        console.log("Typing", roomID);
 
         if (content == "") {
             Socket.emit("ROOM.CLIENT.STOP_TYPING", { targetRoomID: roomID });
@@ -187,12 +191,12 @@ class ChatboxContainer extends Component {
         const { messages, isLoading, roomID } = this.state;
 
         return (
-            <ContainerContext.Provider value={{ replaceMessage: this.replaceMessage, roomIdOrUsername: roomIdOrUsername, roomID, isNewRoom: isNew, partner, onNewRoomCreated }}>
+            <ContainerContext.Provider value={{ replaceMessage: this.replaceMessage, roomIdOrUsername: roomIdOrUsername, roomID, isNewRoom: isNew, partner, onNewRoomCreated, user }}>
                 <div className="ChatboxContainer">
                     <div className="ChatboxContainer__ChatboxContainer" onScroll={this.onMessageConainerScroll} ref={el => this.chatboxContainer = el}>
                         {isLoading && <div className="ChatboxContainer__ChatboxContainer__Loader"><Loading /></div>}
                         <div style={{ padding: "0.5em" }}>
-                            {renderMessages(messages, user.id)}
+                            {renderMessages(messages || [], user.id)}
 
                             <MessageTyping roomID={roomID} />
                         </div>

@@ -11,7 +11,7 @@ function MessageGroup(props) {
     return (
         <div className={["MessageGroup", right ? "MessageGroup--Right" : "MessageGroup--Left"].join(" ")}>
             {!right && <div className="MessageGroup__Avatar">
-                <Avatar />
+                <Avatar width="2.25em" />
             </div>}
 
             <div className={["MessageGroup__ChatboxContainer", right ? "MessageGroup__ChatboxContainer--Right" : "MessageGroup__ChatboxContainer--Left"].join(" ")}>

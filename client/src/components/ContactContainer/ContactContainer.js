@@ -17,16 +17,23 @@ class ContactContainer extends Component {
 
     componentDidMount() {
         Socket.on("ROOM.SERVER.SEND_MESSAGE", this.onMessageReceive);
+        Socket.on("ROOM.SERVER.CREATE_ROOM", this.onNewRoomCreated)
         this.fetchMessages();
     }
 
     componentWillUnmount() {
         Socket.removeListener("ROOM.SERVER.SEND_MESSAGE", this.onMessageReceive);
+        Socket.removeListener("ROOM.SERVER.CREATE_ROOM", this.onNewRoomCreated)
     }
 
     onMessageReceive = (message) => {
         const { targetRoomID } = message.data;
         this.hoistContact(targetRoomID);
+    }
+
+    onNewRoomCreated = (message) => {
+        const { newRoom } = message.data;
+        this.setState((prevState) => ({ rooms: [newRoom, ...prevState.rooms] }));
     }
 
     // Update last message of suitable contact when user submits message input
