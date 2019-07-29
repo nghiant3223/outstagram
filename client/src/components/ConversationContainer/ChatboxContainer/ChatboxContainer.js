@@ -119,9 +119,13 @@ class ChatboxContainer extends Component {
     onFormSubmit = (e) => {
         e.preventDefault();
 
+        const messageContent = this.messageInput.value.trim();
+        if (messageContent === "") {
+            return;
+        }
+
         const { roomID } = this.state;
         const { user, updateLastMessage } = this.props;
-        const messageContent = this.messageInput.value;
         const newMessage = new Message(genUID(), user.id, messageContent, true);
 
         this.setState((prevState) => ({ messages: [...prevState.messages, newMessage] }));
@@ -157,6 +161,12 @@ class ChatboxContainer extends Component {
     }
 
     onMessageInputChange = (e) => {
+        const { isNew } = this.props;
+
+        if (isNew) {
+            return;
+        }
+
         const { roomID } = this.state
         const { value: content } = e.target;
 
@@ -173,11 +183,11 @@ class ChatboxContainer extends Component {
     }
 
     render() {
-        const { user, roomIdOrUsername } = this.props;
+        const { user, roomIdOrUsername, isNew, partner, onNewRoomCreated } = this.props;
         const { messages, isLoading, roomID } = this.state;
 
         return (
-            <ContainerContext.Provider value={{ replaceMessage: this.replaceMessage, roomIdOrUsername: roomIdOrUsername, roomID }}>
+            <ContainerContext.Provider value={{ replaceMessage: this.replaceMessage, roomIdOrUsername: roomIdOrUsername, roomID, isNewRoom: isNew, partner, onNewRoomCreated }}>
                 <div className="ChatboxContainer">
                     <div className="ChatboxContainer__ChatboxContainer" onScroll={this.onMessageConainerScroll} ref={el => this.chatboxContainer = el}>
                         {isLoading && <div className="ChatboxContainer__ChatboxContainer__Loader"><Loading /></div>}

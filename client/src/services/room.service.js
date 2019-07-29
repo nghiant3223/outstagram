@@ -19,3 +19,11 @@ export function getMessages(id, limit, offset) {
 
     return requireAuthApi.get(`/rooms/${id}/messages?limit=${limit}&offset=${offset}`);
 }
+
+export function createRoom(memberIDs, message) {
+    if (!message) {
+        return requireAuthApi.post(`/rooms/`, { memberIDs });
+    }
+
+    return requireAuthApi.post(`/rooms/`, { memberIDs, "1stMessage": { "content": message.content, type: message.type || 0 } });
+}

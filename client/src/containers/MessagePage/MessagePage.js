@@ -12,12 +12,20 @@ class MessagePage extends Component {
         this.contactContainer.updateContact(roomID, lastMessage);
     }
 
+    addFakeRoom = (room) => {
+        this.contactContainer.addFakeRoom(room);
+    }
+
+    replaceFakeRoom = (roomID, newRoom) => {
+        this.contactContainer.replaceFakeRoom(roomID, newRoom);
+    }
+
     render() {
         return (
             <Container>
                 <div className="MessagePage">
                     <ContactContainer ref={el => this.contactContainer = el} />
-                    <ConversationContainer updateLastMessage={this.updateLastMessage} />
+                    <ConversationContainer updateLastMessage={this.updateLastMessage} replaceFakeRoom={this.replaceFakeRoom} addFakeRoom={this.addFakeRoom} />
                 </div>
             </Container>
         )

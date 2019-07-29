@@ -5,7 +5,10 @@ import ContactInfo from './ContactInfo/ContactInfo';
 import ChatboxContainer from './ChatboxContainer/ChatboxContainer';
 
 import * as roomServices from "../../services/room.service";
+import * as userServices from "../../services/user.service";
 import ConversationPlaceholder from './Placeholder';
+import { groupChatName } from '../../utils/api';
+import { genUID } from '../../utils/lang';
 
 class ConversationContainer extends Component {
     state = {
@@ -14,28 +17,46 @@ class ConversationContainer extends Component {
     }
 
     componentDidMount() {
-        this.fetchRoom();
+        this.fetchRoom(true);
     }
 
     componentDidUpdate(prevProps) {
         if (this.props.match.params.roomIdOrUsername !== prevProps.match.params.roomIdOrUsername) {
-            this.fetchRoom();
+            this.fetchRoom(false);
         }
     }
 
-    async fetchRoom() {
+    async fetchRoom(shouldAddFakeRoom) {
         const { roomIdOrUsername } = this.props.match.params;
 
-        if (roomIdOrUsername) {
-            try {
-                const { data: { data: room } } = await roomServices.getRoom(roomIdOrUsername);
-                this.setState({ room });
-            } catch (e) {
-                console.log("Cannot fetch room", e);
-            } finally {
-                this.setState({ isLoading: false });
+        if (!roomIdOrUsername) return;
+
+        try {
+            const { data: { data: room } } = await roomServices.getRoom(roomIdOrUsername);
+            this.setState({ room });
+        } catch (e) {
+            if (e.response.data !== null) {
+                const { data: { type } } = e.response.data;
+                if (type === "room_not_created") {
+                    userServices.getUser(roomIdOrUsername)
+                        .then(({ data: { data: { user } } }) => {
+                            const fakeRoom = { id: genUID(), partner: user, type: false, isNew: true, messages: [] }
+                            // Only add fake room on first load
+                            if (shouldAddFakeRoom) this.props.addFakeRoom(fakeRoom);
+                            this.setState({ room: fakeRoom });
+                        })
+                        .catch((e) => console.log("Cannot fetch user", e));
+                }
             }
+        } finally {
+            this.setState({ isLoading: false });
         }
+    }
+
+    onNewRoomCreated = (fakeRoomID, newRoom) => {
+        this.setState({ room: newRoom });
+        const { replaceFakeRoom } = this.props;
+        replaceFakeRoom(fakeRoomID, newRoom);
     }
 
     render() {
@@ -43,16 +64,16 @@ class ConversationContainer extends Component {
 
         if (isLoading) return <ConversationPlaceholder />;
 
-        if (!room && !isLoading) return <div className="MessageInfoContainer"></div>
+        if (!room) return <div className="MessageInfoContainer"></div>
 
-        const { updateLastMessage } = this.props;
+        const { updateLastMessage, replaceFakeRoom } = this.props;
         const { roomIdOrUsername } = this.props.match.params;
-        const { partner, members, messages, id, type: isGroupChat } = room;
+        const { partner, members, messages, id, type: isGroupChat, isNew } = room;
 
         return (
             <div className="MessageInfoContainer">
-                <ContactInfo isGroupChat={isGroupChat} partner={partner} members={members} />
-                <ChatboxContainer messages={messages} roomID={id} roomIdOrUsername={roomIdOrUsername} updateLastMessage={updateLastMessage} />
+                <ContactInfo header={isGroupChat ? groupChatName(members) : partner.fullname} partner={partner} />
+                <ChatboxContainer messages={messages} roomID={id} partner={partner} onNewRoomCreated={this.onNewRoomCreated} roomIdOrUsername={roomIdOrUsername} updateLastMessage={updateLastMessage} isNew={isNew} />
             </div>
         )
     }

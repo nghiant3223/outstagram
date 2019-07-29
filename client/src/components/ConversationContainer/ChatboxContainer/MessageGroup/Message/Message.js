@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Popup } from 'semantic-ui-react';
 
@@ -21,10 +21,19 @@ class Message extends Component {
 
         if (isNew) {
             try {
-                const { roomIdOrUsername, replaceMessage, roomID } = this.context;
-                const { data: { data: { message } } } = await roomServices.createMessage(roomIdOrUsername, content, type);
-                replaceMessage(id, message);
-                Socket.emit("ROOM.CLIENT.SEND_MESSAGE", { ...message, targetRoomID: roomID });
+                const { roomIdOrUsername, replaceMessage, roomID, isNewRoom, partner, onNewRoomCreated } = this.context;
+
+                if (!isNewRoom) {
+                    const { data: { data: { message } } } = await roomServices.createMessage(roomIdOrUsername, content, type);
+                    replaceMessage(id, message);
+                    Socket.emit("ROOM.CLIENT.SEND_MESSAGE", { ...message, targetRoomID: roomID });
+                    return;
+                }
+
+                const otherMembers = [partner.id];
+                const { data: { data: { room } } } = await roomServices.createRoom(otherMembers, { content: content, type: 0 });
+                onNewRoomCreated(roomID, room);
+                // Socket.emit("ROOM.CLIENT.CREATE_ROOM", { targetRoomID: room.id, otherMembers });
             } catch (e) {
                 this.setState({ error: true });
                 console.log("Cannot create message", e);
@@ -56,4 +65,4 @@ Message.propTypes = {
     createdAt: PropTypes.instanceOf(Date)
 }
 
-export default Message
+export default Message;

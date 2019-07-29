@@ -60,10 +60,30 @@ class ContactContainer extends Component {
         }
     }
 
+    addFakeRoom = (room) => {
+        // MAGIC: I dont know why it needs to setTimeout here :?, if I dont do this, fakeRoom sometimes does not show up
+        setTimeout(() => this.setState((prevState) => ({ rooms: [room, ...prevState.rooms] })), 100);
+    }
+
+    replaceFakeRoom = (roomID, newRoom) => {
+        this.setState((prevState) => {
+            const { rooms } = prevState;
+            const restRooms = rooms.filter(room => room.id !== roomID);
+
+            if (restRooms.length === rooms.length) {
+                throw new Error("Message does not exist");
+            }
+
+            return { rooms: [newRoom, ...restRooms] };
+        });
+    }
+
     render() {
         const { rooms, isLoading } = this.state;
 
         if (isLoading) return <ContactContainerPlaceHolder />;
+
+        console.log(rooms.length);
 
         return (
             <div className="ContactContainer">
