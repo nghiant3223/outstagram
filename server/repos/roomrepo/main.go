@@ -63,8 +63,11 @@ func (r *RoomRepo) FindByPartnerID(userID, partnerID uint) *models.Room {
 		ON A.room_id = room.id WHERE 
 		A.room_id = B.room_id AND A.user_id <> B.user_id AND A.user_id = ? AND B.user_id = ?`
 	r.db.Raw(query, userID, partnerID).Scan(&room)
-	r.db.Model(&room).Related(&room.Messages)
+	if room.ID == 0 {
+		return nil
+	}
 
+	r.db.Model(&room).Related(&room.Messages)
 	if messageCount := len(room.Messages); messageCount > 0 {
 		room.LatestMessage = room.Messages[messageCount-1]
 		if startIdx := messageCount - constants.MessageCount; startIdx >= 0 {

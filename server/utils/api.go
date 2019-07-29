@@ -6,7 +6,7 @@ import (
 
 // AbortRequestWithError abort request with error, request stops at middleware in which this function is called
 func AbortRequestWithError(c *gin.Context, code int, message string, data interface{}) {
-	c.AbortWithStatusJSON(code, gin.H{"status": "error", "message": message, "description": data})
+	c.AbortWithStatusJSON(code, gin.H{"status": "error", "message": message, "data": data})
 }
 
 // AbortRequestWithSuccess abort request with success, request stops at middleware in which this function is called

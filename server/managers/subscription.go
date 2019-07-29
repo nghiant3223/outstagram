@@ -18,7 +18,10 @@ func (s Subscription) ReadPump() {
 	c := s.SuperConn
 	defer func() {
 		Hub.UnregisterChannel <- s
-		c.WS.Close()
+		err := c.WS.Close()
+		if err != nil {
+			log.Println(err.Error())
+		}
 	}()
 
 	c.WS.SetReadLimit(maxMessageSize)
@@ -47,7 +50,10 @@ func (s *Subscription) WritePump() {
 	ticker := time.NewTicker(pingPeriod)
 	defer func() {
 		ticker.Stop()
-		_ = c.WS.Close()
+		err := c.WS.Close()
+		if err != nil {
+			log.Println(err.Error())
+		}
 	}()
 
 	for {
@@ -58,20 +64,17 @@ func (s *Subscription) WritePump() {
 				if err != nil {
 					log.Println(err.Error())
 				}
-				return
 			}
 
 			if transmitMessageJSON, err := json.Marshal(transmitMessageDTO); err != nil {
-				log.Println(err.Error())
-				return
+				log.Println("1.", err.Error())
 			} else if err := c.Write(websocket.TextMessage, transmitMessageJSON); err != nil {
-				log.Println(err.Error())
-				return
+				log.Println("2.", err.Error())
 			}
 
 		case <-ticker.C:
 			if err := c.Write(websocket.PingMessage, []byte{}); err != nil {
-				return
+				log.Println("3.", err.Error())
 			}
 		}
 	}

@@ -64,7 +64,7 @@ func (h *hub) run(wsMuxes ...func(from *SuperConnection, clientMessage Message))
 				log.Printf("User %v joins room %v", s.SuperConn.UserID, roomID)
 			}
 
-			log.Println("A client connected to server")
+			log.Println("A client connected to server! ")
 
 		case s := <-h.UnregisterChannel:
 			if _, ok := h.Connections[s.SuperConn.Connection]; ok {

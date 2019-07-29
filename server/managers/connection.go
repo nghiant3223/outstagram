@@ -1,6 +1,7 @@
 package managers
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/gorilla/websocket"
@@ -17,7 +18,10 @@ type Connection struct {
 
 // Write writes a message with the given message type and payload.
 func (c *Connection) Write(mt int, payload []byte) error {
-	_ = c.WS.SetWriteDeadline(time.Now().Add(writeWait))
+	err := c.WS.SetWriteDeadline(time.Now().Add(writeWait))
+	if err != nil {
+		fmt.Println("4.", err.Error())
+	}
 	return c.WS.WriteMessage(mt, payload)
 }
 

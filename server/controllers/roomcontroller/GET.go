@@ -26,11 +26,6 @@ func (rc *Controller) CheckRoomExist(c *gin.Context) {
 		room, err = rc.roomService.GetRoomByID(idOrUsername)
 	}
 
-	if room == nil {
-		utils.AbortRequestWithError(c, http.StatusNotFound, "Room not found", nil)
-		return
-	}
-
 	if err != nil {
 		if gorm.IsRecordNotFoundError(err) {
 			utils.AbortRequestWithError(c, http.StatusNotFound, "Room not found", err.Error())
@@ -38,6 +33,11 @@ func (rc *Controller) CheckRoomExist(c *gin.Context) {
 		}
 
 		utils.AbortRequestWithError(c, http.StatusInternalServerError, "Error while fetching recent rooms", err.Error())
+		return
+	}
+
+	if room == nil {
+		utils.AbortRequestWithError(c, http.StatusNotFound, "2 users' room not found", &gin.H{"type":"room_not_created"})
 		return
 	}
 

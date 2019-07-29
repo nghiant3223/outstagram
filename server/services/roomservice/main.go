@@ -20,24 +20,24 @@ func New(roomRepo *roomrepo.RoomRepo,
 	}
 }
 
-func (s *RoomService) CreateDualRoom(userAID, userBID uint) error {
+func (s *RoomService) CreateDualRoom(userAID, userBID uint) (*models.Room, error) {
 	var room models.Room
 
 	exist := s.roomRepo.CheckDualRoomExist(userAID, userBID)
 	if exist {
-		return errors.New("room existed")
+		return nil, errors.New("room existed")
 	}
 
 	for _, id := range []uint{userAID, userBID} {
 		user, err := s.userService.FindByID(id)
 		if err != nil {
-			return err
+			return nil, err
 		}
 		room.Members = append(room.Members, user)
 	}
 
 	room.Type = false
-	return s.roomRepo.Save(&room)
+	return &room, s.roomRepo.Save(&room)
 }
 
 func (s *RoomService) GetRoomByID(id uint) (*models.Room, error) {
