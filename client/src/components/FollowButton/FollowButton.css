@@ -4,4 +4,5 @@
 
 .FollowButton {
   padding: 0 1.15em !important;
+  min-height: 2.65em !important;
 }

@@ -30,13 +30,13 @@ function CoverImage(props) {
     }
 
 
-    const { coverImageID } = props;
+    const { coverImageID, isMe } = props;
     return (
         <div className="ImagesContainer__Cover" style={{ backgroundImage: `url(${noAuthStatic('/images/others/' + coverImageID, { size: "big" })})` }} >
-            <div className="ImagesContainer__Cover__ChangeBtn">
+            {isMe && <div className="ImagesContainer__Cover__ChangeBtn">
                 <Button onClick={onButtonClick} loading={isLoading}><Icon name="photo" />Update your cover</Button>
                 <input type="file" accept="image/*" ref={el => coverInput = el} onChange={onFileSelect} />
-            </div>
+            </div>}
         </div>
     )
 }

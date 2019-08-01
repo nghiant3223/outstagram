@@ -25,7 +25,7 @@ function FollowButton(props) {
 
     return (
         followed ?
-            <Button icon onClick={toggleFollow} className="FollowButton">
+            <Button icon onClick={toggleFollow} className="FollowButton" size={props.size} basic={props.basic}>
                 <Icon.Group>
                     <Icon name='user' />
                     <Icon corner name='check' />
@@ -33,7 +33,7 @@ function FollowButton(props) {
                 <span className="FollowButton__Text">Following</span>
             </Button>
             :
-            <Button icon onClick={toggleFollow}>
+            <Button icon onClick={toggleFollow} size={props.size} basic={props.basic}>
                 <Icon.Group>
                     <Icon name='user' />
                     <Icon corner name='plus' />
@@ -47,5 +47,9 @@ function FollowButton(props) {
 const mapDispatchToProps = (dispatch) => ({
     updateFollowingCount: (followed) => dispatch(actionTypes.updateUserFollowingCount(!followed))
 });
+
+FollowButton.defaultProps = {
+    basic: false
+}
 
 export default connect(null, mapDispatchToProps)(FollowButton);

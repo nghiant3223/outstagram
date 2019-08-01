@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 
 import Dot from '../Dot/Dot';
 import Avatar from '../Avatar/Avatar';
-import { getDiffFromPast } from '../../utils/time';
+import { getTimeDiffFromNow } from '../../utils/time';
 import * as reactorActions from "../../actions/reactor.action";
 import * as commentableServices from "../../services/commentable.service";
 import * as reactableServices from "../../services/reactable.service";
@@ -18,6 +18,7 @@ import "./Comment.css";
 import ClickableText from '../ClickableText/ClickableText';
 import Loading from "../Loading/Loading";
 import Reply from '../Reply/Reply';
+import UserInfoPopup from '../UserInfoPopup/UserInfoPopup';
 
 class Comment extends Component {
     constructor(props) {
@@ -153,14 +154,14 @@ class Comment extends Component {
                 <SemanticComment>
                     <div className="Comment__Container">
                         <div className="Comment__AvatarContainer">
-                            <Avatar userID={ownerID} />
+                            <UserInfoPopup username={ownerUsername} trigger={<Link to={`/${ownerUsername}`}><Avatar width="2.75rem" userID={userID} /></Link>} />
                         </div>
 
                         <div style={{ width: "100%" }}>
                             <SemanticComment.Content>
                                 <div className="Comment__ContentContainer">
                                     <span className="Comment__AuthorName">
-                                        <Link to={`/${ownerUsername}`} className="Fullname">{ownerFullname}</Link>
+                                        <UserInfoPopup username={ownerUsername} trigger={<Link to={`/${ownerUsername}`} className="Fullname">{ownerFullname}</Link>} />
                                     </span>
                                     {content}
                                 </div>
@@ -172,7 +173,7 @@ class Comment extends Component {
                                             <div onClick={this.onReplyClick}>Reply</div>
                                         </SemanticComment.Action>
                                         <Dot style={{ marginLeft: 0 }} />
-                                        {getDiffFromPast(createdAt)}
+                                        {getTimeDiffFromNow(createdAt)}
                                         {reactCount > 0 &&
                                             <Fragment>
                                                 <Dot />

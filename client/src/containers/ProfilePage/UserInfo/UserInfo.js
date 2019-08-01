@@ -53,7 +53,7 @@ class UserInfo extends Component {
                 {!user.isMe &&
                     (<div style={{ display: "flex", justifyContent: "center", marginTop: "1em" }}>
                         <FollowButton followed={followed} userID={user.id} />
-                        <Link to={`/messages/${user.username}`}><Button icon="messenger"><Icon name="facebook messenger" />Message</Button></Link>
+                        <Link to={`/messages/${user.username}`}><Button><Icon name="facebook messenger" />Message</Button></Link>
                     </div>)
                 }
 

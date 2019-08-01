@@ -67,8 +67,8 @@ class ProfilePage extends Component {
             <div>
                 <Container className="ProfileSummaryContainer">
                     <div className="ImagesContainer">
-                        <CoverImage coverImageID={user.coverImageID} />
-                        <ProfileImage userID={user.id} />
+                        <CoverImage coverImageID={user.coverImageID} isMe={user.isMe} />
+                        <ProfileImage userID={user.id} isMe={user.isMe} />
                     </div>
 
                     <UserInfo user={user} />

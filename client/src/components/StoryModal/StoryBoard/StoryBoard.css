@@ -34,6 +34,13 @@
   align-items: center;
 }
 
+.StoryBoard__Header__Left__Info {
+  color: #fff;
+  font-weight: bold;
+  text-shadow: 1px 0 0 #111, -1px 0 0 #111, 0 1px 0 #111, 0 -1px 0 #111,
+    1px 1px #111, -1px -1px 0 #111, 1px -1px 0 #111, -1px 1px 0 #111;
+}
+
 .StoryBoard__Header__Left__Info > div:first-child {
   margin-bottom: 0.25em;
 }

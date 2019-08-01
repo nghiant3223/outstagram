@@ -2,7 +2,7 @@
   width: var(--post-width);
   border-radius: 5px;
   background-color: white;
-  padding-top: 1em;
+  padding-top: 0.55em;
 }
 
 .Post > div {

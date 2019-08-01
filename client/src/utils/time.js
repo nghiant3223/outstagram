@@ -4,7 +4,6 @@ const HOUR = MINUTE * 60;
 const DAY = HOUR * 24;
 
 export function getTimeDiffFromNow(time) {
-    console.log(time)
     const then = new Date(time);
     const now = new Date();
     const diff = now.getTime() - then.getTime();

@@ -58,33 +58,27 @@ class ReactorModal extends Component {
                 closeOnDimmerClick
                 open={isModalOpen}
                 centered={false}
-                size="mini"
+                size="tiny"
                 onClose={close}>
-
-                <Modal.Content scrolling>
-                    <div className="ReactorContainer">
-                        {isLoading ?
-                            <div className="ReactorContainer__Loading">
-                                <Loading />
-                            </div>
-                            :
-                            <Fragment>
-                                <Modal.Content className="ReactorContainer__Header">
-                                    <ClickableText><Icon name="heart" color="red" inverted /> {reactCount} {pluralize("Reactions")}</ClickableText>
-                                </Modal.Content>
-                                {reactors.map((reactor) =>
-                                    <div className="ReactorContainer__Reactor" key={reactor.id}>
-                                        <div className="ReactorContainer__Reactor__Container">
-                                            <Avatar userID={reactor.id} />
-                                            <div><Link to={`/${reactor.username}`} onClick={close}>{reactor.fullname}</Link></div>
-                                        </div>
-                                        {reactor.id !== user.id && <div><FollowButton userID={reactor.id} followed={reactor.followed} /></div>}
-                                    </div>)}
-                            </Fragment>
-                        }
-                    </div>
-                </Modal.Content>
-
+                <Modal.Header className="ReactorContainer__Header">
+                    <ClickableText><Icon name="heart" color="red" inverted /> {reactCount} {pluralize("Reactions")}</ClickableText>
+                </Modal.Header>
+                <div className="ReactorContainer">
+                    {isLoading ?
+                        <div className="ReactorContainer__Loading"><Loading /></div>
+                        :
+                        <Modal.Content scrolling className="ReactorContainer__ReactorContainer">
+                            {reactors.map((reactor) =>
+                                <div className="ReactorContainer__Reactor" key={reactor.id}>
+                                    <div className="ReactorContainer__Reactor__Container">
+                                        <Avatar userID={reactor.id} />
+                                        <div><Link to={`/${reactor.username}`} onClick={close}>{reactor.fullname}</Link></div>
+                                    </div>
+                                    {reactor.id !== user.id && <div><FollowButton userID={reactor.id} followed={reactor.followed} size="tiny" /></div>}
+                                </div>)}
+                        </Modal.Content>
+                    }
+                </div>
             </Modal>
         )
     }

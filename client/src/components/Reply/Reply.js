@@ -6,13 +6,14 @@ import pruralize from "pluralize";
 
 import Dot from '../Dot/Dot';
 import Avatar from '../Avatar/Avatar';
-import { getDiffFromPast } from '../../utils/time';
+import { getTimeDiffFromNow } from '../../utils/time';
 import * as reactorActions from "../../actions/reactor.action";
 import * as reactableServices from "../../services/reactable.service";
 import * as commentService from "../../services/comment.service";
 
 import "./Reply.css";
 import ClickableText from '../ClickableText/ClickableText';
+import UserInfoPopup from '../UserInfoPopup/UserInfoPopup';
 
 class Reply extends Component {
     constructor(props) {
@@ -83,14 +84,14 @@ class Reply extends Component {
                 <SemanticReply>
                     <div className="Reply__Container">
                         <div className="Reply__AvatarContainer">
-                            <Avatar userID={ownerID} width="2em" />
+                            <UserInfoPopup username={ownerUsername} trigger={<Link to={`/${ownerUsername}`}><Avatar width="2.75rem" userID={ownerID} /></Link>} />
                         </div>
 
                         <div style={{ width: "100%" }}>
                             <SemanticReply.Content>
                                 <div className="Comment__ContentContainer">
                                     <span className="Comment__AuthorName">
-                                        <Link to={`/${ownerUsername}`} className="Fullname">{ownerFullname}</Link>
+                                        <UserInfoPopup username={ownerUsername} trigger={<Link to={`/${ownerUsername}`} className="Fullname">{ownerFullname}</Link>} />
                                     </span>
                                     {content}
                                 </div>
@@ -100,7 +101,7 @@ class Reply extends Component {
                                         {this.renderReact()}
                                         <SemanticReply.Action><div onClick={this.onReplyClick}>Reply</div></SemanticReply.Action>
                                         <Dot style={{ marginLeft: 0 }} />
-                                        {getDiffFromPast(createdAt)}
+                                        {getTimeDiffFromNow(createdAt)}
                                         {reactCount > 0 &&
                                             <Fragment>
                                                 <Dot />

@@ -37,3 +37,9 @@ a:hover {
 .dropdown.icon {
   margin-left: 0px !important;
 }
+
+i.facebook.icon {
+  font-size: 1.25em;
+  transform: translateY(15%);
+  margin-right: 0.15em !important;
+}

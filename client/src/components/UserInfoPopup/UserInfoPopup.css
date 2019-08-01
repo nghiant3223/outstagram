@@ -1,13 +1,59 @@
 .UserInfoPopUp__Container {
-    display: flex;
-    align-items: center;
+  align-items: center;
+  width: 380px;
+  max-height: calc(160px + 125px);
+  min-height: calc(160px + 85px);
 }
 
-.UserInfoPopUp__Container>div {
-    margin-left: 0.25em;
-    margin-right: 0.25em;
+.UserInfoPopUp__Container > div {
+  margin-left: 0.25em;
+  margin-right: 0.25em;
+}
+
+.UserInfoPopUp__Container__CoverContainer {
+  background: rgb(245, 245, 245);
+  transform: translateX(-3px);
+  height: 160px;
+  left: 0;
+  position: relative;
+  border-radius: 5px;
+  width: 100%;
+}
+
+.UserInfoPopUp__Container__CoverContainer__Avatar {
+  position: absolute;
+  bottom: 0;
+  left: 20%;
+  transform: translate(-50%, 70%);
+  border: 3px solid rgb(211, 211, 211);
+  border-radius: 50%;
+}
+
+.UserInfoPopUp__Container__DescriptionContainer {
+  padding-left: 40%;
+  margin-top: 1em;
 }
 
 .ui.header {
-    margin-bottom: 0px !important
+  margin-bottom: 0px !important;
+}
+
+.ui.popup.transition.visible::before {
+  z-index: 0 !important;
+}
+
+.UserInfoPopUp__Container__DescriptionContainer h3 {
+  margin: 0px !important;
+}
+
+.List {
+  margin-top: 0.5em !important;
+}
+
+.UserInfoPopup__Container__Actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1em;
+  font-size: 0.75em;
+  margin-bottom: 0.5em;
 }

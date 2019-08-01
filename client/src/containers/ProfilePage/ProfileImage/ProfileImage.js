@@ -6,7 +6,7 @@ import Avatar from '../../../components/Avatar/Avatar';
 import "./ProfileImage.css";
 import { updateUser } from '../../../services/user.service';
 
-function ProfileImage({ userID }) {
+function ProfileImage(props) {
     const [isLoading, setIsLoading] = useState(false);
 
     let avatarInput;
@@ -30,13 +30,15 @@ function ProfileImage({ userID }) {
         }
     }
 
+    const { userID, isMe } = props;
+
     return (
         <div className="ImagesContainer__Avatar">
             <Avatar userID={userID} size="big" width="125px" />
-            <div className="ImagesContainer__Avatar__ChangeBtn">
+            {isMe && <div className="ImagesContainer__Avatar__ChangeBtn">
                 <Button icon="photo" circular onClick={onButtonClick} loading={isLoading} />
                 <input type="file" accept="image/*" ref={el => avatarInput = el} onChange={onFileSelect} />
-            </div>
+            </div>}
         </div>
     )
 }
