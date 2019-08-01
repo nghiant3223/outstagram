@@ -22,31 +22,36 @@ type User struct {
 	NotifBoard    NotifBoard `gorm:"association_autoupdate:false"`
 	StoryBoard    StoryBoard `gorm:"association_autoupdate:false"`
 	AvatarImageID uint
+	CoverImageID  uint
 }
 
 func (u *User) ToDTO() dtomodels.User {
 	return dtomodels.User{
-		ID:         u.ID,
-		Fullname:   u.Fullname,
-		Username:   u.Username,
-		Gender:     u.Gender,
-		Phone:      u.Phone,
-		Email:      u.Email,
-		LastLogout: u.LastLogout,
-		LastLogin:  u.LastLogin,
+		ID:           u.ID,
+		Fullname:     u.Fullname,
+		Username:     u.Username,
+		Gender:       u.Gender,
+		Phone:        u.Phone,
+		Email:        u.Email,
+		LastLogout:   u.LastLogout,
+		LastLogin:    u.LastLogin,
+		CoverImageID: u.CoverImageID,
+		CreatedAt:    u.CreatedAt,
 	}
 }
 
 func (u *User) ToMeDTO() dtomodels.Me {
 	return dtomodels.Me{
-		ID:         u.ID,
-		Fullname:   u.Fullname,
-		Username:   u.Username,
-		Gender:     u.Gender,
-		Phone:      u.Phone,
-		Email:      u.Email,
-		LastLogout: u.LastLogout,
-		LastLogin:  u.LastLogin,
+		ID:           u.ID,
+		Fullname:     u.Fullname,
+		Username:     u.Username,
+		Gender:       u.Gender,
+		Phone:        u.Phone,
+		Email:        u.Email,
+		LastLogout:   u.LastLogout,
+		LastLogin:    u.LastLogin,
+		CoverImageID: u.CoverImageID,
+		CreatedAt:    u.CreatedAt,
 	}
 }
 
@@ -57,5 +62,6 @@ func (u *User) ToSimpleDTO() dtomodels.SimpleUser {
 		Username:   u.Username,
 		LastLogout: u.LastLogout,
 		LastLogin:  u.LastLogin,
+		CreatedAt:  u.CreatedAt,
 	}
 }

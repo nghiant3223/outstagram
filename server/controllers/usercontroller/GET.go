@@ -74,7 +74,7 @@ func (uc *Controller) GetUsersInfo(c *gin.Context) {
 	dtoUser.FollowerCount = len(dtoFollowers)
 
 	var dtoFollowings []dtomodels.SimpleUser
-	followings := uc.userService.GetFollowers(user.ID)
+	followings := uc.userService.GetFollowings(user.ID)
 	for _, follower := range followings {
 		dtoFollowings = append(dtoFollowings, follower.ToSimpleDTO())
 	}

@@ -19,6 +19,7 @@ type User struct {
 	CreatedAt      time.Time    `json:"createdAt"`
 	LastLogin      *time.Time   `json:"lastLogin"`
 	LastLogout     *time.Time   `json:"lastLogout"`
+	CoverImageID   uint         `json:"coverImageID"`
 }
 
 type SimpleUser struct {
@@ -28,4 +29,6 @@ type SimpleUser struct {
 	Followed   *bool      `json:"followed"`
 	LastLogin  *time.Time `json:"lastLogin"`
 	LastLogout *time.Time `json:"lastLogout"`
+	CreatedAt  time.Time  `json:"createdAt"`
+	IsMe       bool       `json:"isMe"`
 }

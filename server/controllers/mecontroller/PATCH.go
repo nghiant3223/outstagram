@@ -49,7 +49,17 @@ func (mc *Controller) UpdateUser(c *gin.Context) {
 	// Update cover
 	cover := form.File["cover"]
 	if len(cover) > 0 {
+		image, err := mc.imageService.Save(cover[0], userID, false)
+		if err != nil {
+			utils.ResponseWithError(c, http.StatusInternalServerError, "Error while saving user's avatar", err.Error())
+			return
+		}
 
+		user.CoverImageID = image.ID
+		if err := mc.userService.Save(user); err != nil {
+			utils.ResponseWithError(c, http.StatusBadRequest, "Invalid form data", err.Error())
+			return
+		}
 	}
 
 	utils.ResponseWithSuccess(c, http.StatusOK, "Fetch user successfully", user.ToMeDTO())
