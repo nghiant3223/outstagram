@@ -20,3 +20,21 @@ export function getNewsFeed(sinceID) {
 export function searchUser(filterText) {
     return requireAuthApi.get("/users?filter=" + filterText);
 }
+
+export function localSearchUser(users, filterText) {
+    const lowerCaseText = filterText.toLowerCase();
+    const results = users.filter((user) => {
+        const usernameMatch = user.username && user.username.toLowerCase().includes(lowerCaseText);
+        const fullnameMatch = user.fullname && user.fullname.toLowerCase().includes(lowerCaseText);
+        const emailMatch = user.email && user.email.toLowerCase().includes(lowerCaseText);
+        return usernameMatch || fullnameMatch || emailMatch;
+    });
+    return results;
+}
+
+export function updateUser({ avatar }) {
+    const formData = new FormData();
+
+    formData.append("avatar", avatar);
+    return requireAuthApi.patch("/me", formData);
+}

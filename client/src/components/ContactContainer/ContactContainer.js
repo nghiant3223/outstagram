@@ -56,7 +56,6 @@ class ContactContainer extends Component {
     }
 
     async fetchMessages() {
-        alert("fake rom")
         this.setState({ isLoading: true });
         try {
             const { data: { data: { rooms } } } = await roomServices.getRecentRooms();
@@ -92,9 +91,9 @@ class ContactContainer extends Component {
         if (isLoading) return <ContactContainerPlaceHolder />;
 
         return (
-            <div className="ContactContainer">
+            <div className="ContactContainer" >
                 <div className="ContactContainer__SearchContainer">
-                    <ContactSearch onContactClick={this.onContactClick} />
+                    <ContactSearch users={rooms.map(room => room.partner)} />
                 </div>
                 <div className="ContactContainer__ContactItemContainer">
                     {rooms.map((contact) => <Contact key={contact.id} ref={(el) => this.contactRefs[contact.id] = el} {...contact} />)}

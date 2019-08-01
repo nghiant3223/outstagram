@@ -64,6 +64,9 @@ func (h *hub) run(wsMuxes ...func(from *SuperConnection, clientMessage Message))
 				log.Printf("User %v joins room %v", s.SuperConn.UserID, roomID)
 			}
 
+			message := Message{Type: "USER.SERVER.GO_ONLINE"}
+			serverMessage := ServerMessage{Message: message, ActorID: s.SuperConn.UserID}
+			h.Broadcast(s.SuperConn, serverMessage)
 			log.Println("A client connected to server! ")
 
 		case s := <-h.UnregisterChannel:
@@ -87,6 +90,9 @@ func (h *hub) run(wsMuxes ...func(from *SuperConnection, clientMessage Message))
 					}
 				}
 
+				message := Message{Type: "USER.SERVER.GO_OFFLINE"}
+				serverMessage := ServerMessage{Message: message, ActorID: s.SuperConn.UserID}
+				h.Broadcast(s.SuperConn, serverMessage)
 				log.Println("A client disconnected from server")
 			}
 

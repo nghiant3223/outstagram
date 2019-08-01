@@ -17,11 +17,15 @@ type User struct {
 	Followed       *bool        `json:"followed,omitempty"`
 	PostCount      int          `json:"postCount"`
 	CreatedAt      time.Time    `json:"createdAt"`
+	LastLogin      *time.Time   `json:"lastLogin"`
+	LastLogout     *time.Time   `json:"lastLogout"`
 }
 
 type SimpleUser struct {
-	ID       uint   `json:"id"`
-	Username string `json:"username"`
-	Fullname string `json:"fullname"`
-	Followed *bool  `json:"followed"`
+	ID         uint       `json:"id"`
+	Username   string     `json:"username"`
+	Fullname   string     `json:"fullname"`
+	Followed   *bool      `json:"followed"`
+	LastLogin  *time.Time `json:"lastLogin"`
+	LastLogout *time.Time `json:"lastLogout"`
 }

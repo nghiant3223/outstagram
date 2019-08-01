@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Popup } from 'semantic-ui-react';
+import moment from 'moment';
 
 import ContainerContext from '../../ContainerContext';
 import * as roomServices from "../../../../../services/room.service";
@@ -55,7 +56,7 @@ class Message extends Component {
 
         return (
             <div className={className}>
-                <Popup content={createdAt.toString()} size="mini" position="right center" style={{ padding: "0.75em" }} inverted
+                <Popup content={moment(new Date(createdAt)).calendar().replace(/\sat\s/, ' ').replace('Today', '')} size="mini" position="right center" style={{ padding: "0.75em" }} inverted
                     trigger={<div className="Message__Content">{content}</div>} />
             </div>
         )

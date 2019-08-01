@@ -16,6 +16,7 @@ func MeAPIRouter(router *gin.Engine, routerGroup *gin.RouterGroup) {
 	routerGroup.Use(middlewares.VerifyToken(true))
 
 	routerGroup.GET("", meController.GetMe)
+	routerGroup.PATCH("", meController.UpdateUser)
 
 	routerGroup.GET("/newsfeed", meController.GetNewsFeed)
 

@@ -3,7 +3,8 @@ const MINUTE = SECOND * 60;
 const HOUR = MINUTE * 60;
 const DAY = HOUR * 24;
 
-export function getDiffFromPast(time) {
+export function getTimeDiffFromNow(time) {
+    console.log(time)
     const then = new Date(time);
     const now = new Date();
     const diff = now.getTime() - then.getTime();
@@ -26,3 +27,4 @@ export function toHHMM(time) {
     const m = time.getMinutes();
     return (h < 10 ? ('0' + h.toString()) : h.toString()) + ':' + (m < 10 ? ('0' + m.toString()) : m.toString());
 }
+

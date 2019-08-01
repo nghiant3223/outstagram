@@ -76,7 +76,7 @@ class ConversationContainer extends Component {
 
         return (
             <div className="MessageInfoContainer">
-                <ContactInfo header={isGroupChat ? groupChatName(members) : partner.fullname} partner={partner} />
+                <ContactInfo header={isGroupChat ? groupChatName(members) : partner.fullname} partner={partner} key={partner.id} />
                 <ChatboxContainer messages={messages} roomID={id} partner={partner} onNewRoomCreated={this.onNewRoomCreated} roomIdOrUsername={roomIdOrUsername} updateLastMessage={updateLastMessage} isNew={isNew} />
             </div>
         )

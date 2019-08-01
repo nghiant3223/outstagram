@@ -9,7 +9,6 @@ import * as authActions from '../../actions/auth.action';
 
 import './Header.css';
 import Avatar from '../Avatar/Avatar';
-import logo from '../../images/logo.jpg';
 
 const Header = (props) => {
     const { user } = props;
@@ -24,6 +23,12 @@ const Header = (props) => {
 
                 <ul className="Header__Right">
                     <li className="Header__Right__Item">
+                        <NavLink to="/messages" activeStyle={{ color: "blue" }} style={{ color: "grey" }}>
+                            <Icon name="facebook messenger" size="large" />
+                        </NavLink>
+                    </li>
+
+                    <li className="Header__Right__Item">
                         <Link to={`/${user.username}`}>
                             <div className="Header__Right__Info">
                                 <div className="Header__Right__Info__Avatar" >
@@ -32,15 +37,6 @@ const Header = (props) => {
                                 <div>{user.fullname}</div>
                             </div>
                         </Link>
-                    </li>
-
-                    <li className="Header__Right__Item">
-                        <Link to="/messages">
-                            <Icon name="alarm" size="large" color="grey" />
-                        </Link>
-                        <NavLink to="/messages" activeStyle={{ color: "blue" }} style={{ color: "grey" }}>
-                            <Icon name="facebook messenger" size="large" />
-                        </NavLink>
                     </li>
 
                     <li className="Header__Right__Item">

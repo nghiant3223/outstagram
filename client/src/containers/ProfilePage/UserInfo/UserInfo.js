@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Button } from 'semantic-ui-react';
+import { Link } from 'react-router-dom';
+import { Button, Icon } from 'semantic-ui-react';
 
 import * as userServices from '../../../services/user.service';
 
@@ -46,12 +47,15 @@ class UserInfo extends Component {
             <div className="InfoContainer">
                 <div className="InfoHeader">
                     <div className="InfoHeader__Fullname">{user.fullname}</div>
-                    {!user.isMe &&
-                        (<div className="InfoHeader__Button">
-                            <FollowButton followed={followed} userID={user.id} />
-                        </div>)
-                    }
+
                 </div>
+
+                {!user.isMe &&
+                    (<div style={{ display: "flex", justifyContent: "center", marginTop: "1em" }}>
+                        <FollowButton followed={followed} userID={user.id} />
+                        <Link to={`/messages/${user.username}`}><Button icon="messenger"><Icon name="facebook messenger" />Message</Button></Link>
+                    </div>)
+                }
 
                 <div className="InfoItemContainer">
                     <div className="InfoItem">

@@ -1,5 +1,6 @@
-import React, { Component } from 'react'
-import { Search } from 'semantic-ui-react'
+import React, { Component } from 'react';
+import { Search } from 'semantic-ui-react';
+import { withRouter } from 'react-router';
 import _ from 'lodash';
 
 import * as userServices from '../../../services/user.service';
@@ -10,13 +11,11 @@ import "./ContactSearch.css";
 const resultRenderer = ({ title }) => {
     const [id, fullname] = title.split(' ');
 
-    if (title === "__feching_data__") {
-        return <div className="FechingData">Fetching data...</div>;
-    }
+    if (title === "__feching_data__") return <div className="FechingData">Fetching data...</div>;
 
-    if (title === "__no_results__") {
-        return <div className="FechingData">No results</div>;
-    }
+
+    if (title === "__no_results__") return <div className="FechingData">No results</div>;
+
 
     return <div className="ResultContainer">
         <div><Avatar userID={id} /></div>
@@ -34,9 +33,8 @@ class ContactSearch extends Component {
         const components = result.title.split(' ');
 
         if (components.length > 0) {
-            const [id] = components;
-            const { onContactClick } = this.props;
-            onContactClick(id);
+            const [, , username] = components;
+            this.props.history.push(`/messages/${username}`);
         }
     }
 
@@ -47,17 +45,16 @@ class ContactSearch extends Component {
         }
 
         this.setState({ isLoading: true, value, results: [{ title: "__feching_data__" }] })
-        userServices.searchUser(value).then(({ data: { data } }) => {
-            if (data) {
-                this.setState({ results: data.map((result) => ({ title: result.id + " " + result.fullname })) })
-            } else {
-                this.setState({ results: [{ title: "__no_results__" }] });
-            }
-        }).catch((e) => {
-            console.log("Cannot search user");
-        }).finally(() => {
-            this.setState({ isLoading: false });
-        });
+
+        const { users } = this.props;
+        const results = userServices.localSearchUser(users, value)
+        if (results.length > 0) {
+            this.setState({ results: results.map((result) => ({ title: result.id + " " + result.fullname + " " + result.username })) })
+        } else {
+            this.setState({ results: [{ title: "__no_results__" }] });
+        }
+
+        this.setState({ isLoading: false });
     }
 
     render() {
@@ -77,4 +74,4 @@ class ContactSearch extends Component {
     }
 }
 
-export default ContactSearch;
+export default withRouter(ContactSearch);

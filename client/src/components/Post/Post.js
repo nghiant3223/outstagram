@@ -9,8 +9,7 @@ import PostAction from '../PostAction/PostAction';
 import PostInput from '../PostInput/PostInput';
 
 import PostHeader from '../PostHeader/PostHeader';
-import { getDiffFromPast } from '../../utils/time';
-import { noAuthStatic } from '../../axios';
+import { getTimeDiffFromNow } from '../../utils/time';
 import * as reactableServices from "../../services/reactable.service";
 import * as commentableServices from "../../services/commentable.service";
 
@@ -120,7 +119,7 @@ class Post extends Component {
 
         return (
             <div className="Post">
-                <PostHeader fullname={ownerFullname} createdAt={getDiffFromPast(createdAt)} userID={ownerID} username={ownerUsername} />
+                <PostHeader fullname={ownerFullname} createdAt={createdAt} userID={ownerID} username={ownerUsername} />
 
                 <div className="ThreaterContainer__InfoContainer__Description">
                     {this.renderDescription()}

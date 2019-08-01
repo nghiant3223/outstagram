@@ -1,3 +1,7 @@
 .FollowButton__Text {
   margin-left: 0.25em;
 }
+
+.FollowButton {
+  padding: 0 1.15em !important;
+}

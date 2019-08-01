@@ -19,9 +19,16 @@ export const loginUser = (username, password) =>
     }
 
 export const logoutUser = () => {
-    sessionStorage.clear();
-    Socket.close();
-    return { type: actionTypes.LOGOUT };
+    return async dispatch => {
+        try {
+            await authServices.logoutUser();
+            sessionStorage.clear();
+            Socket.close();
+            dispatch({ type: actionTypes.LOGOUT });
+        } catch (e) {
+            console.log("Cannot logout user");
+        }
+    }
 }
 
 export const getMe = () =>

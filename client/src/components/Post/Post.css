@@ -2,11 +2,12 @@
   width: var(--post-width);
   border-radius: 5px;
   background-color: white;
+  padding-top: 1em;
 }
 
 .Post > div {
-  padding-left: 1em;
-  padding-right: 1em;
+  padding-left: 1rem;
+  padding-right: 1rem;
 }
 
 .Post > div:last-child {

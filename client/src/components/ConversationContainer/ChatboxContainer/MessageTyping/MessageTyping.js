@@ -43,7 +43,7 @@ class MessageTyping extends Component {
             <Fragment>
                 {typingIDs.map((id) =>
                     <div key={id} className={["MessageGroup", "MessageGroup--Left"].join(" ")}>
-                        <div className="MessageGroup__Avatar"><Avatar userID={id} /> </div>
+                        <div className="MessageGroup__Avatar"><Avatar userID={id} width="2.25em" /> </div>
                         <div className={["MessageGroup__ChatboxContainer", "MessageGroup__ChatboxContainer--Left"].join(" ")}>
                             <div className="Message">
                                 <Popup content={`Someone is typing`} size="mini" position="right center" inverted

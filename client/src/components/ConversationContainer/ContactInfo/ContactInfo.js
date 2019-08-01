@@ -1,5 +1,7 @@
 import React from 'react';
-import { Icon } from 'semantic-ui-react';
+import OnlineStatus from '../../OnlinrStatus/OnlineStatus';
+
+import "./ContactInfo.css";
 
 function ContactInfo(props) {
     const { header, partner } = props;
@@ -8,9 +10,9 @@ function ContactInfo(props) {
         <div className="MessageInfoContainer__Info">
             <div className="MessageInfoContainer__Info__Detail">
                 <div className="Fullname">{header}</div>
-                <div style={{ display: "flex", alignItems: "center" }}>
-                    <Icon name="circle" size="mini" color="green" />
-                    <span>Online</span></div>
+                <div className="Status">
+                    <OnlineStatus partnerID={partner.id} lastLogin={partner.lastLogin} lastLogout={partner.lastLogout} />
+                </div>
             </div>
         </div>
     )

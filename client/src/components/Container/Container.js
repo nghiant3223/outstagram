@@ -5,8 +5,15 @@ import "./Container.css";
 
 function Container({ children, className, style, white, center }) {
     const newStyle = {}
-    if (white) newStyle.backgroundColor = "white";
-    if (center) newStyle.margin = "0 auto";
+
+    if (white) {
+        newStyle.backgroundColor = "white";
+    }
+
+    if (center) {
+        newStyle.marginLeft = "auto";
+        newStyle.marginRight = "auto";
+    }
 
     return (
         <div className={["Container", className].join(" ")} style={{ ...style, ...newStyle }}>

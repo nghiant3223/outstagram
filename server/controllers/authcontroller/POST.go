@@ -52,7 +52,7 @@ func (ac *Controller) Logout(c *gin.Context) {
 		return
 	}
 
-	user.LastLogin = utils.NewTimePointer(time.Now())
+	user.LastLogout = utils.NewTimePointer(time.Now())
 	if err = ac.userService.Save(user); err != nil {
 		utils.ResponseWithError(c, http.StatusInternalServerError, "Saving user failed", err.Error())
 		return

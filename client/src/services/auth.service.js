@@ -19,3 +19,7 @@ export function registerUser(fullname, email, username, password, avatar) {
 
     return noAuthApi.post('/auth/register', formData)
 }
+
+export function logoutUser() {
+    return requireAuthApi.post("/auth/logout");
+}

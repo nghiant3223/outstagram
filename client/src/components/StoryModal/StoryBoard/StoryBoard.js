@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import './StoryBoard.css';
 import Avatar from '../../Avatar/Avatar';
 import TimeSlicer from './TimeSlicer/TimeSlicer';
-import { getDiffFromPast } from '../../../utils/time';
+import { getTimeDiffFromNow } from '../../../utils/time';
 import Socket from '../../../Socket';
 
 import * as storyActions from '../../../actions/story.action';
@@ -187,7 +187,7 @@ class StoryBoard extends Component {
                                 </div>
                                 <div className="StoryBoard__Header__Left__Info">
                                     <div><b>{fullname}</b></div>
-                                    <div>{getDiffFromPast(activeStory.createdAt)}</div>
+                                    <div>{getTimeDiffFromNow(activeStory.createdAt)}</div>
                                 </div>
                             </div>
                         </Link>
