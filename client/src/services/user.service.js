@@ -32,9 +32,12 @@ export function localSearchUser(users, filterText) {
     return results;
 }
 
-export function updateUser({ avatar }) {
+export function updateUser(body) {
     const formData = new FormData();
 
-    formData.append("avatar", avatar);
+    Object.keys(body).map((key) => {
+        if (key) formData.append(key, body[key]);
+    })
+
     return requireAuthApi.patch("/me", formData);
 }

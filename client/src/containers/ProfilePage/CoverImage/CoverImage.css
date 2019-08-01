@@ -1,5 +1,18 @@
 .ImagesContainer__Cover {
-    height: 250px;
-    background-color: bisque;
-    border-radius: 5px;
+  height: 250px;
+  border-radius: 5px;
+  position: relative;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+}
+
+.ImagesContainer__Cover__ChangeBtn {
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+}
+
+.ImagesContainer__Cover__ChangeBtn input {
+  display: none;
 }
