@@ -3,6 +3,7 @@ package utils
 import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
+	"net/http"
 	"os"
 	"outstagram/server/dtos/jwtdtos"
 	"outstagram/server/models"
@@ -10,7 +11,7 @@ import (
 )
 
 // SignToken returns a token string
-func SignToken(user *models.User) (string, error) {
+func SignToken(user *models.User) (string, *models.AppError) {
 	claims := jwtdtos.Token{
 		UserID: user.ID,
 		StandardClaims: jwt.StandardClaims{
@@ -24,7 +25,7 @@ func SignToken(user *models.User) (string, error) {
 	tokenString, err := token.SignedString([]byte(os.Getenv("JWT_SECRET")))
 
 	if err != nil {
-		return "", err
+		return "", models.NewAppError("sign_token_failed", "SignToken", "Cannot sign token", nil, http.StatusInternalServerError)
 	}
 
 	return tokenString, nil

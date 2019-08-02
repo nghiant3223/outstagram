@@ -3,6 +3,7 @@ package userservice
 import (
 	"errors"
 	"github.com/jinzhu/gorm"
+	"net/http"
 	"outstagram/server/constants"
 	"outstagram/server/models"
 	"outstagram/server/repos/userrepo"
@@ -29,14 +30,24 @@ func (s *UserService) GetAllUsers() ([]models.User, error) {
 	return s.userRepo.FindAll()
 }
 
-func (s *UserService) VerifyLogin(username, password string) (*models.User, error) {
+func (s *UserService) VerifyLogin(username, password string) (*models.User, *models.AppError) {
 	user, err := s.userRepo.FindByUsername(username)
 	if gorm.IsRecordNotFoundError(err) {
-		return nil, errors.New("username not found")
+		id := "username_not_found"
+		where := "UserService.VerifyLogin"
+		message := "Username not found"
+		params := map[string]interface{}{"username": username}
+		code := http.StatusNotFound
+		return nil, models.NewAppError(id, where, message, params, code)
 	}
 
 	if user.Password != password {
-		return nil, errors.New("username not found")
+		id := "password_incorrect"
+		where := "UserService.VerifyLogin"
+		message := "Password is incorrect"
+		params := map[string]interface{}{"password": password}
+		code := http.StatusConflict
+		return nil, models.NewAppError(id, where, message, params, code)
 	}
 
 	return user, nil
@@ -120,7 +131,7 @@ func (s *UserService) GetUserByUserIDOrUsername(userIDOrUsername interface{}) (*
 	var user *models.User
 	var err error
 
-	if username,ok := userIDOrUsername.(string); ok {
+	if username, ok := userIDOrUsername.(string); ok {
 		id, err := utils.StringToUint(username)
 		if err != nil {
 			user, err = s.FindByUsername(username)
@@ -129,7 +140,7 @@ func (s *UserService) GetUserByUserIDOrUsername(userIDOrUsername interface{}) (*
 		}
 	}
 
-	if id, ok := userIDOrUsername.(uint);ok {
+	if id, ok := userIDOrUsername.(uint); ok {
 		user, err = s.FindByID(id)
 	}
 
@@ -139,7 +150,6 @@ func (s *UserService) GetUserByUserIDOrUsername(userIDOrUsername interface{}) (*
 
 	return user, nil
 }
-
 
 func (s *UserService) GetUserRoomIDs(userID uint) ([]uint, error) {
 	return s.userRepo.GetUserRoomIDs(userID)

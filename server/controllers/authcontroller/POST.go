@@ -15,24 +15,24 @@ func (ac *Controller) Login(c *gin.Context) {
 	var reqBody authdtos.LoginRequest
 
 	if err := c.ShouldBindJSON(&reqBody); err != nil {
-		utils.ResponseWithError(c, http.StatusBadRequest, "Some required fields missing", nil)
+		utils.ResponseWithBadRequest(c, err)
 		return
 	}
 
 	user, err := ac.userService.VerifyLogin(reqBody.Username, reqBody.Password)
 	if err != nil {
-		utils.ResponseWithError(c, http.StatusNotFound, "Login failed", err.Error())
+		utils.ResponseWithAppError(c, err)
 		return
 	}
 
 	token, err := utils.SignToken(user)
 	if err != nil {
-		utils.ResponseWithError(c, http.StatusInternalServerError, "Signing token failed", err.Error())
+		utils.ResponseWithAppError(c, err)
 		return
 	}
 
 	user.LastLogin = utils.NewTimePointer(time.Now())
-	if err = ac.userService.Save(user); err != nil {
+	if err := ac.userService.Save(user); err != nil {
 		utils.ResponseWithError(c, http.StatusInternalServerError, "Saving user failed", err.Error())
 		return
 	}

@@ -12,6 +12,7 @@ import Avatar from '../Avatar/Avatar';
 
 const Header = (props) => {
     const { user } = props;
+
     return (
         <div className="HeaderContainer">
             <Container className="Header" center={false} white={false}>
@@ -24,7 +25,7 @@ const Header = (props) => {
                 <ul className="Header__Right">
                     <li className="Header__Right__Item">
                         <NavLink to="/messages" activeStyle={{ color: "blue" }} style={{ color: "grey" }}>
-                            <Icon name="facebook messenger" size="large" />
+                            <Icon name="mail" size="large" />
                         </NavLink>
                     </li>
 

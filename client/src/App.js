@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import Router from './router';
 import * as authActions from './actions/auth.action';
+import Router from './router/index';
+
 import './App.css';
 
 class App extends Component {

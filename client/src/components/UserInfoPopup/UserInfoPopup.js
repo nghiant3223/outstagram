@@ -70,7 +70,7 @@ const UserInfoPopup = (props) => {
                 </div>
 
             ) : (
-                    <div className="UserInfoPopUp__Container">
+                    <Link to={`/${user.username}`}><div className="UserInfoPopUp__Container">
                         <div className="UserInfoPopUp__Container__CoverContainer" style={{ backgroundImage: `url(${noAuthStatic('/images/others/' + user.coverImageID, { size: "big" })})` }} >
                             <div className="UserInfoPopUp__Container__CoverContainer__Avatar">
                                 <Avatar width="100px" userID={user.id} />
@@ -88,8 +88,8 @@ const UserInfoPopup = (props) => {
                             <FollowButton followed={user.followed} userID={user.id} size="small" basic={true} />
                             <Link to={`/messages/${user.username}`}><Button basic size="small"><Icon name="facebook messenger" />Message</Button></Link>
                         </div>}
-
                     </div>
+                    </Link>
                 )}
         </Popup>
     )
