@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import uuid from "uuid/v1";
-import { Modal, Form, Icon, Segment, Grid, Divider, Header } from 'semantic-ui-react';
+import { Modal, Form } from 'semantic-ui-react';
 
 import * as storyServices from '../../services/story.service';
 import * as creatorActions from '../../actions/creator.action';
@@ -17,7 +17,7 @@ import UploadTypeSelectionContainer from './UploadTypeSelectionContainer/UploadT
 import UploadTypeContainer from './UploadTypeContainer/UploadTypeContainer';
 import ChosenImageContainer from './ChosenImageContainer/ChosenImageContainer';
 import DescriptionInput from './DescriptionInput/DescriptionInput';
-import { validURL, genUID } from '../../utils/lang';
+import { validURL } from '../../utils/lang';
 
 const initialState = {
     isLoading: false,

@@ -47,7 +47,7 @@ class ContactContainer extends Component {
         this.setState((prevState) => {
             let candidateRoom;
             const restRooms = prevState.rooms.filter(room => {
-                const match = room.id == roomID;
+                const match = room.id === roomID;
                 if (match) candidateRoom = room;
                 return !match;
             });

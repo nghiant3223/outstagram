@@ -29,7 +29,7 @@ const initialState = { isLoading: false, results: [], value: '' }
 class ContactSearch extends Component {
     state = initialState
 
-    handleResultSelect = (e, { result }) => {
+    handleResultSelect = (_, { result }) => {
         const components = result.title.split(' ');
 
         if (components.length > 0) {
@@ -39,7 +39,7 @@ class ContactSearch extends Component {
     }
 
     handleSearchChange = (e, { value }) => {
-        if (value == "") {
+        if (value === "") {
             this.setState({ value });
             return;
         }

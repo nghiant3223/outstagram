@@ -1,20 +1,22 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link, NavLink } from 'react-router-dom';
-import { Dropdown, Icon } from 'semantic-ui-react';
+import { Dropdown, Popup } from 'semantic-ui-react';
 
 import Container from '../Container/Container';
 import Avatar from '../Avatar/Avatar';
 
 import * as authActions from '../../actions/auth.action';
+import * as creatorActions from "../../actions/creator.action";
 
 import './Header.css';
 
 import chatIcon from '../../images/chat.png';
 import globalIcon from '../../images/globe.png';
+import cameraIcon from '../../images/camera.png';
 
 const Header = (props) => {
-    const { user } = props;
+    const { user, openCreatorModal, logoutUser } = props;
 
     return (
         <div className="HeaderContainer">
@@ -27,12 +29,21 @@ const Header = (props) => {
 
                 <ul className="Header__Right">
                     <li className="Header__Right__Item Header__IconContainer">
-                        <NavLink to="/messages" >
-                            <img src={chatIcon} width="20" />
-                        </NavLink>
-                        <NavLink>
-                            <img src={globalIcon} width="20" />
-                        </NavLink>
+                        <Popup content="Upload your images" size="small" inverted trigger={
+                            <NavLink to="/" onClick={openCreatorModal}>
+                                <img src={cameraIcon} width="20" />
+                            </NavLink>} />
+
+                        <Popup content="Messages" size="small" inverted trigger={
+                            <NavLink to="/messages" >
+                                <img src={chatIcon} width="20" />
+                            </NavLink>} />
+
+                        <Popup content="Notifications" size="small" inverted trigger={
+                            <NavLink>
+                                <img src={globalIcon} width="20" />
+                            </NavLink>} />
+
                     </li>
 
                     <li className="Header__Right__Item">
@@ -47,7 +58,7 @@ const Header = (props) => {
 
                         <Dropdown direction='left'>
                             <Dropdown.Menu>
-                                <Dropdown.Item onClick={props.logoutUser} text="Logout" />
+                                <Dropdown.Item onClick={logoutUser} text="Logout" />
                             </Dropdown.Menu>
                         </Dropdown>
                     </li>
@@ -59,7 +70,8 @@ const Header = (props) => {
 const mapStateToProps = ({ authReducer: { user } }) => ({ user });
 
 const mapDispatchToProps = (dispatch) => ({
-    logoutUser: () => dispatch(authActions.logoutUser())
+    logoutUser: () => dispatch(authActions.logoutUser()),
+    openCreatorModal: () => dispatch(creatorActions.openModal())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Header);

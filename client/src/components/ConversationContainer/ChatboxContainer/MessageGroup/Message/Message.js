@@ -33,7 +33,7 @@ class Message extends Component {
 
                 const { data: { data: { room } } } = await roomServices.createRoom([partner.id], { content: content, type: 0 });
                 onNewRoomCreated(roomID, room);
-                
+
                 const newRoom = JSON.parse(JSON.stringify(room));
                 newRoom.partner = user;
                 Socket.emit("ROOM.CLIENT.CREATE_ROOM", { targetRoomID: room.id, anotherMemberID: partner.id, newRoom });
@@ -54,9 +54,11 @@ class Message extends Component {
             var className = "Message"
         }
 
+        const popUpContent = moment(new Date(createdAt)).calendar().replace(/\sat\s/, ' ').replace('Today', '');
+
         return (
             <div className={className}>
-                <Popup content={moment(new Date(createdAt)).calendar().replace(/\sat\s/, ' ').replace('Today', '')} size="mini" position="right center" style={{ padding: "0.75em" }} inverted
+                <Popup content={popUpContent} size="mini" position="right center" style={{ padding: "0.75em" }} inverted
                     trigger={<div className="Message__Content">{content}</div>} />
             </div>
         )

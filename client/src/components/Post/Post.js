@@ -9,7 +9,6 @@ import PostAction from '../PostAction/PostAction';
 import PostInput from '../PostInput/PostInput';
 
 import PostHeader from '../PostHeader/PostHeader';
-import { getTimeDiffFromNow } from '../../utils/time';
 import * as reactableServices from "../../services/reactable.service";
 import * as commentableServices from "../../services/commentable.service";
 

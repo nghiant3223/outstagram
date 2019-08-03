@@ -30,7 +30,7 @@ class ThreaterModal extends Component {
     componentDidUpdate(prevProps, prevState) {
         if (this.props.post === undefined) {
             // Do not update if update (1) occurs
-            if (this.state.currentIndex == -1) {
+            if (this.state.currentIndex === -1) {
                 return;
             }
 
@@ -104,7 +104,7 @@ class ThreaterModal extends Component {
                                 <Icon name="chevron right" size="big" color="grey" inverted />
                             </div>
                         </div>
-                        <Post {...postOrPostImage} showImageGrid={false} key={postOrPostImage.id} isPost={this.props.post && this.props.post.images.length == 1} />
+                        <Post {...postOrPostImage} showImageGrid={false} key={postOrPostImage.id} isPost={this.props.post && this.props.post.images.length === 1} />
                     </div>}
             </Modal>
         )

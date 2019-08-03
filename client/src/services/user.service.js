@@ -1,4 +1,4 @@
-import { noAuthApi, requireAuthApi } from '../axios';
+import { requireAuthApi } from '../axios';
 
 export function getUser(username) {
     return requireAuthApi.get(`/users/${username}`);
@@ -35,7 +35,7 @@ export function localSearchUser(users, filterText) {
 export function updateUser(body) {
     const formData = new FormData();
 
-    Object.keys(body).map((key) => {
+    Object.keys(body).forEach((key) => {
         if (key) formData.append(key, body[key]);
     })
 

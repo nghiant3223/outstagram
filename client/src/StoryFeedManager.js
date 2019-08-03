@@ -1,7 +1,6 @@
 import DoublyLinkedList from './ds/DoubleLinkedList';
 import { getUserStoryBoard } from './services/story.service';
 import DoublyLinkedListNode from './ds/DoubleLinkedListNode';
-import { FormInput } from 'semantic-ui-react';
 
 class StoryFeedManager {
     constructor(storyBoards) {
@@ -44,7 +43,7 @@ class StoryFeedManager {
         // If userID == current logged in user's id
         if (this._head.getValue().userID === userID) {
             const storyBoard = this._head.getValue();
-            stories.forEach((story) => storyBoard.stories.unshift(story)); 
+            stories.forEach((story) => storyBoard.stories.unshift(story));
             return;
         }
 

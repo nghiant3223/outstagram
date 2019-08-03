@@ -16,6 +16,7 @@ import './HomePage.css';
 import * as uiActions from '../../actions/ui.action';
 import StoryFeedManager from '../../StoryFeedManager';
 import PostPlaceholder from '../../components/Post/PostPlaceholder';
+import { Header } from 'semantic-ui-react';
 
 class HomePage extends Component {
     state = {
@@ -111,22 +112,22 @@ class HomePage extends Component {
 
         return (
             <Container white={false}>
-                <StoryFeed ref={(cmp) => { if (cmp) { this.storyFeed = cmp } }} fetchingStoryFeed={isLoading} />
                 <StoryModal updateStoryFeed={this.updateStoryFeed} />
                 <CreatorModal updateStoryFeed={this.updateStoryFeed} />
 
                 <div className="HomePage__MainContainer">
                     <Container className="HomePage__PostContainer" white={false} center={false}>
+                        <StoryFeed ref={(cmp) => { if (cmp) { this.storyFeed = cmp } }} fetchingStoryFeed={isLoading} />
                         {isLoading ?
                             Array(3).fill(0).map((_, index) => <PostPlaceholder key={index} />)
                             :
-                            posts.map((post) => <div className="ProfileBodyContainer__PostContainer__Post"><Post {...post} key={post.id} showImageGrid /></div>)
+                            posts.map((post) => <div className="ProfileBodyContainer__PostContainer__Post"><Post {...post} showImageGrid /></div>)
                         }
                         {isFetchingMorePost && <PostPlaceholder />}
                     </Container>
 
                     <Container className="HomePage__MainContainer__Aside">
-                        People you may know
+                        <Header as="h5">  People you may know</Header>
                     </Container>
                 </div>
             </Container>

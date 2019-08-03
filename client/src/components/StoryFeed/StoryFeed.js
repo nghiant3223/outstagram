@@ -1,4 +1,4 @@
-import React, { Component, Fragment, } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import StoryFeedManager from '../../StoryFeedManager';
@@ -32,7 +32,7 @@ class StoryFeed extends Component {
 
                 <div className="StoryFeed__Main">
                     {fetchingStoryFeed ?
-                        Array(6).fill(0).map((_, index) => <StoryCardPlaceholder key={index} />)
+                        Array(4).fill(0).map((_, index) => <StoryCardPlaceholder key={index} />)
                         :
                         StoryFeedManager.getInstance().map((sbNode) => <StoryCard key={sbNode.getValue().storyBoardID} sbNode={sbNode} shouldUpdate={shouldUpdate} />)}
                 </div>

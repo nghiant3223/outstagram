@@ -1,7 +1,7 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { Modal, Button, Icon } from 'semantic-ui-react';
+import { Modal, Icon } from 'semantic-ui-react';
 import pluralize from 'pluralize';
 
 import Avatar from "../Avatar/Avatar";

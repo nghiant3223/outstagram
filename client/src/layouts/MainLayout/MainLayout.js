@@ -6,6 +6,7 @@ import Footer from '../../components/Footer/Footer';
 import './MainLayout.css';
 import ReactorModal from '../../components/ReactorModal/ReactorModal';
 import ThreaterModal from '../../components/ThreaterModal/ThreaterModal';
+import CreatorModal from '../../components/CreatorModal/CreatorModal';
 
 const MainLayout = (props) => (
     <div>
