@@ -154,14 +154,14 @@ class Comment extends Component {
                 <SemanticComment>
                     <div className="Comment__Container">
                         <div className="Comment__AvatarContainer">
-                            <UserInfoPopup username={ownerUsername} trigger={<Link to={`/${ownerUsername}`}><Avatar width="2.75rem" userID={userID} /></Link>} />
+                            <UserInfoPopup username={ownerUsername} trigger={<Link to={`/${ownerUsername}`}><Avatar width="2.5rem" userID={ownerID} /></Link>} />
                         </div>
 
                         <div style={{ width: "100%" }}>
                             <SemanticComment.Content>
                                 <div className="Comment__ContentContainer">
                                     <span className="Comment__AuthorName">
-                                        <UserInfoPopup username={ownerUsername} trigger={<Link to={`/${ownerUsername}`} className="Fullname">{ownerFullname}</Link>} />
+                                        <UserInfoPopup username={ownerUsername} trigger={<Link to={`/${ownerUsername}`} className="Fullname Fullname--Medium">{ownerFullname}</Link>} />
                                     </span>
                                     {content}
                                 </div>

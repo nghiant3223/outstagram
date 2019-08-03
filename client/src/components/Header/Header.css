@@ -59,11 +59,16 @@
   margin-right: 0.15em;
 }
 
+.Header__Right > .Header__Right__Item {
+  margin-left: 0.5em;
+  margin-right: 0.5em;
+}
+
 .Header__Right > .Header__Right__Item:first-child {
   margin-left: 0;
 }
 
-.Header__Right > .Header__Right__Itemi:last-child {
+.Header__Right > .Header__Right__Item:last-child {
   margin-right: 0;
 }
 
@@ -77,4 +82,19 @@
 .Header__Right__Info > div {
   margin-left: 0.25em;
   margin-right: 0.25em;
+}
+
+.Header__IconContainer img {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.Header__IconContainer {
+  display: flex;
+  align-items: center;
+}
+
+.Header__IconContainer > a {
+  margin-left: 0.5em;
+  margin-right: 0.5em;
 }

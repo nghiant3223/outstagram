@@ -115,14 +115,20 @@ class HomePage extends Component {
                 <StoryModal updateStoryFeed={this.updateStoryFeed} />
                 <CreatorModal updateStoryFeed={this.updateStoryFeed} />
 
-                <Container className="HomePage__PostContainer" white={false}>
-                    {isLoading ?
-                        Array(3).fill(0).map((_, index) => <PostPlaceholder key={index} />)
-                        :
-                        posts.map((post) => <Post {...post} key={post.id} showImageGrid />)
-                    }
-                    {isFetchingMorePost && <PostPlaceholder />}
-                </Container>
+                <div className="HomePage__MainContainer">
+                    <Container className="HomePage__PostContainer" white={false} center={false}>
+                        {isLoading ?
+                            Array(3).fill(0).map((_, index) => <PostPlaceholder key={index} />)
+                            :
+                            posts.map((post) => <div className="ProfileBodyContainer__PostContainer__Post"><Post {...post} key={post.id} showImageGrid /></div>)
+                        }
+                        {isFetchingMorePost && <PostPlaceholder />}
+                    </Container>
+
+                    <Container className="HomePage__MainContainer__Aside">
+                        People you may know
+                    </Container>
+                </div>
             </Container>
         );
     }

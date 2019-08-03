@@ -1,6 +1,7 @@
 .StoryFeed {
   background-color: white;
-  padding: 1.5em;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.15);
+  padding: 1em 1.5em;
 }
 
 .StoryFeed__Header {

@@ -84,14 +84,14 @@ class Reply extends Component {
                 <SemanticReply>
                     <div className="Reply__Container">
                         <div className="Reply__AvatarContainer">
-                            <UserInfoPopup username={ownerUsername} trigger={<Link to={`/${ownerUsername}`}><Avatar width="2.75rem" userID={ownerID} /></Link>} />
+                            <UserInfoPopup username={ownerUsername} trigger={<Link to={`/${ownerUsername}`}><Avatar width="2.25rem" userID={ownerID} /></Link>} />
                         </div>
 
                         <div style={{ width: "100%" }}>
                             <SemanticReply.Content>
                                 <div className="Comment__ContentContainer">
                                     <span className="Comment__AuthorName">
-                                        <UserInfoPopup username={ownerUsername} trigger={<Link to={`/${ownerUsername}`} className="Fullname">{ownerFullname}</Link>} />
+                                        <UserInfoPopup username={ownerUsername} trigger={<Link to={`/${ownerUsername}`} className="Fullname Fullname--Medium">{ownerFullname}</Link>} />
                                     </span>
                                     {content}
                                 </div>

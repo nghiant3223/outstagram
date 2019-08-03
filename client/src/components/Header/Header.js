@@ -4,11 +4,14 @@ import { Link, NavLink } from 'react-router-dom';
 import { Dropdown, Icon } from 'semantic-ui-react';
 
 import Container from '../Container/Container';
+import Avatar from '../Avatar/Avatar';
 
 import * as authActions from '../../actions/auth.action';
 
 import './Header.css';
-import Avatar from '../Avatar/Avatar';
+
+import chatIcon from '../../images/chat.png';
+import globalIcon from '../../images/globe.png';
 
 const Header = (props) => {
     const { user } = props;
@@ -23,9 +26,12 @@ const Header = (props) => {
                 </Link>
 
                 <ul className="Header__Right">
-                    <li className="Header__Right__Item">
-                        <NavLink to="/messages" activeStyle={{ color: "blue" }} style={{ color: "grey" }}>
-                            <Icon name="mail" size="large" />
+                    <li className="Header__Right__Item Header__IconContainer">
+                        <NavLink to="/messages" >
+                            <img src={chatIcon} width="20" />
+                        </NavLink>
+                        <NavLink>
+                            <img src={globalIcon} width="20" />
                         </NavLink>
                     </li>
 
@@ -38,9 +44,7 @@ const Header = (props) => {
                                 <div>{user.fullname}</div>
                             </div>
                         </Link>
-                    </li>
 
-                    <li className="Header__Right__Item">
                         <Dropdown direction='left'>
                             <Dropdown.Menu>
                                 <Dropdown.Item onClick={props.logoutUser} text="Logout" />

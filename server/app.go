@@ -66,5 +66,5 @@ func main() {
 
 	if err := router.Run(fmt.Sprintf(":%v", PORT)); err != nil {
 		log.Fatal(err.Error())
-	}
+	} 
 }

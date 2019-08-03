@@ -26,6 +26,10 @@ body {
   cursor: pointer;
 }
 
+.Fullname--Medium {
+  font-size: 0.9rem;
+}
+
 a {
   color: black;
 }
@@ -42,4 +46,9 @@ i.facebook.icon {
   font-size: 1.25em;
   transform: translateY(15%);
   margin-right: 0.15em !important;
+}
+
+.HomePage__PostContainer .Post .MoreCommentIcon,
+.ProfileBodyContainer__PostContainer .Post .MoreCommentIcon {
+  transform: rotate(180deg) translateY(-0.15em);
 }

@@ -9,7 +9,7 @@
 }
 
 .Comment__AvatarContainer {
-  margin-right: 0.5em;
+  margin-right: 0.25em;
 }
 
 .Comment__ContentContainer {
@@ -20,11 +20,12 @@
   color: black;
   display: inline-block;
   word-break: break-word;
+  font-size: 0.9em;
 }
 
 .Comment__AuthorName {
   font-weight: 700;
-  margin-right: 0.5em;
+  margin-right: 0.25em;
 }
 
 .Comment__ActionContainer,

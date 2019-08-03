@@ -4,15 +4,8 @@ import { Modal, Icon } from 'semantic-ui-react';
 
 import "./ThreaterModal.css";
 import AmpImage from '../AmpImage/AmpImage';
-import Avatar from '../Avatar/Avatar';
-import Comment from '../Comment/Comment';
-import FeedbackSummary from '../FeedbackSummary/FeedbackSummary';
-import PostAction from '../PostAction/PostAction';
-import PostInput from '../PostInput/PostInput';
-
 import * as threaterAction from "../../actions/threater.modal";
 import * as postServices from "../../services/post.service";
-import PostHeader from '../PostHeader/PostHeader';
 import { noAuthStatic } from '../../axios';
 import Post from '../Post/Post';
 

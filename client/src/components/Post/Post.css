@@ -19,6 +19,6 @@
 }
 
 .MoreCommentIcon {
-  transform: rotate(180deg) translateY(-0.15em);
+  transform: rotate(180deg);
   color: rgba(0, 0, 0, 0.75);
 }

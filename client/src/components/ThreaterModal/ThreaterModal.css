@@ -1,5 +1,5 @@
 .ThreaterContainer {
-  height: 620px;
+  height: 92.5vh;
   display: flex;
   justify-content: center;
   color: black;
@@ -11,7 +11,7 @@
 
 .ThreaterModal__CloseIcon {
   position: absolute;
-  top: -1.75em !important;
+  top: -0.5em !important;
   right: -2.25em !important;
 }
 
@@ -47,7 +47,6 @@
 }
 
 .ThreaterContainer__InfoContainer__CommentContainer {
-  overflow-y: auto;
   padding-bottom: 1em;
 }
 
@@ -59,12 +58,14 @@
   margin-bottom: 0px !important;
 }
 
-.ThreaterContainer__ImageContainer .ThreaterContainer__ImageContainer__Navigation {
+.ThreaterContainer__ImageContainer
+  .ThreaterContainer__ImageContainer__Navigation {
   opacity: 0;
   transition: opacity 0.2s;
 }
 
-.ThreaterContainer__ImageContainer:hover .ThreaterContainer__ImageContainer__Navigation {
+.ThreaterContainer__ImageContainer:hover
+  .ThreaterContainer__ImageContainer__Navigation {
   opacity: 1;
 }
 
