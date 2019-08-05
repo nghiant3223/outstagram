@@ -3,39 +3,21 @@ services:
   web_1:
     build: .
     environment:
-      PORT: "3001"
+      PORT: "80"
     ports:
-      - "3000:3000"
+      - "80:80"
     expose:
-      - "3000"
-    command: gin -p 3000 -a 3001 run app.go
-    # Comment the two following lines for production
-    volumes:
-      - .:/outstagram
-    links:
-      - db
-      - cache
-  web_2:
-    build: .
-    environment:
-      PORT: "4001"
-    ports:
-      - "4000:4000"
-    expose:
-      - "4000"
-    command: gin -p 4000 -a 4001 run app.go
-    # Comment the two following lines for production
-    volumes:
-      - .:/outstagram
+      - "80"
+    command: go run app.go
     links:
       - db
       - cache
   db:
     image: mysql
     environment:
-      MYSQL_USERNAME: "root"
-      MYSQL_PASSWORD: "root"
-      MYSQL_DATABASE: "outstagram"
+      - MYSQL_USERNAME=root
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=outstagram
     ports:
       - "33060:3306"
     expose:
