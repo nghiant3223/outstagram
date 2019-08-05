@@ -70,5 +70,7 @@ func (r *StoryBoardRepo) CheckUserViewedStory(userID, storyID uint) (bool, error
 	if err != nil {
 		return false, err
 	}
+
+	defer rows.Close()
 	return rows.Next(), nil
 }
