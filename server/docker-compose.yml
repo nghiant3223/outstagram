@@ -8,7 +8,7 @@ services:
       - "3000:3000"
     expose:
       - "3000"
-    command: go run app.go
+    command: bash -c "sleep 30 &&  go run app.go
     links:
       - db
       - cache
