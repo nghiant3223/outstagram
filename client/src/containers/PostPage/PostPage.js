@@ -4,7 +4,6 @@ import _ from 'lodash';
 
 import * as postServices from "../../services/post.service";
 import Container from '../../components/Container/Container';
-import { Header } from 'semantic-ui-react';
 import PostPlaceholder from '../../components/Post/PostPlaceholder';
 import Post from '../../components/Post/Post';
 import FollowSuggestions from '../../components/FollowSuggestions/FollowSuggestions';

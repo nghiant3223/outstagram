@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
-import { List, Header, Placeholder, Popup, Button, Icon } from 'semantic-ui-react'
+import { List, Header, Popup, Button, Icon } from 'semantic-ui-react'
 import pluralize from "pluralize";
 
+import { noAuthStatic } from '../../axios';
 import * as userServices from "../../services/user.service";
+
 import Avatar from '../Avatar/Avatar';
+import FollowButton from '../FollowButton/FollowButton';
+import UserInfoPopUpPlaceholder from './Placeholder';
 
 import "./UserInfoPopup.css";
-import { noAuthStatic } from '../../axios';
-import FollowButton from '../FollowButton/FollowButton';
 
 const UserInfoPopup = (props) => {
     const { username, trigger } = props;
@@ -45,32 +47,25 @@ const UserInfoPopup = (props) => {
     }
 
     const onOpen = () => {
-        userServices.getUser(username).then(({ data: { data: { user } } }) => setUser(user)).catch((e) => console.log(e));
+        userServices.getUser(username)
+            .then(({ data: { data: { user } } }) => setUser(user))
+            .catch((e) => console.log(e));
     }
 
     return (
         <Popup
-            style={{ padding: 0 }}
+            wide
             hoverable
             on='hover'
-            onClose={onClose}
             onOpen={onOpen}
-            popperDependencies={[!!user]}
+            onClose={onClose}
             trigger={trigger}
-            wide
+            style={{ padding: 0 }}
+            popperDependencies={[!!user]}
         >
-            {user === null ? (
-                <div className="UserInfoPopUp__Container">
-                    <Placeholder style={{ minWidth: '200px' }}>
-                        <Placeholder.Header image>
-                            <Placeholder.Line />
-                            <Placeholder.Line length='medium' />
-                        </Placeholder.Header>
-                    </Placeholder>
-                </div>
-
-            ) : (
-                    <Link to={`/${user.username}`}><div className="UserInfoPopUp__Container">
+            {user === null ? <UserInfoPopUpPlaceholder /> : (
+                <Link to={`/${user.username}`}>
+                    <div className="UserInfoPopUp__Container">
                         <div className="UserInfoPopUp__Container__CoverContainer" style={{ background: `url(${noAuthStatic('/images/others/' + user.coverImageID, { size: "big" })})` }} >
                             <div className="UserInfoPopUp__Container__CoverContainer__Avatar">
                                 <Avatar width="100px" userID={user.id} />
@@ -89,8 +84,8 @@ const UserInfoPopup = (props) => {
                             <Link to={`/messages/${user.username}`}><Button basic size="small"><Icon name="facebook messenger" />Message</Button></Link>
                         </div>}
                     </div>
-                    </Link>
-                )}
+                </Link>
+            )}
         </Popup>
     )
 }
