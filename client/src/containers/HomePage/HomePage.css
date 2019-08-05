@@ -11,6 +11,19 @@
   margin-top: 2em;
 }
 
+.HomePage__MainContainer > div {
+  margin-left: 1em;
+  margin-right: 1em;
+}
+
+.HomePage__MainContainer > div:first-child {
+  margin-left: 0;
+}
+
+.HomePage__MainContainer > div:last-child {
+  margin-right: 0;
+}
+
 .HomePage__MainContainer__Aside {
   top: 70px;
   height: 210px;
@@ -18,4 +31,17 @@
   padding: 1em 1.25em;
   box-shadow: 0 1px 5px rgba(0, 0, 0, 0.15);
   width: calc(var(--content-width) - var(--post-width) - 1em);
+}
+
+.HomePage__PostContainer > div {
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+}
+
+.HomePage__PostContainer > div:first-child {
+  margin-top: 0;
+}
+
+.HomePage__PostContainer > div:last-child {
+  margin-bottom: 0;
 }

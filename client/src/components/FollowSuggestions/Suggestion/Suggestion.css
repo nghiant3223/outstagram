@@ -1,0 +1,29 @@
+.Suggestion .Avatar {
+  display: inline-block;
+}
+
+.visible.transition.Suggestion {
+  display: flex !important;
+  align-items: center;
+}
+
+.Suggestion {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+.Suggestion > a:first-child {
+  margin-right: 0.5em;
+}
+
+.Suggestion > button:last-child {
+  margin-left: auto;
+}
+
+.Suggestion__Fullname {
+  width: 125px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 0.9em !important;
+}

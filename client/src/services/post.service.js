@@ -33,3 +33,7 @@ export function updateSpecificPost(postID, body) {
 export function updatePostImage(postImageID, body) {
     return requireAuthApi.put(`/posts/images/${postImageID}`, body);
 }
+
+export function searchPost(filterText) {
+    return requireAuthApi.get("/posts?filter=" + filterText);
+}

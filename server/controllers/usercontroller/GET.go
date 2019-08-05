@@ -14,6 +14,11 @@ import (
 )
 
 func (uc *Controller) SearchUser(c *gin.Context) {
+	audienceUserID, ok := utils.RetrieveUserID(c)
+	if !ok {
+		log.Fatal("This route needs VerifyToken middleware")
+	}
+
 	var req userdtos.SearchUserRequest
 
 	if err := c.ShouldBindQuery(&req); err != nil {
@@ -37,7 +42,13 @@ func (uc *Controller) SearchUser(c *gin.Context) {
 
 	var dtoUsers []dtomodels.User
 	for _, user := range users {
-		dtoUsers = append(dtoUsers, user.ToDTO())
+		dtoUser := user.ToDTO()
+		dtoUser.IsMe = user.ID == audienceUserID
+		if !dtoUser.IsMe {
+			followed, _ := uc.userService.CheckFollow(audienceUserID, dtoUser.ID)
+			dtoUser.Followed = &followed
+		}
+		dtoUsers = append(dtoUsers, dtoUser)
 	}
 
 	utils.ResponseWithSuccess(c, http.StatusOK, "Fetching user successfully", dtoUsers)

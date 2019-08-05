@@ -41,3 +41,7 @@ export function updateUser(body) {
 
     return requireAuthApi.patch("/me", formData);
 }
+
+export function getSuggestion() {
+    return requireAuthApi.get("/me/follow-suggestions");
+}

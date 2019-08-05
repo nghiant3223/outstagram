@@ -71,7 +71,7 @@ const UserInfoPopup = (props) => {
 
             ) : (
                     <Link to={`/${user.username}`}><div className="UserInfoPopUp__Container">
-                        <div className="UserInfoPopUp__Container__CoverContainer" style={{ backgroundImage: `url(${noAuthStatic('/images/others/' + user.coverImageID, { size: "big" })})` }} >
+                        <div className="UserInfoPopUp__Container__CoverContainer" style={{ background: `url(${noAuthStatic('/images/others/' + user.coverImageID, { size: "big" })})` }} >
                             <div className="UserInfoPopUp__Container__CoverContainer__Avatar">
                                 <Avatar width="100px" userID={user.id} />
                             </div>
@@ -95,4 +95,4 @@ const UserInfoPopup = (props) => {
     )
 }
 
-export default UserInfoPopup
+export default UserInfoPopup;

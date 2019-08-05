@@ -5,6 +5,7 @@ import * as authActions from './actions/auth.action';
 import Router from './router/index';
 
 import './App.css';
+import Loading from './components/Loading/Loading';
 
 class App extends Component {
     componentDidMount = () => {
@@ -16,7 +17,7 @@ class App extends Component {
         const { isLoading, isAuthenticated } = this.props;
 
         if (isLoading) {
-            return <div>Loading...</div>
+            return <div className="InitialLoaderContainer"><Loading /></div>
         }
 
         return <Router isAuthenticated={isAuthenticated} />;

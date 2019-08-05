@@ -25,13 +25,17 @@ const initialState = {
     uploadUrls: [],
     renderImages: [],
     imageURL: "",
-    caption: "",
-    uploadType: "post"
+    caption: ""
 }
 
 class CreatorModal extends Component {
-    state = {
-        ...initialState
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            ...initialState,
+            uploadType: props.uploadType
+        }
     }
 
     onImagesUpload = async () => {
@@ -42,7 +46,7 @@ class CreatorModal extends Component {
         try {
             this.setState({ isLoading: true });
             switch (uploadType) {
-                case "story":
+                case "STORY":
                     const { data: { data: { stories } } } = await storyServices.createStory(uploadImages.map(image => image.file), uploadUrls.map(url => url.file));
 
                     stories.forEach((story) => storyFeedManager.prependStory(story));
@@ -50,7 +54,7 @@ class CreatorModal extends Component {
                     updateStoryFeed();
                     break;
 
-                case "post":
+                case "NEWSFEED":
                     await postServices.createPost(uploadImages.map(image => image.file), uploadUrls.map(url => url.file), caption);
                     break;
 
@@ -66,7 +70,7 @@ class CreatorModal extends Component {
 
     componentWillReceiveProps(nextProps) {
         if (this.props.isModalOpen !== nextProps.isModalOpen) {
-            this.setState({ ...initialState });
+            this.setState({ ...initialState, uploadType: nextProps.uploadType });
         }
     }
 
@@ -172,7 +176,7 @@ class CreatorModal extends Component {
                                 </div>
                         }
 
-                        <UploadTypeSelectionContainer isLoading={isLoading} onImagesUpload={this.onImagesUpload} closeModal={this.props.closeModal} onUploadTypeChange={this.onUploadTypeChange} />
+                        <UploadTypeSelectionContainer type={uploadType} isLoading={isLoading} onImagesUpload={this.onImagesUpload} closeModal={this.props.closeModal} onUploadTypeChange={this.onUploadTypeChange} />
 
                         <input type="file" ref={el => this.fileInput = el} multiple onClick={e => e.target.value = null} onChange={this.onFileInputChange} style={{ display: "none" }} />
                     </Form>
@@ -182,7 +186,7 @@ class CreatorModal extends Component {
     }
 }
 
-const mapStateToProps = ({ creatorReducer: { isModalOpen } }) => ({ isModalOpen });
+const mapStateToProps = ({ creatorReducer: { isModalOpen, type: uploadType } }) => ({ isModalOpen, uploadType });
 
 const mapDispatchToProps = (dispatch) => ({
     closeModal: () => dispatch(creatorActions.closeModal())

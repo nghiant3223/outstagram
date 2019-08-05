@@ -11,7 +11,7 @@ function FollowButton(props) {
     const [followed, setFollowed] = useState(props.followed)
 
     const toggleFollow = () => {
-        const { userID, updateFollowingCount } = props;
+        const { userID, updateFollowingCount, onClick } = props;
 
         if (!followed) {
             userServices.followUser(userID);
@@ -21,6 +21,10 @@ function FollowButton(props) {
 
         setFollowed(!followed);
         updateFollowingCount(followed);
+
+        if (onClick) {
+            onClick();
+        }
     }
 
     return (

@@ -1,8 +1,9 @@
 .UserInfoPopUp__Container {
   align-items: center;
-  width: 380px;
+  width: 425px;
   max-height: calc(160px + 125px);
   min-height: calc(160px + 85px);
+  padding-bottom: 10px;
 }
 
 .UserInfoPopUp__Container > div {
@@ -11,13 +12,15 @@
 }
 
 .UserInfoPopUp__Container__CoverContainer {
-  background: rgb(245, 245, 245);
   transform: translateX(-3px);
   height: 160px;
   left: 0;
   position: relative;
   border-radius: 5px;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
   width: 100%;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.15);
 }
 
 .UserInfoPopUp__Container__CoverContainer__Avatar {
@@ -55,5 +58,4 @@
   justify-content: flex-end;
   margin-top: 1em;
   font-size: 0.75em;
-  margin-bottom: 0.5em;
 }

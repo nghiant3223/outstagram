@@ -1,7 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router'
 import { Link, NavLink } from 'react-router-dom';
-import { Dropdown, Popup } from 'semantic-ui-react';
+import { Dropdown, Popup, Input } from 'semantic-ui-react';
 
 import Container from '../Container/Container';
 import Avatar from '../Avatar/Avatar';
@@ -14,18 +15,35 @@ import './Header.css';
 import chatIcon from '../../images/chat.png';
 import globalIcon from '../../images/globe.png';
 import cameraIcon from '../../images/camera.png';
+import Search from './Search/Search';
 
 const Header = (props) => {
+    let searchInput;
     const { user, openCreatorModal, logoutUser } = props;
+
+    const onSearchFormSubmit = (e) => {
+        e.preventDefault();
+        props.history.push("/search?q=" + searchInput.getSearchValue());
+    }
 
     return (
         <div className="HeaderContainer">
             <Container className="Header" center={false} white={false}>
-                <Link to="/">
-                    <div className="Header__Left">
-                        Outstagram
-                     </div>
-                </Link>
+                <ul className="Header__Left">
+                    <li>
+                        <Link to="/">
+                            <div className="Header__Left__Logo">
+                                Outstagram
+                            </div>
+                        </Link>
+                    </li>
+
+                    <li>
+                        <form onSubmit={onSearchFormSubmit}>
+                            <Search ref={el => searchInput = el} />
+                        </form>
+                    </li>
+                </ul>
 
                 <ul className="Header__Right">
                     <li className="Header__Right__Item Header__IconContainer">
@@ -39,8 +57,9 @@ const Header = (props) => {
                                 <img src={chatIcon} width="20" />
                             </NavLink>} />
 
+
                         <Popup content="Notifications" size="small" inverted trigger={
-                            <NavLink>
+                            <NavLink to="#">
                                 <img src={globalIcon} width="20" />
                             </NavLink>} />
 
@@ -67,11 +86,12 @@ const Header = (props) => {
         </div>
     );
 }
+
 const mapStateToProps = ({ authReducer: { user } }) => ({ user });
 
 const mapDispatchToProps = (dispatch) => ({
     logoutUser: () => dispatch(authActions.logoutUser()),
-    openCreatorModal: () => dispatch(creatorActions.openModal())
+    openCreatorModal: () => dispatch(creatorActions.openModal("NEWSFEED"))
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Header);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Header));

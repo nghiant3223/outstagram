@@ -95,3 +95,47 @@ func (r *PostRepo) GetPostsByUserID(userID uint) ([]models.Post, error) {
 func (r *PostRepo) Update(post *models.Post, values map[string]interface{}) error {
 	return r.db.Model(&post).Update(values).Error
 }
+
+func (r *PostRepo) Search(text string) ([]*models.Post, error) {
+	var posts []models.Post
+	var postImages []models.PostImage
+	var pPosts []*models.Post
+
+	if err := r.db.Where("content LIKE ?", "%"+text+"%").Find(&posts).Error; err != nil {
+		return nil, err
+	}
+
+	for _, post := range posts {
+		pPost, err := r.FindByID(post.ID)
+		if err != nil {
+			return nil, err
+		}
+		pPosts = append(pPosts, pPost)
+	}
+
+	if err := r.db.Where("content LIKE ?", "%"+text+"%").Find(&postImages).Error; err != nil {
+		return pPosts, err
+	}
+
+	for _, postImage := range postImages {
+		r.db.Model(&postImage).Related(&postImage.Post)
+		pPost, err := r.FindByID(postImage.Post.ID)
+		if err != nil {
+			return pPosts, err
+		}
+
+		found := false
+		for _, candidateFoundPost := range pPosts {
+			if candidateFoundPost.ID == pPost.ID {
+				found = true
+				break
+			}
+		}
+
+		if !found {
+			pPosts = append(pPosts, pPost)
+		}
+	}
+
+	return pPosts, nil
+}

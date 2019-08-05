@@ -90,6 +90,10 @@ func (s *PostService) GetPostByID(postID, audienceID uint) (*models.Post, error)
 	return post, nil
 }
 
+func (s *PostService) Search(text string) ([]*models.Post, error) {
+	return s.postRepo.Search(text)
+}
+
 // getDTOPost maps post, including post's images, post's comments into a DTO object
 func (s *PostService) GetDTOPost(post *models.Post, userID, audienceUserID uint) (*dtomodels.Post, error) {
 	// Set basic post's info

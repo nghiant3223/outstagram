@@ -1,7 +1,6 @@
 package userrepo
 
 import (
-	"fmt"
 	"outstagram/server/models"
 
 	"github.com/jinzhu/gorm"
@@ -225,7 +224,6 @@ func (r *UserRepo) Search(text string, options ...map[string]interface{}) ([]*mo
 					}
 				}
 				if foundIdx != -1 {
-					fmt.Println("ok")
 					users = append(users[:foundIdx], users[foundIdx+1:]...)
 				}
 			}
@@ -247,4 +245,28 @@ func (r *UserRepo) GetUserRoomIDs(userID uint) ([]uint, error) {
 		roomIDs = append(roomIDs, room.ID)
 	}
 	return roomIDs, nil
+}
+
+func (r *UserRepo) GetFollowSuggestions(userID uint) []*models.User {
+	var allUsers []*models.User
+	var candidateUsers []*models.User
+
+	r.db.Where("").Find(&allUsers)
+	for _, user := range allUsers {
+		if user.ID == userID {
+			continue
+		}
+		followed, err := r.CheckFollow(userID, user.ID)
+		if err != nil {
+			continue
+		}
+		if !followed {
+			candidateUsers = append(candidateUsers, user)
+		}
+		if len(candidateUsers) >= 20 {
+			return candidateUsers
+		}
+	}
+
+	return candidateUsers
 }

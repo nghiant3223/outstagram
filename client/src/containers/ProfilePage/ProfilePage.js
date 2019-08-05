@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
+import { Redirect } from 'react-router'
 
 import Container from "../../components/Container/Container";
 import UserInfo from './UserInfo/UserInfo';
@@ -56,11 +57,7 @@ class ProfilePage extends Component {
 
         // If user is not found
         if (user === null) {
-            return (
-                <Container>
-                    <div>User not found</div>
-                </Container>
-            );
+            return <Redirect to="/notfound" />
         }
 
         return (

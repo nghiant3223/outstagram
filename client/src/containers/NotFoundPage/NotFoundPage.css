@@ -1,0 +1,22 @@
+.NotFoundContainer {
+  text-align: center;
+  padding: 1em;
+}
+
+.NotFoundContainer > div:first-child {
+  font-size: 4em;
+  font-weight: bold;
+  height: 2em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.NotFoundContainer > div {
+  padding-top: 1em;
+  padding-bottom: 1em;
+}
+
+.NotFoundContainer .ui.header {
+  margin: 1em 0 !important;
+}

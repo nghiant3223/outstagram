@@ -47,13 +47,12 @@ class UserInfo extends Component {
             <div className="InfoContainer">
                 <div className="InfoHeader">
                     <div className="InfoHeader__Fullname">{user.fullname}</div>
-
                 </div>
 
                 {!user.isMe &&
                     (<div style={{ display: "flex", justifyContent: "center", marginTop: "1em" }}>
-                        <FollowButton followed={followed} userID={user.id} />
-                        <Link to={`/messages/${user.username}`}><Button><Icon name="facebook messenger" />Message</Button></Link>
+                        <FollowButton followed={followed} userID={user.id} size="small" />
+                        <Link to={`/messages/${user.username}`}><Button size="small"><Icon name="facebook messenger" />Message</Button></Link>
                     </div>)
                 }
 

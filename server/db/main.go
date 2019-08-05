@@ -29,8 +29,6 @@ func New() (*gorm.DB, error) {
 		dbCon.SingularTable(true)
 
 		if os.Getenv("ENV") != "production" {
-			dbCon.LogMode(true)
-			dbCon.Debug()
 			dbCon.AutoMigrate(
 				&models.Comment{},
 				&models.Commentable{},

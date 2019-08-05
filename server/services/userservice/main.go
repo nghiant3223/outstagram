@@ -154,3 +154,7 @@ func (s *UserService) GetUserByUserIDOrUsername(userIDOrUsername interface{}) (*
 func (s *UserService) GetUserRoomIDs(userID uint) ([]uint, error) {
 	return s.userRepo.GetUserRoomIDs(userID)
 }
+
+func (s *UserService) GetFollowSuggestions(userID uint) []*models.User {
+	return s.userRepo.GetFollowSuggestions(userID)
+}

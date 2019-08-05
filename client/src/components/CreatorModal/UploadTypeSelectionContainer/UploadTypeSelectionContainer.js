@@ -5,15 +5,15 @@ import RadioButton from "../../RadioButton/RadioButton";
 
 import "./UploadTypeSelectionContainer.css";
 
-function UploadTypeSelectionContainer({ closeModal, onImagesUpload, onUploadTypeChange, isLoading }) {
+function UploadTypeSelectionContainer({ closeModal, onImagesUpload, onUploadTypeChange, isLoading, type }) {
     return (
         <div className="CreatorModal__UploadTypeContainer">
             <div className="CreatorModal__UploadTypeContainer__Radio" onChange={onUploadTypeChange}>
-                <RadioButton name="upload-type" value="post" defaultChecked>
+                <RadioButton name="upload-type" value="NEWSFEED" defaultChecked={type === "NEWSFEED"}>
                     <Icon name="newspaper outline" size="large" color="blue" />Newsfeed
                 </RadioButton>
 
-                <RadioButton name="upload-type" value="story" >
+                <RadioButton name="upload-type" value="STORY" defaultChecked={type === "STORY"}>
                     <Icon className="" name="image" size="large" color="blue" />Story
                 </RadioButton>
             </div>

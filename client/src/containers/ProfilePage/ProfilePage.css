@@ -7,6 +7,7 @@
 }
 
 .ProfileBodyContainer {
+  margin-top: 1.5em;
   display: flex;
 }
 
@@ -18,9 +19,20 @@
   flex-grow: 1fr;
 }
 
-.ProfileBodyContainer__PostContainer__Post {
+.ProfileBodyContainer__PostContainer > div {
   margin-top: 1.5em;
   margin-bottom: 1.5em;
+}
+
+.ProfileBodyContainer__PostContainer > div:first-child {
+  margin-top: 0;
+}
+
+.ProfileBodyContainer__PostContainer > div:last-child {
+  margin-top: 0;
+}
+
+.ProfileBodyContainer__PostContainer__Post {
   box-shadow: 0 1px 5px rgba(0, 0, 0, 0.15);
 }
 

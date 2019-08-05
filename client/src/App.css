@@ -31,12 +31,12 @@ body {
   font-size: 0.9rem;
 }
 
-a {
-  color: black;
-}
-
-a:hover {
-  color: black;
+.InitialLoaderContainer {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .dropdown.icon {
@@ -52,4 +52,18 @@ i.facebook.icon {
 .HomePage__PostContainer .Post .MoreCommentIcon,
 .ProfileBodyContainer__PostContainer .Post .MoreCommentIcon {
   transform: rotate(180deg) translateY(-0.15em);
+}
+
+a {
+  color: black;
+}
+
+a:hover {
+  color: black;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
 }

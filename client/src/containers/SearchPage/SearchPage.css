@@ -1,0 +1,32 @@
+.SearchPage__Card {
+  padding: 1em 0.75em !important;
+}
+
+.SearchPage__Result {
+  display: flex;
+  align-items: center;
+}
+
+.SearchPage__Result > div {
+  margin-left: 0.5em;
+  margin-right: 0.5em;
+}
+
+.SearchPage__Result > div:first-child {
+  margin-left: 0;
+}
+
+.SearchPage__Result > div:last-child {
+  margin-left: auto;
+  margin-right: 0;
+}
+
+.PostResult {
+  display: flex;
+  padding: 0.5em 0;
+}
+
+.PostResult__ImageContainer {
+  width: 100px;
+  margin-left: auto;
+}

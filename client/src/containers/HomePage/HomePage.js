@@ -17,6 +17,7 @@ import * as uiActions from '../../actions/ui.action';
 import StoryFeedManager from '../../StoryFeedManager';
 import PostPlaceholder from '../../components/Post/PostPlaceholder';
 import { Header } from 'semantic-ui-react';
+import FollowSuggestions from '../../components/FollowSuggestions/FollowSuggestions';
 
 class HomePage extends Component {
     state = {
@@ -28,58 +29,63 @@ class HomePage extends Component {
 
     shouldScroll = true
 
-    async componentDidMount() {
+    componentDidMount() {
         document.addEventListener('scroll', this.trackScrolling);
+        Promise.all([storyServices.getStoryFeed(), userServices.getNewsFeed(0)])
+            .then(([{ data: { data: { storyBoards } } }, { data: { data: { posts, nextSinceID } } }]) => {
+                this.setState({ posts: posts || [], sinceID: nextSinceID });
+                StoryFeedManager.initialize(storyBoards);
 
-        try {
-            const { data: { data: { storyBoards } } } = await storyServices.getStoryFeed();
-            const { data: { data: { posts, nextSinceID } } } = await userServices.getNewsFeed(0);
-
-            this.setState({ posts: posts || [], sinceID: nextSinceID });
-            StoryFeedManager.initialize(storyBoards);
-
-            Socket.on("STORY.SERVER.POST_STORY", (message) => {
-                const manager = StoryFeedManager.getInstance();
-                manager.prependUserStory(message.actorID, ...message.data)
-                    .then(this.updateStoryFeed)
-                    .catch((e) => console.log(e));
+                Socket.on("STORY.SERVER.POST_STORY", this.onServerPostStory);
+                Socket.on("STORY.SERVER.REACT_STORY", this.onServerReactStory);
+                Socket.on("STORY.SERVER.UNREACT_STORY", this.onServerUnreactStory);
+            }).catch((e) => {
+                console.log("Error while fetching story: ", e);
+            }).finally(() => {
+                this.setState({ isLoading: false });
             });
-
-            Socket.on("STORY.SERVER.REACT_STORY", (message) => {
-                const manager = StoryFeedManager.getInstance();
-                const { storyID, reactor } = message.data;
-                const story = manager.getStory(storyID)
-
-                // IMPORTANT: This should be !=, not !== because built-in `find` function return undefined when item not found in array
-                if (story != null) {
-                    if (story.reactors == null) {
-                        story.reactors = [];
-                    }
-                    story.reactors.unshift(reactor);
-                }
-            });
-
-            Socket.on("STORY.SERVER.UNREACT_STORY", (message) => {
-                const manager = StoryFeedManager.getInstance();
-                const { storyID, reactor } = message.data;
-                const story = manager.getStory(storyID);
-
-                // IMPORTANT: This should be !=, not !== because built-in `find` function return undefined when item not found in array
-                if (story != null) {
-                    story.reactors = story.reactors.filter((_reactor) => _reactor.id !== reactor.id);
-                }
-            });
-        } catch (e) {
-            console.log("Error while fetching story: ", e);
-        } finally {
-            this.setState({ isLoading: false });
-        }
     }
 
     componentWillUnmount() {
-        StoryFeedManager.removeInstance();
         this.props.closeModal();
+        StoryFeedManager.removeInstance();
         document.removeEventListener('scroll', this.trackScrolling);
+
+        Socket.removeListener("STORY.SERVER.POST_STORY", this.onServerPostStory);
+        Socket.removeListener("STORY.SERVER.REACT_STORY", this.onServerReactStory);
+        Socket.removeListener("STORY.SERVER.UNREACT_STORY", this.onServerUnreactStory);
+    }
+
+    onServerPostStory = (message) => {
+        const manager = StoryFeedManager.getInstance();
+        manager.prependUserStory(message.actorID, ...message.data)
+            .then(this.updateStoryFeed)
+            .catch((e) => console.log(e));
+    }
+
+    onServerReactStory = (message) => {
+        const manager = StoryFeedManager.getInstance();
+        const { storyID, reactor } = message.data;
+        const story = manager.getStory(storyID)
+
+        // IMPORTANT: This should be !=, not !== because built-in `find` function return undefined when item not found in array
+        if (story != null) {
+            if (story.reactors == null) {
+                story.reactors = [];
+            }
+            story.reactors.unshift(reactor);
+        }
+    }
+
+    onServerUnreactStory = (message) => {
+        const manager = StoryFeedManager.getInstance();
+        const { storyID, reactor } = message.data;
+        const story = manager.getStory(storyID);
+
+        // IMPORTANT: This should be !=, not !== because built-in `find` function return undefined when item not found in array
+        if (story != null) {
+            story.reactors = story.reactors.filter((_reactor) => _reactor.id !== reactor.id);
+        }
     }
 
     updateStoryFeed = () => {
@@ -127,7 +133,7 @@ class HomePage extends Component {
                     </Container>
 
                     <Container className="HomePage__MainContainer__Aside">
-                        <Header as="h5">  People you may know</Header>
+                        <FollowSuggestions />
                     </Container>
                 </div>
             </Container>

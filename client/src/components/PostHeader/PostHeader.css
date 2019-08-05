@@ -21,7 +21,6 @@
   font-weight: 700;
   color: var(--primary-color);
   font-size: var(--title-font-size);
-  margin-bottom: 0.5rem;
   line-height: 15px;
   cursor: pointer;
 }
@@ -31,4 +30,5 @@
   font-weight: 500;
   font-size: var(--subtitle-font-size);
   line-height: 15px;
+  margin-top: 0.5em;
 }

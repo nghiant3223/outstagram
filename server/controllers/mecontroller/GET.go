@@ -23,8 +23,13 @@ func (mc *Controller) GetMe(c *gin.Context) {
 	}
 
 	user, err := mc.userService.FindByID(userID)
-	if gorm.IsRecordNotFoundError(err) {
-		utils.ResponseWithError(c, http.StatusNotFound, "User not found", nil)
+	if err != nil {
+		if gorm.IsRecordNotFoundError(err) {
+			utils.ResponseWithError(c, http.StatusNotFound, "User not found", nil)
+			return
+		}
+
+		utils.ResponseWithError(c, http.StatusInternalServerError, "Cannot find user", err.Error())
 		return
 	}
 
@@ -212,4 +217,20 @@ func (mc *Controller) GetStoryFeed(c *gin.Context) {
 	storyBoardResponse.StoryBoards = append(storyBoardResponse.StoryBoards, activeStoryBoard...)
 	storyBoardResponse.StoryBoards = append(storyBoardResponse.StoryBoards, inactiveStoryBoard...)
 	utils.ResponseWithSuccess(c, http.StatusOK, "Retrieve story feed successfully", storyBoardResponse)
+}
+
+func (mc *Controller) GetFollowSuggestion(c *gin.Context) {
+	userID, ok := utils.RetrieveUserID(c)
+	if !ok {
+		log.Fatal("This route needs VerifyToken middleware")
+	}
+
+	var dtoUsers []dtomodels.SimpleUser
+
+	suggestedFollows := mc.userService.GetFollowSuggestions(userID)
+	for _, follow := range suggestedFollows {
+		dtoUsers = append(dtoUsers, follow.ToSimpleDTO())
+	}
+
+	utils.ResponseWithSuccess(c, http.StatusOK, "Retrieve story feed successfully", dtoUsers)
 }
