@@ -3,7 +3,7 @@ vendor/*
 gin-bin
 .idea/
 #.env
-images/
+images/*
 !images/.keep
 #client-build
 configs/main.yml
