@@ -2,8 +2,8 @@ vendor/*
 !vendor/vendor.json
 gin-bin
 .idea/
-.env
+#.env
 images/
 !images/.keep
-client-build
+#client-build
 configs/main.yml

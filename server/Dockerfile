@@ -9,7 +9,7 @@ COPY go.sum .
 RUN go mod download
 
 # Comment the following line for production
-RUN go get github.com/codegangsta/gin
+# RUN go get github.com/codegangsta/gin
 
 COPY . .
 
