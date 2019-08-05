@@ -58,7 +58,7 @@ function registerForm() {
                 setShouldRedirect(true);
             })
             .catch((err) => {
-                alert(err);
+                alert(err.response && err.response.data.message);
             });
     }
 

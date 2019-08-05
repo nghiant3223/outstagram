@@ -47,11 +47,15 @@
   background-color: transparent;
   color: var(--primary-color);
   text-transform: uppercase;
-  padding: 0 1em;
   outline: none;
   cursor: pointer;
+  margin-right: 0.5em;
 }
 
 .ChatboxContainer__InputContainer__SendBtn:hover {
   opacity: 0.75;
+}
+
+.ChatboxContainer__InputContainer__SendBtn img {
+  width: 75%;
 }

@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import { connect } from 'react-redux';
 
 import { Popup } from 'semantic-ui-react';
 import Avatar from "../../../Avatar/Avatar";
@@ -21,19 +22,23 @@ class MessageTyping extends Component {
     }
 
     onSomeoneTyping = (message) => {
-        const { roomID } = this.props;
+        const { roomID, user } = this.props;
         const { actorID, data } = message;
-        if (data.targetRoomID === roomID) {
-            this.setState((prevState) => ({ typingIDs: [...prevState.typingIDs, actorID] }));
-        }
+
+        if (data.targetRoomID !== roomID) return;
+        if (actorID === user.id) return;
+
+        this.setState((prevState) => ({ typingIDs: [...prevState.typingIDs, actorID] }));
     }
 
     onSomeoneStopTyping = (message) => {
-        const { roomID } = this.props;
+        const { roomID, user } = this.props;
         const { actorID, data } = message;
-        if (data.targetRoomID === roomID) {
-            this.setState((prevState) => ({ typingIDs: prevState.typingIDs.filter((id) => id !== actorID) }));
-        }
+
+        if (data.targetRoomID !== roomID) return;
+        if (actorID === user.id) return;
+
+        this.setState((prevState) => ({ typingIDs: prevState.typingIDs.filter((id) => id !== actorID) }));
     }
 
     render() {
@@ -56,4 +61,6 @@ class MessageTyping extends Component {
     }
 }
 
-export default MessageTyping;
+const mapStateToProps = ({ authReducer: { user } }) => ({ user });
+
+export default connect(mapStateToProps)(MessageTyping);

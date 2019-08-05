@@ -1,6 +1,7 @@
 package roomcontroller
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	"log"
@@ -36,8 +37,11 @@ func (rc *Controller) CheckRoomExist(c *gin.Context) {
 		return
 	}
 
+	fmt.Println(">> here", room)
+
 	if room == nil {
-		utils.AbortRequestWithError(c, http.StatusNotFound, "2 users' room not found", &gin.H{"type":"room_not_created"})
+		fmt.Println("> here")
+		utils.AbortRequestWithError(c, http.StatusNotFound, "2 users' room not found", &gin.H{"type": "room_not_created"})
 		return
 	}
 

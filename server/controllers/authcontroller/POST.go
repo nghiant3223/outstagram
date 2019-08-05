@@ -85,6 +85,12 @@ func (ac *Controller) Register(c *gin.Context) {
 		return
 	}
 
+	ok, message := newUser.IsValid()
+	if !ok {
+		utils.ResponseWithError(c, http.StatusBadRequest, message, nil)
+		return
+	}
+
 	if err := ac.userService.Save(&newUser); err != nil {
 		utils.ResponseWithError(c, http.StatusInternalServerError, "Creating user failed", err.Error())
 		return

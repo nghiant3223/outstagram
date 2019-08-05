@@ -1,7 +1,9 @@
 package models
 
 import (
+	"log"
 	"outstagram/server/dtos/dtomodels"
+	"regexp"
 	"time"
 
 	"github.com/jinzhu/gorm"
@@ -64,4 +66,23 @@ func (u *User) ToSimpleDTO() dtomodels.SimpleUser {
 		LastLogin:  u.LastLogin,
 		CreatedAt:  u.CreatedAt,
 	}
+}
+
+func (u *User) IsValid() (bool, string) {
+	usernameOK, err := regexp.MatchString(`^[a-zA-Z][a-zA-Z0-9._]{5,}$`, u.Username)
+	if err != nil {
+		log.Print("Invalid regex", err.Error())
+		return false, ""
+	}
+
+	if !usernameOK {
+		return false, "Invalid username. Password must be greater than 5 characters in length and contains at least a letter"
+	}
+
+	passwordOK := len(u.Password) >= 5
+	if !passwordOK {
+		return false, "Invalid password. Password must be greater than 5 characters in length"
+	}
+
+	return true, ""
 }
