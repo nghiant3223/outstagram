@@ -178,7 +178,7 @@ class CreatorModal extends Component {
 
                         <UploadTypeSelectionContainer type={uploadType} isLoading={isLoading} onImagesUpload={this.onImagesUpload} closeModal={this.props.closeModal} onUploadTypeChange={this.onUploadTypeChange} />
 
-                        <input type="file" ref={el => this.fileInput = el} multiple onClick={e => e.target.value = null} onChange={this.onFileInputChange} style={{ display: "none" }} />
+                        <input type="file" name="images" accept="image/*" ref={el => this.fileInput = el} multiple onClick={e => e.target.value = null} onChange={this.onFileInputChange} style={{ display: "none" }} />
                     </Form>
                 </Modal>
             </div>

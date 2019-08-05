@@ -8,7 +8,7 @@ services:
       - "80:80"
     expose:
       - "80"
-    command: bash -c "sleep 30 &&  go run app.go"
+    command: bash -c "sleep 15 &&  go run app.go"
     links:
       - db
       - cache

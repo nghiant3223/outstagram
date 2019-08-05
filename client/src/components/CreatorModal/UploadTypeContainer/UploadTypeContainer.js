@@ -30,7 +30,7 @@ function UploadTypeContainer({ expand = true, triggerFileInput, onUrlInputChange
                         )}
 
                         <div>
-                            <Input width={expand ? "90%" : "80%"} onChange={onUrlInputChange} placeHolder={expand ? "Paste a URL" : "Paste another URL"} value={imageURL} accept="image/*" />
+                            <Input width={expand ? "90%" : "80%"} onChange={onUrlInputChange} placeHolder={expand ? "Paste a URL" : "Paste another URL"} value={imageURL} />
                             <Popup content={`Get image's URL by right-click on it and choose "Copy image address" (for Chrome)`}
                                 inverted wide="very" offset="0 5px" position="top center"
                                 trigger={<Icon name='question circle outline' size="large" color="blue" className="QuestionMark" />} />
