@@ -26,11 +26,12 @@
 
 .HomePage__MainContainer__Aside {
   top: 70px;
-  height: 210px;
+  height: 230px;
   position: sticky;
   padding: 1em 1.25em;
   box-shadow: 0 1px 5px rgba(0, 0, 0, 0.15);
   width: calc(var(--content-width) - var(--post-width) - 1em);
+  padding-top: 1.25em;
 }
 
 .HomePage__PostContainer > div {

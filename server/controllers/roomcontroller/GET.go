@@ -37,8 +37,6 @@ func (rc *Controller) CheckRoomExist(c *gin.Context) {
 		return
 	}
 
-	fmt.Println(">> here", room)
-
 	if room == nil {
 		fmt.Println("> here")
 		utils.AbortRequestWithError(c, http.StatusNotFound, "2 users' room not found", &gin.H{"type": "room_not_created"})

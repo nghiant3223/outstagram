@@ -172,7 +172,7 @@ class CreatorModal extends Component {
                                 <div>
                                     <ChosenImageContainer renderImages={renderImages} removeImage={this.removeImage} />
                                     <UploadTypeContainer expand={false} imageURL={imageURL} onUrlInputChange={this.onUrlInputChange} triggerFileInput={this.triggerFileInput} />
-                                    {uploadType === "post" && <DescriptionInput value={caption} onChange={this.onCaptionChange} />}
+                                    {uploadType === "NEWSFEED" && <DescriptionInput value={caption} onChange={this.onCaptionChange} />}
                                 </div>
                         }
 

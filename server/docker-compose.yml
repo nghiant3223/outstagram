@@ -3,11 +3,11 @@ services:
   web_1:
     build: .
     environment:
-      PORT: "80"
+      PORT: "3000"
     ports:
-      - "80:80"
+      - "3000:3000"
     expose:
-      - "80"
+      - "3000"
     command: go run app.go
     links:
       - db

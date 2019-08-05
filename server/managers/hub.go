@@ -2,7 +2,6 @@ package managers
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/segmentio/ksuid"
 	"log"
 	"strings"
@@ -171,12 +170,9 @@ func (h *hub) BroadcastTo(conn *SuperConnection, serverMessage ServerMessage, ro
 
 // BroadcastSelective broadcasts to specific connections collection
 func (h *hub) BroadcastSelective(conn *SuperConnection, serverMessage ServerMessage, connections ...*Connection) {
-	for i, c := range connections {
+	for _, c := range connections {
 		if c != conn.Connection {
 			c.Send <- serverMessage
-			fmt.Println(i, "Send message", serverMessage)
-		} else {
-			fmt.Println("Do not send")
 		}
 	}
 }
